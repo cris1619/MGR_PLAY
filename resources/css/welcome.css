@@ -1,0 +1,149 @@
+
+
+        body{
+            font-family: "Play", sans-serif;
+            font-optical-sizing: auto;
+            background-image: 
+        }
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        .navbar {
+            background-color: dark;
+            padding: 0 20px;
+            height: 60px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+
+        .navbar-left {
+            display: flex;
+            align-items: center;
+            gap: 40px;
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            color: white;
+            font-size: 18px;
+            font-weight: bold;
+            text-decoration: none;
+        }
+
+        .logo-icon {
+            width: 24px;
+            height: 24px;
+            background: linear-gradient(45deg, #00ff88, #00ccff);
+            border-radius: 4px;
+            display: flex;
+            align-items: center;
+            align-items: center;
+            font-weight: bold;
+            font-size: 14px;
+            color: #000;
+        }
+
+        .nav-menu {
+            display: flex;
+            align-items: center;
+            list-style: none;
+            gap: 200px;
+        }
+        .nav-menu2 {
+            display: flex;
+            align-items: center;
+            list-style: none;
+            gap: 200px;
+        }
+
+        .nav-menu li a {
+            color: #ccc;
+            text-decoration: none;
+            font-size: 20px;
+            padding:  24px;
+            border-radius: 4px;
+            transition: all 0.3s ease;
+        }
+
+        .nav-menu2 li a {
+            color: #ccc;
+            text-decoration: none;
+            font-size: 13px;
+            padding:  10px;
+            border-radius: 4px;
+            transition: all 0.3s ease;
+        }
+
+        .nav-menu li a:hover {
+            color: yellow;
+            background-color: rgba(255,255,255,0.1);
+        }
+
+        .nav-menu2 li a:hover {
+            color: green;
+            background-color: rgba(255,255,255,0.1);
+        }
+
+        .container-principal{
+            background-color: #000;
+            color: white;
+            padding: 40px 20px;
+            text-align: center;
+        }
+
+        .navbar-right {
+            display: flex;
+            align-items: center;
+            gap: 20px;
+        }
+
+        .search-icon, .user-icon {
+            width: 24px;
+            height: 24px;
+            background: none;
+            border: none;
+            color: #ccc;
+            cursor: pointer;
+            padding: 0;
+            transition: color 0.3s ease;
+        }
+
+        .search-icon:hover, .user-icon:hover {
+            color: white;
+        }
+
+        .search-icon svg, .user-icon svg {
+            width: 100%;
+            height: 100%;
+            fill: currentColor;
+        }
+
+        .top-news {
+            background-color: #1a1a1a;
+            color: white;
+            padding: 10px 20px;
+            font-size: 14px;
+            border-top: 1px solid #333;
+            background-color: #333;
+            padding: 1px 0; /* Reduce el padding vertical para hacer la barra más delgada */
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .nav-menu {
+                display: none;
+            }
+            
+            .navbar-left {
+                gap: 20px;
+            }
+            
+        }
