@@ -177,13 +177,16 @@
                 <img src="{{ url('img/logoSinFondo.png') }}" alt="MGR PLAY" style="height: 50px; margin-right: 30px;">
                 MALAGA GARCIA ROVIRA PLAY
             </a>
-            
-            <ul class="nav-menu">
-                <li><a href="#">TORNEOS</a></li>
-                <li><a href="#">EQUIPOS</a></li>
-                <li><a href="#">JUGADORES</a></li>
-                <li><a href="#">PARTIDOS</a></li>
-            </ul>
+            <div class="container">
+                <div class="center">
+                    <ul class="nav-menu">
+                        <li><a href="#">TORNEOS</a></li>
+                        <li><a href="#">EQUIPOS</a></li>
+                        <li><a href="#">JUGADORES</a></li>
+                        <li><a href="#">PARTIDOS</a></li>
+                    </ul>
+                </div>
+            </div>
         </div>
         
         <div class="navbar-right">
@@ -223,13 +226,13 @@
           <div class="card-header bg-dark text-white text-center">
             <h5 class="mb-0">Ubicaciones</h5>
           </div>
+          @foreach ($canchas as $cancha)
           <div class="card-body">
             <ul class="list-group list-group-flush">
-              <li class="list-group-item">Cancha Central</li>
-              <li class="list-group-item">Estadio Municipal</li>
-              <li class="list-group-item">Coliseo Deportivo</li>
+              <li class="list-group-item"> {{ $cancha->nombre }} - {{ $cancha->idMunicipio->nombre }}</li>
             </ul>
           </div>
+          @endforeach
         </div>
       </div>
 

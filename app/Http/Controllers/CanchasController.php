@@ -2,18 +2,18 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\municipios;
+use App\Models\Canchas;
 use Illuminate\Http\Request;
 
-class MunicipiosController extends Controller
+class CanchasController extends Controller
 {
     /**
      * Display a listing of the resource.
      */
     public function index()
     {
-        $municipios = municipios::all();
-        return view('welcome', compact('municipios'));
+        $canchas = Canchas::all();
+        return view('welcome', compact('canchas'));
     }
 
     /**
@@ -35,7 +35,7 @@ class MunicipiosController extends Controller
     /**
      * Display the specified resource.
      */
-    public function show(municipios $municipios)
+    public function show(Canchas $canchas)
     {
         //
     }
@@ -43,7 +43,7 @@ class MunicipiosController extends Controller
     /**
      * Show the form for editing the specified resource.
      */
-    public function edit(municipios $municipios)
+    public function edit(Canchas $canchas)
     {
         //
     }
@@ -51,7 +51,7 @@ class MunicipiosController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, municipios $municipios)
+    public function update(Request $request, Canchas $canchas)
     {
         //
     }
@@ -59,7 +59,7 @@ class MunicipiosController extends Controller
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(municipios $municipios)
+    public function destroy(Canchas $canchas)
     {
         //
     }
