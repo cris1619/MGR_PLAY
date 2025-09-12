@@ -226,10 +226,10 @@
           <div class="card-header bg-dark text-white text-center">
             <h5 class="mb-0">Ubicaciones</h5>
           </div>
-          @foreach ($canchas as $cancha)
+          @foreach ($municipios as $municipio)
           <div class="card-body">
             <ul class="list-group list-group-flush">
-              <li class="list-group-item"> {{ $cancha->nombre }} - {{ $cancha->idMunicipio->nombre }}</li>
+              <li class="list-group-item"> {{ $municipio->nombre }}</li>
             </ul>
           </div>
           @endforeach
