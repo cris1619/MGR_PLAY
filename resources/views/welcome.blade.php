@@ -221,20 +221,116 @@
 
     <div class="row">
       <!-- Contenedor Ubicaciones -->
-      <div class="col-md-3 mb-4">
-        <div class="card shadow-lg border-0">
-          <div class="card-header bg-dark text-white text-center">
-            <h5 class="mb-0">Ubicaciones</h5>
+<div class="col-md-3 mb-4">
+  <div class="card shadow-lg border-0">
+    <div class="card-header bg-dark text-white text-center">
+      <h5 class="mb-0">Ubicaciones</h5>
+    </div>
+    <div class="card-body">
+      <div class="accordion" id="accordionMunicipios">
+  @foreach ($municipios as $municipio)
+    <div class="accordion-item bg-dark border-0">
+      <h2 class="accordion-header" id="heading{{ $municipio->id }}">
+        <button class="accordion-button collapsed bg-dark text-white"
+                type="button"
+                data-bs-toggle="collapse"
+                data-bs-target="#collapse{{ $municipio->id }}"
+                aria-expanded="false"
+                aria-controls="collapse{{ $municipio->id }}">
+          {{ $municipio->nombre }}
+        </button>
+      </h2>
+
+      <div id="collapse{{ $municipio->id }}"
+           class="accordion-collapse collapse"
+           aria-labelledby="heading{{ $municipio->id }}"
+           data-bs-parent="#accordionMunicipios">
+        <div class="accordion-body">
+
+          <!-- ⚽ Canchas -->
+          <div class="mb-2">
+            <button class="btn btn-sm w-100 text-start text-white bg-secondary"
+                    type="button"
+                    data-bs-toggle="collapse"
+                    data-bs-target="#canchas{{ $municipio->id }}"
+                    aria-expanded="false"
+                    aria-controls="canchas{{ $municipio->id }}">
+              ⚽ Canchas
+            </button>
+            <div class="collapse mt-2" id="canchas{{ $municipio->id }}">
+              <ul class="list-unstyled ps-3">
+                @forelse ($municipio->canchas as $cancha)
+                  <li>
+                    <a href="{{ url('/cancha/' . $cancha->id) }}" class="text-white text-decoration-underline">
+                      {{ $cancha->nombre }}
+                    </a>
+                  </li>
+                @empty
+                  <li class="text-white"><em>No hay canchas por ahora :/ .</em></li>
+                @endforelse
+              </ul>
+            </div>
           </div>
-          @foreach ($municipios as $municipio)
-          <div class="card-body">
-            <ul class="list-group list-group-flush">
-              <li class="list-group-item"> {{ $municipio->nombre }}</li>
-            </ul>
+
+          <!-- 👥 Equipos -->
+          <div class="mb-2">
+            <button class="btn btn-sm w-100 text-start text-white bg-secondary"
+                    type="button"
+                    data-bs-toggle="collapse"
+                    data-bs-target="#equipos{{ $municipio->id }}"
+                    aria-expanded="false"
+                    aria-controls="equipos{{ $municipio->id }}">
+              👥 Equipos
+            </button>
+            <div class="collapse mt-2" id="equipos{{ $municipio->id }}">
+              <ul class="list-unstyled ps-3">
+                @forelse ($municipio->canchas as $cancha)
+                  <li>
+                    <a href="{{ url('/cancha/' . $cancha->id) }}" class="text-white text-decoration-underline">
+                      {{ $cancha->nombre }}
+                    </a>
+                  </li>
+                @empty
+                  <li class="text-white"><em>No hay equipos por ahora :( .</em></li>
+                @endforelse
+              </ul>
+            </div>
           </div>
-          @endforeach
+
+          <!-- 📅 Torneos -->
+          <div class="mb-2">
+            <button class="btn btn-sm w-100 text-start text-white bg-secondary"
+                    type="button"
+                    data-bs-toggle="collapse"
+                    data-bs-target="#torneos{{ $municipio->id }}"
+                    aria-expanded="false"
+                    aria-controls="torneos{{ $municipio->id }}">
+              📅 Torneos
+            </button>
+            <div class="collapse mt-2" id="torneos{{ $municipio->id }}">
+              <ul class="list-unstyled ps-3">
+                @forelse ($municipio->canchas as $cancha)
+                  <li>
+                    <a href="{{ url('/cancha/' . $cancha->id) }}" class="text-white text-decoration-underline">
+                      {{ $cancha->nombre }}
+                    </a>
+                  </li>
+                @empty
+                  <li class="text-white"><em>No hay torneos por ahora :) .</em></li>
+                @endforelse
+              </ul>
+            </div>
+          </div>
+
         </div>
       </div>
+    </div>
+  @endforeach
+</div>
+    </div>
+  </div>
+</div>
+
 
       <!-- Contenedor Imágenes -->
       <div class="col-md-9 mb-4">
@@ -261,39 +357,8 @@
         </div>
       </div>
     </div>
-    
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
     </div>
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js" integrity="sha384-FKyoEForCGlyvwx9Hj09JcYn3nv7wiPVlz7YYwJrWVcXK/BmnVDxM+D2scQbITxI" crossorigin="anonymous"></script>  

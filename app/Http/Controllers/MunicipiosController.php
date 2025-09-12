@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Canchas;
 use App\Models\municipios;
 use Illuminate\Http\Request;
 
@@ -13,7 +14,8 @@ class MunicipiosController extends Controller
     public function index()
     {
         $municipios = municipios::all();
-        return view('welcome', compact('municipios'));
+        $canchas = Canchas::all();
+        return view('welcome', compact('municipios', 'canchas'));
     }
 
     /**

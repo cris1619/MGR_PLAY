@@ -12,4 +12,9 @@ class Canchas extends Model
         'nombre',
         'idMunicipio'
     ];
+    
+    public function municipio()
+    {
+        return $this->belongsTo(Municipios::class, 'municipio_id');
+    }
 }

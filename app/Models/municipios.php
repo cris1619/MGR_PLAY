@@ -11,4 +11,9 @@ class municipios extends Model
     protected $fillable = [
         'nombre'
     ];
+
+    public function canchas()
+    {
+        return $this->hasMany(Canchas::class, 'idMunicipio');
+    }
 }
