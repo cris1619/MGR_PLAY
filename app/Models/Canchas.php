@@ -15,6 +15,6 @@ class Canchas extends Model
     
     public function municipio()
     {
-        return $this->belongsTo(Municipios::class, 'municipio_id');
+        return $this->belongsTo(Municipios::class, 'idMunicipio');
     }
 }
