@@ -46,7 +46,7 @@
 <div class="container mt-5">
     <div class="d-flex justify-content-between align-items-center mb-4">
         <h2 class="text-white">🌍 Municipios Registrados</h2>
-        <a href="#" class="btn btn-success rounded-pill px-4">
+        <a href="{{ route('municipios.create') }}" class="btn btn-success rounded-pill px-4">
             ➕ Crear Municipio
         </a>
     </div>
@@ -61,12 +61,12 @@
                         </h5>
 
                         <div class="d-flex justify-content-center gap-2 mt-3">
-                            <a href="#" 
+                            <a href="{{ route('municipios.edit', $municipio->id) }}" 
                                class="btn btn-warning btn-sm rounded-pill px-3">
                                 ✏️ Editar
                             </a>
 
-                            <form action="#" method="POST" 
+                            <form action="{{ route('municipios.destroy', $municipio->id) }}" method="POST" 
                                   onsubmit="return confirm('¿Estás seguro de eliminar este municipio?')">
                                 @csrf
                                 <button type="submit" class="btn btn-danger btn-sm rounded-pill px-3">
@@ -78,6 +78,7 @@
                 </div>
             </div>
         @endforeach
-    </div>
-</div>
+        <div class="container text-center mt-4">
+            <a href="{{ route('welcome') }}" class="btn btn-secondary">Volver al menu</a>
+        </div>
 @endsection
