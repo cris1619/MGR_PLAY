@@ -15,7 +15,7 @@ class MunicipiosController extends Controller
     {
         $municipios = municipios::all();
         $canchas = Canchas::all();
-        return view('Municipios.index', compact('municipios', 'canchas'));
+        return view('Municipios.index', compact('municipios'));
     }
 
     /**

@@ -10,3 +10,7 @@ Route::get('/', function () {
 
 //RUTAS MUNICIPIOS
 Route::get('/Municipios/index', [MunicipiosController::class, 'index'])->name('municipios.index');
+
+
+//RUTAS CANCHAS
+Route::get('/Canchas/index', [CanchasController::class, 'index'])->name('canchas.index');
