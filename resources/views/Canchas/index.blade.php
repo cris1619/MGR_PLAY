@@ -46,7 +46,7 @@
 <div class="container mt-5">
     <div class="d-flex justify-content-between align-items-center mb-4">
         <h2 class="text-white">🏟️ Canchas Registradas</h2>
-        <a href="#" class="btn btn-success rounded-pill px-4">
+        <a href="#" class="btn btn-secondary rounded-pill px-4">
             ➕ Crear Cancha
         </a>
     </div>
@@ -65,7 +65,7 @@
 
                         <div class="d-flex justify-content-center gap-2 mt-3">
                             <a href="#" 
-                               class="btn btn-warning btn-sm rounded-pill px-3">
+                               class="btn btn-success btn-sm rounded-pill px-3">
                                 ✏️ Editar
                             </a>
 
@@ -73,7 +73,7 @@
                                   method="POST" 
                                   onsubmit="return confirm('¿Estás seguro de eliminar esta cancha?')">
                                 @csrf
-                                <button type="submit" class="btn btn-danger btn-sm rounded-pill px-3">
+                                <button type="submit" class="btn btn-warning btn-sm rounded-pill px-3">
                                     🗑️ Eliminar
                                 </button>
                             </form>

@@ -46,7 +46,7 @@
 <div class="container mt-5">
     <div class="d-flex justify-content-between align-items-center mb-4">
         <h2 class="text-white">🌍 Municipios Registrados</h2>
-        <a href="{{ route('municipios.create') }}" class="btn btn-success rounded-pill px-4">
+        <a href="{{ route('municipios.create') }}" class="btn btn-secondary rounded-pill px-4">
             ➕ Crear Municipio
         </a>
     </div>
@@ -62,14 +62,14 @@
 
                         <div class="d-flex justify-content-center gap-2 mt-3">
                             <a href="{{ route('municipios.edit', $municipio->id) }}" 
-                               class="btn btn-warning btn-sm rounded-pill px-3">
+                               class="btn btn-success btn-sm rounded-pill px-3">
                                 ✏️ Editar
                             </a>
 
                             <form action="{{ route('municipios.destroy', $municipio->id) }}" method="POST" 
                                   onsubmit="return confirm('¿Estás seguro de eliminar este municipio?')">
                                 @csrf
-                                <button type="submit" class="btn btn-danger btn-sm rounded-pill px-3">
+                                <button type="submit" class="btn btn-warning btn-sm rounded-pill px-3">
                                     🗑️ Eliminar
                                 </button>
                             </form>
@@ -81,4 +81,52 @@
         <div class="container text-center mt-4">
             <a href="{{ route('welcome') }}" class="btn btn-secondary">Volver al menu</a>
         </div>
+
+@if(session('success'))
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            Swal.fire({
+                icon: 'success',
+                title: '¡Éxito!',
+                text: "{{ session('success') }}",
+                confirmButtonText: 'Aceptar',
+                timer: 3000
+            });
+        });
+    </script>
+    @endif
+    <script>
+        function confirmarEliminacion(event) {
+            event.preventDefault();
+            const form = event.target.closest('form');
+
+            Swal.fire({
+                title: '¿Estás seguro?',
+                text: "¡No podrás revertir esto!",
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonColor: '#3085d6',
+                cancelButtonColor: '#d33',
+                confirmButtonText: 'Sí, eliminar',
+                cancelButtonText: 'Cancelar'
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    form.submit();
+                }
+            });
+        }
+</script>
+@if(session('error'))
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        Swal.fire({
+            icon: 'error',
+            title: '¡Error!',
+            text: "{{ session('error') }}",
+            confirmButtonText: 'Aceptar',
+            timer: 4000
+        });
+    });
+</script>
+@endif
 @endsection
