@@ -1,7 +1,7 @@
 @extends('layouts.app')
 
 @section('title')
-    Municipios
+    Municipios | MGR PLAY
 @endsection
 
 @section('titleContent')
@@ -44,7 +44,12 @@
 </style>
 
 <div class="container mt-5">
-    <h2 class="text-center text-white mb-4">🌍 Municipios Registrados</h2>
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h2 class="text-white">🌍 Municipios Registrados</h2>
+        <a href="#" class="btn btn-success rounded-pill px-4">
+            ➕ Crear Municipio
+        </a>
+    </div>
 
     <div class="row justify-content-center g-4">
         @foreach($municipios as $municipio)
@@ -54,19 +59,25 @@
                         <h5 class="card-title text-white mb-3">
                             🏘️ <b>{{ $municipio->nombre }}</b>
                         </h5>
+
+                        <div class="d-flex justify-content-center gap-2 mt-3">
+                            <a href="#" 
+                               class="btn btn-warning btn-sm rounded-pill px-3">
+                                ✏️ Editar
+                            </a>
+
+                            <form action="#" method="POST" 
+                                  onsubmit="return confirm('¿Estás seguro de eliminar este municipio?')">
+                                @csrf
+                                <button type="submit" class="btn btn-danger btn-sm rounded-pill px-3">
+                                    🗑️ Eliminar
+                                </button>
+                            </form>
+                        </div>
                     </div>
                 </div>
             </div>
-            
         @endforeach
     </div>
-    <div class="card shadow-lg border-0 rounded-4 municipio-card">
-                    <div class="card-body text-center">
-                        <h5 class="card-title text-white mb-3">
-                            🏘️ <b>Crear Municipio</b>
-                        </h5>
-                    </div>
 </div>
-</div>
-
 @endsection
