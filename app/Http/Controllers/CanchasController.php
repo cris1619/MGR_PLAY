@@ -13,7 +13,7 @@ class CanchasController extends Controller
     public function index()
     {
         $canchas = Canchas::all();
-        return view('welcome', compact('canchas'));
+        return view('Canchas.index', compact('canchas'));
     }
 
     /**
