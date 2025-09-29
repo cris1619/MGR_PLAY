@@ -15,3 +15,6 @@ Route::post('/Municipios/store', [MunicipiosController::class, 'store'])->name('
 Route::get('/Municipios/edit/{id}', [MunicipiosController::class, 'edit'])->name('municipios.edit');
 Route::post('/Municipios/update/{id}', [MunicipiosController::class, 'update'])->name('municipios.update');
 Route::post('/Municipios/delete/{id}', [MunicipiosController::class, 'destroy'])->name('municipios.destroy');
+
+//RUTAS CANCHAS
+Route::get('/Canchas/index', [CanchasController::class, 'index'])->name('canchas.index');
