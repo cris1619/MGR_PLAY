@@ -6,12 +6,7 @@ use Illuminate\Support\Facades\Route;
 
 Route::get('/', function () {
     return view('welcome');
-});
+})->name('welcome');
 
-Route::get('/', [MunicipiosController::class, 'index'])->name('welcome');
-
-
-
-
-
-Route::get('/', [CanchasController::class, 'index'])->name('welcome');
+//RUTAS MUNICIPIOS
+Route::get('/Municipios/index', [MunicipiosController::class, 'index'])->name('municipios.index');
