@@ -110,7 +110,7 @@
                     <p class="card-text text-white-50">
                         <i>Escenarios preparados para los partidos de cada torneo.</i>
                     </p>
-                    <a href="#" class="btn btn-outline-light px-4 py-2 rounded-pill">
+                    <a href="{{ route('canchas.index') }}" class="btn btn-outline-light px-4 py-2 rounded-pill">
                         ➡️ Ver Canchas
                     </a>
                 </div>
