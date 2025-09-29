@@ -54,8 +54,16 @@ class MunicipiosController extends Controller
     public function destroy($id)
     {
         $municipio = Municipios::findOrFail($id);
+
+        // Validar si el municipio tiene canchas asociadas
+        if ($municipio->canchas()->count() > 0) {
+            return redirect()->route('municipios.index')
+                ->with('error', 'No puedes eliminar este municipio porque tiene canchas asociadas.');
+        }
+
         $municipio->delete();
+
         return redirect()->route('municipios.index')
-                         ->with('success', 'Municipio eliminado correctamente');
+            ->with('success', 'Municipio eliminado correctamente.');
     }
 }
