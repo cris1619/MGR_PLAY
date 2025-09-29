@@ -96,7 +96,7 @@
                     <p class="card-text text-white-50">
                         <i>Consulta los municipios donde se disputan los torneos.</i>
                     </p>
-                    <a href="#" class="btn btn-outline-light px-4 py-2 rounded-pill">
+                    <a href="{{ route('municipios.index') }}" class="btn btn-outline-light px-4 py-2 rounded-pill">
                         ➡️ Ver Municipios
                     </a>
                 </div>
