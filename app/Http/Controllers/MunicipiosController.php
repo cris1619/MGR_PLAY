@@ -2,67 +2,60 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Canchas;
-use App\Models\municipios;
+use App\Models\Municipios;
 use Illuminate\Http\Request;
 
 class MunicipiosController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     */
+    // GET: lista de municipios
     public function index()
     {
-        $municipios = municipios::all();
-        $canchas = Canchas::all();
-        return view('Municipios.index', compact('municipios', 'canchas'));
+        $municipios = Municipios::all();
+        return view('municipios.index', compact('municipios'));
     }
 
-    /**
-     * Show the form for creating a new resource.
-     */
+    // GET: formulario para crear
     public function create()
     {
-        //
+        return view('municipios.create');
     }
 
-    /**
-     * Store a newly created resource in storage.
-     */
+    // POST: guardar nuevo municipio
     public function store(Request $request)
     {
-        //
+        Municipios::create($request->all());
+        return redirect()->route('municipios.index')
+                         ->with('success', 'Municipio creado correctamente');
     }
 
-    /**
-     * Display the specified resource.
-     */
-    public function show(municipios $municipios)
+    // GET: mostrar un municipio
+    public function show()
     {
         //
     }
 
-    /**
-     * Show the form for editing the specified resource.
-     */
-    public function edit(municipios $municipios)
+    // GET: formulario editar
+    public function edit($id)
     {
-        //
+        $municipio = Municipios::findOrFail($id);
+        return view('municipios.edit', compact('municipio'));
     }
 
-    /**
-     * Update the specified resource in storage.
-     */
-    public function update(Request $request, municipios $municipios)
-    {
-        //
+    // POST: actualizar municipio (sin PUT)
+    public function update(Request $request, $id)
+    {        
+        $municipio = Municipios::findOrFail($id);
+        $municipio->update($request->all());
+        return redirect()->route('municipios.index')
+                         ->with('success', 'Municipio actualizado correctamente');
     }
 
-    /**
-     * Remove the specified resource from storage.
-     */
-    public function destroy(municipios $municipios)
+    // POST: eliminar municipio (sin DELETE)
+    public function destroy($id)
     {
-        //
+        $municipio = Municipios::findOrFail($id);
+        $municipio->delete();
+        return redirect()->route('municipios.index')
+                         ->with('success', 'Municipio eliminado correctamente');
     }
 }
