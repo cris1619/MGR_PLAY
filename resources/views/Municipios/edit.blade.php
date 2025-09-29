@@ -20,7 +20,7 @@
     <form action="{{ route('municipios.update', $municipio->id) }}" method="POST">
         @csrf
         <div class="mb-3">
-            <label for="nombre" class="form-label">Nombre del Municipio</label>
+            <label for="nombre" class="form-label" style="color: white;">Nombre del Municipio</label>
             <input type="text" 
                    name="nombre" 
                    id="nombre" 
@@ -31,7 +31,7 @@
         </div>
 
         <button type="submit" class="btn btn-success">Actualizar</button>
-        <a href="{{ route('municipios.index') }}" class="btn btn-danger">Cancelar</a>
+        <a href="{{ route('municipios.index') }}" class="btn btn-warning">Cancelar</a>
     </form>
 </div>
 

@@ -21,7 +21,7 @@
         @csrf
 
         <div class="mb-3">
-            <label for="nombre" class="form-label">Nombre del Municipio</label>
+            <label for="nombre" class="form-label" style="color: white;">Nombre del Municipio</label>
             <input type="text" 
                    name="nombre" 
                    id="nombre" 
@@ -32,7 +32,7 @@
         </div>
 
         <button type="submit" class="btn btn-success">Guardar</button>
-        <a href="{{ route('municipios.index') }}" class="btn btn-danger">Volver</a>
+        <a href="{{ route('municipios.index') }}" class="btn btn-warning">Volver</a>
     </form>
 </div>
 
