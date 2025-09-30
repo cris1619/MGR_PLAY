@@ -2,11 +2,17 @@
 
 use App\Http\Controllers\CanchasController; 
 use App\Http\Controllers\MunicipiosController;
+use App\Http\Controllers\UserController;
 use Illuminate\Support\Facades\Route;
 
 Route::get('/', function () {
     return view('welcome');
 })->name('welcome');
+
+//RUTA USUARIO
+Route::get('/', [UserController::class, 'index'])->name('vistaUsuario');
+
+
 
 //RUTAS MUNICIPIOS
 Route::get('/Municipios/index', [MunicipiosController::class, 'index'])->name('municipios.index');
