@@ -145,6 +145,10 @@
             </div>
         </div>
 
+        <a href="{{ route('usuario.index') }}" class="btn btn-outline-light px-4 py-2 rounded-pill">
+                        ➡️ Vista Usuario
+        </a>
+
     </div>
 </div>
 
