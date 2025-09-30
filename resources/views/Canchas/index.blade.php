@@ -15,6 +15,7 @@
     </nav>
 @endsection
 
+
 @section('content')
 <style>
     .navbar {
@@ -46,7 +47,7 @@
 <div class="container mt-5">
     <div class="d-flex justify-content-between align-items-center mb-4">
         <h2 class="text-white">🏟️ Canchas Registradas</h2>
-        <a href="#" class="btn btn-secondary rounded-pill px-4">
+        <a href="{{ route('canchas.create') }}" class="btn btn-secondary rounded-pill px-4">
             ➕ Crear Cancha
         </a>
     </div>
@@ -64,12 +65,12 @@
                         </p>
 
                         <div class="d-flex justify-content-center gap-2 mt-3">
-                            <a href="#" 
+                            <a href="{{ route('canchas.edit', $cancha->id) }}" 
                                class="btn btn-success btn-sm rounded-pill px-3">
                                 ✏️ Editar
                             </a>
 
-                            <form action="#" 
+                            <form action="{{ route('canchas.destroy', $cancha->id) }}" 
                                   method="POST" 
                                   onsubmit="return confirm('¿Estás seguro de eliminar esta cancha?')">
                                 @csrf
@@ -83,6 +84,10 @@
                 </div>
             </div>
         @endforeach
+
+                <div class="container text-center mt-4">
+            <a href="{{ route('welcome') }}" class="btn btn-secondary">Volver al menu</a>
+        </div>
     </div>
 </div>
 @endsection
