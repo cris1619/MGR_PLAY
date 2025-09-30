@@ -18,3 +18,8 @@ Route::post('/Municipios/delete/{id}', [MunicipiosController::class, 'destroy'])
 
 //RUTAS CANCHAS
 Route::get('/Canchas/index', [CanchasController::class, 'index'])->name('canchas.index');
+Route::get('/Canchas/create', [CanchasController::class, 'create'])->name('canchas.create');
+Route::post('/Canchas/store', [CanchasController::class, 'store'])->name('canchas.store');
+Route::get('/Canchas/edit/{id}', [CanchasController::class, 'edit'])->name('canchas.edit');
+Route::post('/Canchas/update/{id}', [CanchasController::class, 'update'])->name('canchas.update');
+Route::post('/Canchas/delete/{id}', [CanchasController::class, 'destroy'])->name('canchas.destroy');

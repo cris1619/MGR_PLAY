@@ -1,7 +1,7 @@
 <?php
 
 namespace App\Http\Controllers;
-
+use App\Models\Municipios;
 use App\Models\Canchas;
 use Illuminate\Http\Request;
 
@@ -13,7 +13,8 @@ class CanchasController extends Controller
     public function index()
     {
         $canchas = Canchas::all();
-        return view('Canchas.index', compact('canchas'));
+        $municipios = Municipios::all();
+        return view('canchas.index', compact('canchas', 'municipios'));
     }
 
     /**
@@ -21,7 +22,9 @@ class CanchasController extends Controller
      */
     public function create()
     {
-        //
+        $municipios = Municipios::all();
+        $canchas = Canchas::all();
+        return view('canchas.create', compact('municipios', 'canchas'));
     }
 
     /**
@@ -29,7 +32,11 @@ class CanchasController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        $canchas = new Canchas();
+        $canchas->nombre = $request->input('nombre');
+        $canchas->idMunicipio = $request->input('idMunicipio');
+        $canchas->save();
+        return redirect()->route('canchas.index');
     }
 
     /**
@@ -43,24 +50,32 @@ class CanchasController extends Controller
     /**
      * Show the form for editing the specified resource.
      */
-    public function edit(Canchas $canchas)
+    public function edit($id)
     {
-        //
+        $canchas = Canchas::find($id);
+        $municipios = Municipios::all();
+        return view('canchas.edit', compact('canchas', 'municipios'));
     }
 
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, Canchas $canchas)
+    public function update(Request $request,  $id)
     {
-        //
+        $canchas  = Canchas::findOrFail($id);
+        $canchas->update($request->all());
+        return redirect()->route('canchas.index')
+                         ->with('success', 'Cancha actualizada correctamente');
     }
 
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(Canchas $canchas)
+    public function destroy($id)
     {
-        //
+        $canchas = Canchas::findorFail($id);
+        $canchas->delete();
+        return redirect()->route('canchas.index')
+                         ->with('success', 'Cancha eliminada correctamente');
     }
 }
