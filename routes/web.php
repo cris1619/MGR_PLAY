@@ -3,7 +3,7 @@
 use App\Http\Controllers\CanchasController;
 use App\Http\Controllers\EquiposController;
 use App\Http\Controllers\ArbitrosController;
-use App\Http\Controllers\CanchasController; 
+use App\Http\Controllers\JugadoresController;
 use App\Http\Controllers\MunicipiosController;
 use App\Http\Controllers\UserController;
 use Illuminate\Support\Facades\Route;
@@ -50,3 +50,11 @@ Route::post('/Arbitros/store', [ArbitrosController::class, 'store'])->name('Arbi
 Route::get('/Arbitros/edit/{id}', [ArbitrosController::class, 'edit'])->name('Arbitros.edit');
 Route::post('/Arbitros/update/{id}', [ArbitrosController::class, 'update'])->name('Arbitros.update');
 Route::post('/Arbitros/delete/{id}', [ArbitrosController::class, 'destroy'])->name('Arbitros.destroy');
+
+//RUTAS JUGADORES
+Route::get('/Jugadores/index', [JugadoresController::class, 'index'])->name('jugadores.index');
+Route::get('/Jugadores/create', [JugadoresController::class, 'create'])->name('jugadores.create');
+Route::post('/Jugadores/store', [JugadoresController::class, 'store'])->name('jugadores.store');
+Route::get('/Jugadores/edit/{id}', [JugadoresController::class, 'edit'])->name('jugadores.edit');
+Route::post('/Jugadores/update/{id}', [JugadoresController::class, 'update'])->name('jugadores.update');
+Route::post('/Jugadores/delete/{id}', [JugadoresController::class, 'destroy'])->name('jugadores.destroy');

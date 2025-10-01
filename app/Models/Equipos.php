@@ -18,4 +18,9 @@ class Equipos extends Model
         {
             return $this->belongsTo(Municipios::class, 'idMunicipio');
         }
+
+        public function jugadores()
+        {
+            return $this->hasMany(Jugadores::class, 'idEquipo');
+        }
 }
