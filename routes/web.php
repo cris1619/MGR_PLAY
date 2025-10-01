@@ -1,5 +1,7 @@
 <?php
 
+use App\Http\Controllers\CanchasController;
+use App\Http\Controllers\EquiposController;
 use App\Http\Controllers\ArbitrosController;
 use App\Http\Controllers\CanchasController; 
 use App\Http\Controllers\MunicipiosController;
@@ -11,6 +13,7 @@ Route::get('/', function () {
 })->name('welcome');
 
 //RUTA USUARIO
+Route::get('/usuario/index', [UserController::class, 'index'])->name('usuario.vistaUsuario');
 //Route::get('/', [UserController::class, 'index'])->name('vistaUsuario');//
 
 
@@ -30,6 +33,15 @@ Route::post('/Canchas/store', [CanchasController::class, 'store'])->name('cancha
 Route::get('/Canchas/edit/{id}', [CanchasController::class, 'edit'])->name('canchas.edit');
 Route::post('/Canchas/update/{id}', [CanchasController::class, 'update'])->name('canchas.update');
 Route::post('/Canchas/delete/{id}', [CanchasController::class, 'destroy'])->name('canchas.destroy');
+
+//RUTAS EQUIPOS
+Route::get('/Equipos/index', [EquiposController::class, 'index'])->name('equipos.index');
+Route::get('/Equipos/create', [EquiposController::class, 'create'])->name('equipos.create');
+Route::post('/Equipos/store', [EquiposController::class, 'store'])->name('equipos.store');
+Route::get('/Equipos/edit/{id}', [EquiposController::class, 'edit'])->name('equipos.edit');
+Route::post('/Equipos/update/{id}', [EquiposController::class, 'update'])->name('equipos.update');
+Route::post('/Equipos/delete/{id}', [EquiposController::class, 'destroy'])->name('equipos.destroy');
+
 
 //Rutas arbitros
 Route::get('/Arbitros/index',[ArbitrosController::class,'index'])->name('Arbitros.index');

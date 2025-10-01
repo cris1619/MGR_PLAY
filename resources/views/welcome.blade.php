@@ -63,7 +63,7 @@
                     <p class="card-text text-white-50">
                         <i>Consulta los equipos participantes y su información.</i>
                     </p>
-                    <a href="#" class="btn btn-outline-light px-4 py-2 rounded-pill">
+                    <a href="{{ route('equipos.index') }}" class="btn btn-outline-light px-4 py-2 rounded-pill">
                         ➡️ Ver Equipos
                     </a>
                 </div>
@@ -145,7 +145,7 @@
             </div>
         </div>
 
-        <a href="#}" class="btn btn-outline-light px-4 py-2 rounded-pill">
+        <a href="{{ route('usuario.vistaUsuario') }}" class="btn btn-outline-light px-4 py-2 rounded-pill">
                         ➡️ Vista Usuario
         </a>
 
