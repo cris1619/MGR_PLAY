@@ -138,14 +138,14 @@
                     <p class="card-text text-white-50">
                         <i>Conoce a los árbitros encargados de dirigir los encuentros.</i>
                     </p>
-                    <a href="#" class="btn btn-outline-light px-4 py-2 rounded-pill">
+                    <a href="{{ route('Arbitros.index')}}" class="btn btn-outline-light px-4 py-2 rounded-pill">
                         ➡️ Ver Árbitros
                     </a>
                 </div>
             </div>
         </div>
 
-        <a href="{{ route('usuario.index') }}" class="btn btn-outline-light px-4 py-2 rounded-pill">
+        <a href="#}" class="btn btn-outline-light px-4 py-2 rounded-pill">
                         ➡️ Vista Usuario
         </a>
 

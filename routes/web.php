@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\ArbitrosController;
 use App\Http\Controllers\CanchasController; 
 use App\Http\Controllers\MunicipiosController;
 use App\Http\Controllers\UserController;
@@ -10,7 +11,7 @@ Route::get('/', function () {
 })->name('welcome');
 
 //RUTA USUARIO
-Route::get('/', [UserController::class, 'index'])->name('vistaUsuario');
+//Route::get('/', [UserController::class, 'index'])->name('vistaUsuario');//
 
 
 
@@ -29,3 +30,11 @@ Route::post('/Canchas/store', [CanchasController::class, 'store'])->name('cancha
 Route::get('/Canchas/edit/{id}', [CanchasController::class, 'edit'])->name('canchas.edit');
 Route::post('/Canchas/update/{id}', [CanchasController::class, 'update'])->name('canchas.update');
 Route::post('/Canchas/delete/{id}', [CanchasController::class, 'destroy'])->name('canchas.destroy');
+
+//Rutas arbitros
+Route::get('/Arbitros/index',[ArbitrosController::class,'index'])->name('Arbitros.index');
+Route::get('/Arbitros/create', [ArbitrosController::class, 'create'])->name('Arbitros.create');
+Route::post('/Arbitros/store', [ArbitrosController::class, 'store'])->name('Arbitros.store');
+Route::get('/Arbitros/edit/{id}', [ArbitrosController::class, 'edit'])->name('Arbitros.edit');
+Route::post('/Arbitros/update/{id}', [ArbitrosController::class, 'update'])->name('Arbitros.update');
+Route::post('/Arbitros/delete/{id}', [ArbitrosController::class, 'destroy'])->name('Arbitros.destroy');

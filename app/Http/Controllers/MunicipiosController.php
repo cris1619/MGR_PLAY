@@ -7,7 +7,7 @@ use Illuminate\Http\Request;
 
 class MunicipiosController extends Controller
 {
-    // GET: lista de municipios
+    
     public function index()
     {
         $municipios = Municipios::all();
