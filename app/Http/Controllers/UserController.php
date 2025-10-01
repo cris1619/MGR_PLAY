@@ -12,6 +12,6 @@ class UserController extends Controller
     {
         $municipios = municipios::all();
         $canchas = Canchas::all();
-        return view('/vistaUsuario', compact('municipios', 'canchas'));
+        return view('usuario.vistaUsuario', compact('municipios', 'canchas'));
     }
 }

@@ -16,4 +16,9 @@ class municipios extends Model
     {
         return $this->hasMany(Canchas::class, 'idMunicipio');
     }
+
+    public function equipos()
+    {
+        return $this->hasMany(Equipos::class, 'idMunicipio');
+    }
 }
