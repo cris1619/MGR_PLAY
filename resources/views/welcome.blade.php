@@ -77,7 +77,7 @@
                     <p class="card-text text-white-50">
                         <i>Explora los jugadores de cada equipo y sus estadísticas.</i>
                     </p>
-                    <a href="#" class="btn btn-outline-light px-4 py-2 rounded-pill">
+                    <a href="{{ route('jugadores.index') }}" class="btn btn-outline-light px-4 py-2 rounded-pill">
                         ➡️ Ver Jugadores
                     </a>
                 </div>
