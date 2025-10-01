@@ -138,7 +138,7 @@
                     <p class="card-text text-white-50">
                         <i>Conoce a los árbitros encargados de dirigir los encuentros.</i>
                     </p>
-                    <a href="#" class="btn btn-outline-light px-4 py-2 rounded-pill">
+                    <a href="{{ route('Arbitros.index')}}" class="btn btn-outline-light px-4 py-2 rounded-pill">
                         ➡️ Ver Árbitros
                     </a>
                 </div>
