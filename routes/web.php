@@ -14,7 +14,7 @@ Route::get('/', function () {
 
 //RUTA USUARIO
 Route::get('/usuario/index', [UserController::class, 'index'])->name('usuario.vistaUsuario');
-//Route::get('/', [UserController::class, 'index'])->name('vistaUsuario');//
+
 
 
 
