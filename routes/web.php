@@ -3,7 +3,6 @@
 use App\Http\Controllers\CanchasController;
 use App\Http\Controllers\EquiposController;
 use App\Http\Controllers\ArbitrosController;
-use App\Http\Controllers\CanchasController; 
 use App\Http\Controllers\MunicipiosController;
 use App\Http\Controllers\UserController;
 use Illuminate\Support\Facades\Route;
@@ -14,7 +13,7 @@ Route::get('/', function () {
 
 //RUTA USUARIO
 Route::get('/usuario/index', [UserController::class, 'index'])->name('usuario.vistaUsuario');
-//Route::get('/', [UserController::class, 'index'])->name('vistaUsuario');//
+
 
 
 

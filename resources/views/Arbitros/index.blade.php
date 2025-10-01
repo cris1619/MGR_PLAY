@@ -51,18 +51,18 @@ Arbitros | MGR PLAY
         </a>
     </div>
 
-    <div class="row justify-content-center">
-        <div class="col-md-10">
-            <table class="table table-striped table-bordered text-center align-middle shadow-sm">
-                <thead class="table-dark">
-                    <tr>
-                        <th>Nombre</th>
-                        <th>Apellido</th>
-                        <th>Acciones</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    @foreach($arbitros as $arbitro)
+<div class="row justify-content-center">
+    <div class="col-md-10">
+        <table class="table table-striped table-bordered text-center align-middle shadow-sm">
+            <thead class="table-dark">
+                <tr>
+                    <th>Nombre</th>
+                    <th>Apellido</th>
+                    <th>Acciones</th>
+                </tr>
+            </thead>
+            <tbody>
+                @forelse($arbitros as $arbitro)
                     <tr>
                         <td><b>{{ $arbitro->nombre }}</b></td>
                         <td><b>{{ $arbitro->apellido }}</b></td>
@@ -75,19 +75,27 @@ Arbitros | MGR PLAY
                             <form action="{{ route('Arbitros.destroy', $arbitro->id) }}"
                                 method="POST"
                                 class="d-inline"
-                                onsubmit="return confirm('¿Estás seguro de eliminar este municipio?')">
+                                onsubmit="return confirm('¿Estás seguro de eliminar este árbitro?')">
                                 @csrf
+                                @method('DELETE')
                                 <button type="submit" class="btn btn-warning btn-sm rounded-pill px-3">
                                     🗑️ Eliminar
                                 </button>
                             </form>
                         </td>
                     </tr>
-                    @endforeach
-                </tbody>
-            </table>
-        </div>
+                @empty
+                    <tr>
+                        <td colspan="3" class="text-center text-muted">
+                            ⚠️ No hay árbitros registrados
+                        </td>
+                    </tr>
+                @endforelse
+            </tbody>
+        </table>
     </div>
+</div>
+
 
     <div class="container text-center mt-4">
         <a href="{{ route('welcome') }}" class="btn btn-secondary">Volver al menu</a>
