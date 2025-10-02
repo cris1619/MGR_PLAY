@@ -7,11 +7,12 @@
 @section('titleContent')
     <nav class="navbar">
         <div class="navbar-left">
-            <a href="#" class="logo">
+            <a href="{{ route('welcome') }}" class="logo">
                 <img src="{{ url('img/logoSinFondo.png') }}" alt="MGR PLAY" style="height: 50px; margin-right: 30px;">
                 🏟️ CANCHAS
-            </a>
+            </a> 
         </div>
+        <a href="{{ route('welcome') }}" class="btn btn-secondary">Volver al menú</a>
     </nav>
 @endsection
 
@@ -41,6 +42,15 @@
     .cancha-card:hover {
         transform: translateY(-5px);
     }
+
+    /* Estilos barra de búsqueda */
+    .filter-card {
+        background: #1B1F23;
+        padding: 15px 20px;
+        border-radius: 15px;
+        margin-bottom: 25px;
+        box-shadow: 0 2px 10px rgba(0,0,0,0.5);
+    }
 </style>
 
 <div class="container mt-5">
@@ -51,31 +61,42 @@
         </a>
     </div>
 
-    <!-- 🔍 Formulario de búsqueda -->
-    <form method="GET" action="{{ route('canchas.index') }}" class="mb-4">
-        <div class="row">
-            <div class="col-md-8">
-                <select name="IdMunicipio" class="form-select rounded-pill">
-                    <option value="">-- Selecciona un municipio --</option>
-                    @foreach($municipios as $municipio)
-                        <option value="{{ $municipio->id }}" 
-                            {{ request('IdMunicipio') == $municipio->id ? 'selected' : '' }}>
-                            {{ $municipio->nombre }}
-                        </option>
-                    @endforeach
-                </select>
+    <!-- 🔍 Barra de búsqueda mejorada -->
+    <div class="filter-card">
+        <form method="GET" action="{{ route('canchas.index') }}">
+            <div class="row g-3 align-items-center">
+                
+                <!-- Filtrar por municipio -->
+                <div class="col-md-9">
+                    <select name="IdMunicipio" class="form-select rounded-pill">
+                        <option value="">Todos los municipios</option>
+                        @foreach($municipios as $municipio)
+                            <option value="{{ $municipio->id }}" 
+                                {{ request('IdMunicipio') == $municipio->id ? 'selected' : '' }}>
+                                {{ $municipio->nombre }}
+                            </option>
+                        @endforeach
+                    </select>
+                </div>
+
+                <!-- Botones -->
+                <div class="col-md-3 d-flex gap-2">
+                    <button type="submit" class="btn btn-primary rounded-pill px-4">Buscar</button>
+                    <a href="{{ route('canchas.index') }}" class="btn btn-outline-light rounded-pill px-4">Limpiar</a>
+                </div>
             </div>
-            <div class="col-md-4 d-flex gap-2">
-                <button type="submit" class="btn btn-primary rounded-pill px-4">Buscar</button>
-                <a href="{{ route('canchas.index') }}" class="btn btn-outline-light rounded-pill px-4">Limpiar</a>
-            </div>
-        </div>
-    </form>
+        </form>
+    </div>
 
     <!-- 🔎 Mostrar filtro activo -->
-    @if(request('IdMunicipio'))
+    @if(request('IdMunicipio') || request('search'))
         <div class="alert alert-info text-center rounded-pill">
-            Mostrando canchas en: <b>{{ $municipios->find(request('IdMunicipio'))->nombre }}</b>
+            @if(request('IdMunicipio'))
+                Mostrando canchas en: <b>{{ $municipios->find(request('IdMunicipio'))->nombre }}</b>
+            @endif
+            @if(request('search'))
+                &nbsp; | &nbsp; Coincidencias con: <b>{{ request('search') }}</b>
+            @endif
         </div>
     @endif
 

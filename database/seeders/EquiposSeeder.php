@@ -13,7 +13,7 @@ class EquiposSeeder extends Seeder
      */
     public function run(): void
     {
-        $municipioIds = [1, 2, 4, 6, 7, 9, 10, 11, 12, 13, 14, 15];
+        $municipioIds = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12];
         $municipioNombres = [
             1 => 'Málaga', 
             2 => 'Concepción', 
