@@ -7,7 +7,7 @@
 @section('titleContent')
     <nav class="navbar">
         <div class="navbar-left">
-            <a href="#" class="logo">
+            <a href="{{ route('welcome') }}" class="logo">
                 <img src="{{ url('img/logoSinFondo.png') }}" alt="MGR PLAY" style="height: 50px; margin-right: 30px;">
                 ⚽ JUGADORES
             </a>
@@ -57,7 +57,6 @@
                 <tr>
                     <th>#</th>
                     <th>Nombre</th>
-                    <th>Apellido</th>
                     <th>Posición</th>
                     <th>Fecha Nacimiento</th>
                     <th>Altura (m)</th>
@@ -71,8 +70,7 @@
                 @forelse($jugadores as $jugador)
                     <tr>
                         <td>{{ $jugador->id }}</td>
-                        <td>{{ $jugador->nombre }}</td>
-                        <td>{{ $jugador->apellido }}</td>
+                        <td>{{ $jugador->nombreCompleto() }}</td>
                         <td>{{ $jugador->posicion }}</td>
                         <td>{{ \Carbon\Carbon::parse($jugador->fechaNacimiento)->format('d/m/Y') }}</td>
                         <td>{{ number_format($jugador->altura, 2) }}</td>

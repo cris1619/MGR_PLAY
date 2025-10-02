@@ -7,7 +7,7 @@
 @section('titleContent')
     <nav class="navbar">
         <div class="navbar-left">
-            <a href="#" class="logo">
+            <a href="{{ route('welcome') }}" class="logo">
                 <img src="{{ url('img/logoSinFondo.png') }}" alt="MGR PLAY" style="height: 50px; margin-right: 30px;">
                 MALAGA GARCIA ROVIRA PLAY
             </a>
@@ -151,6 +151,7 @@
 
     </div>
 </div>
+
 
 
 @endsection

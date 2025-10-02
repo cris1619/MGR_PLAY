@@ -7,14 +7,13 @@
 @section('titleContent')
     <nav class="navbar">
         <div class="navbar-left">
-            <a href="#" class="logo">
+            <a href="{{ route('welcome') }}" class="logo">
                 <img src="{{ url('img/logoSinFondo.png') }}" alt="MGR PLAY" style="height: 50px; margin-right: 30px;">
                 🏟️ CANCHAS
             </a>
         </div>
     </nav>
 @endsection
-
 
 @section('content')
 <style>
@@ -52,8 +51,37 @@
         </a>
     </div>
 
+    <!-- 🔍 Formulario de búsqueda -->
+    <form method="GET" action="{{ route('canchas.index') }}" class="mb-4">
+        <div class="row">
+            <div class="col-md-8">
+                <select name="IdMunicipio" class="form-select rounded-pill">
+                    <option value="">-- Selecciona un municipio --</option>
+                    @foreach($municipios as $municipio)
+                        <option value="{{ $municipio->id }}" 
+                            {{ request('IdMunicipio') == $municipio->id ? 'selected' : '' }}>
+                            {{ $municipio->nombre }}
+                        </option>
+                    @endforeach
+                </select>
+            </div>
+            <div class="col-md-4 d-flex gap-2">
+                <button type="submit" class="btn btn-primary rounded-pill px-4">Buscar</button>
+                <a href="{{ route('canchas.index') }}" class="btn btn-outline-light rounded-pill px-4">Limpiar</a>
+            </div>
+        </div>
+    </form>
+
+    <!-- 🔎 Mostrar filtro activo -->
+    @if(request('IdMunicipio'))
+        <div class="alert alert-info text-center rounded-pill">
+            Mostrando canchas en: <b>{{ $municipios->find(request('IdMunicipio'))->nombre }}</b>
+        </div>
+    @endif
+
+    <!-- 📌 Listado de canchas -->
     <div class="row justify-content-center g-4">
-        @foreach($canchas as $cancha)
+        @forelse($canchas as $cancha)
             <div class="col-md-4">
                 <div class="card shadow-lg border-0 rounded-4 cancha-card">
                     <div class="card-body text-center">
@@ -79,15 +107,18 @@
                                 </button>
                             </form>
                         </div>
-
                     </div>
                 </div>
             </div>
-        @endforeach
+        @empty
+            <div class="text-center text-white mt-4">
+                <h5>No hay canchas registradas en este municipio.</h5>
+            </div>
+        @endforelse
+    </div>
 
-                <div class="container text-center mt-4">
-            <a href="{{ route('welcome') }}" class="btn btn-secondary">Volver al menu</a>
-        </div>
+    <div class="container text-center mt-4">
+        <a href="{{ route('welcome') }}" class="btn btn-secondary">Volver al menú</a>
     </div>
 </div>
 @endsection
