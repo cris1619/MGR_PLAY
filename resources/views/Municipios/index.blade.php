@@ -12,6 +12,7 @@
                 🌍 MUNICIPIOS
             </a>
         </div>
+        <a href="{{ route('welcome') }}" class="btn btn-secondary">Volver al menú</a>
     </nav>
 @endsection
 
