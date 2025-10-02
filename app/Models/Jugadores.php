@@ -21,4 +21,9 @@ class Jugadores extends Model
         {
             return $this->belongsTo(Equipos::class, 'idEquipo');
         }
+
+        public function nombreCompleto()
+        {
+            return $this->nombre . ' ' . $this->apellido;
+        }
 }

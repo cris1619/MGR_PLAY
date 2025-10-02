@@ -7,7 +7,7 @@
 @section('titleContent')
     <nav class="navbar">
         <div class="navbar-left">
-            <a href="#" class="logo">
+            <a href="{{ route('welcome') }}" class="logo">
                 <img src="{{ url('img/logoSinFondo.png') }}" alt="MGR PLAY" style="height: 50px; margin-right: 30px;">
                 👥 EQUIPOS
             </a>
@@ -114,4 +114,31 @@
         <a href="{{ route('welcome') }}" class="btn btn-secondary">Volver al menú</a>
     </div>
 </div>
+@if(session('success'))
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            Swal.fire({
+                icon: 'success',
+                title: '¡Éxito!',
+                text: "{{ session('success') }}",
+                confirmButtonText: 'Aceptar',
+                timer: 3000
+            });
+        });
+    </script>
+@endif
+
+@if(session('error'))
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            Swal.fire({
+                icon: 'error',
+                title: '¡Error!',
+                text: "{{ session('error') }}",
+                confirmButtonText: 'Aceptar',
+                timer: 4000
+            });
+        });
+    </script>
+@endif
 @endsection
