@@ -1,6 +1,7 @@
 <?php
 
 namespace App\Http\Controllers;
+
 use App\Models\Municipios;
 use App\Models\Canchas;
 use Illuminate\Http\Request;
@@ -10,10 +11,18 @@ class CanchasController extends Controller
     /**
      * Display a listing of the resource.
      */
-    public function index()
+    public function index(Request $request)
     {
-        $canchas = Canchas::all();
-        $municipios = Municipios::all();
+        $municipios = municipios::all();
+
+        // Si hay filtro, solo trae las canchas de ese municipio
+        if ($request->filled('IdMunicipio')) {
+            $canchas = Canchas::where('IdMunicipio', $request->IdMunicipio)->get();
+        } else {
+            // Si no hay filtro, muestra todas
+            $canchas = Canchas::all();
+        }
+
         return view('canchas.index', compact('canchas', 'municipios'));
     }
 
@@ -65,7 +74,7 @@ class CanchasController extends Controller
         $canchas  = Canchas::findOrFail($id);
         $canchas->update($request->all());
         return redirect()->route('canchas.index')
-                         ->with('success', 'Cancha actualizada correctamente');
+            ->with('success', 'Cancha actualizada correctamente');
     }
 
     /**
@@ -76,6 +85,6 @@ class CanchasController extends Controller
         $canchas = Canchas::findorFail($id);
         $canchas->delete();
         return redirect()->route('canchas.index')
-                         ->with('success', 'Cancha eliminada correctamente');
+            ->with('success', 'Cancha eliminada correctamente');
     }
 }

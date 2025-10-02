@@ -52,7 +52,7 @@
     </div>
 
     <div class="row justify-content-center g-4">
-        @foreach($municipios as $municipio)
+        @forelse($municipios as $municipio)
             <div class="col-md-4">
                 <div class="card shadow-lg border-0 rounded-4 municipio-card">
                     <div class="card-body text-center">
@@ -77,10 +77,17 @@
                     </div>
                 </div>
             </div>
-        @endforeach
+        @empty
+            <div class="text-center text-white mt-4">
+                <h5>No hay municipios registrados aún.</h5>
+            </div>
+        @endforelse
+
         <div class="container text-center mt-4">
-            <a href="{{ route('welcome') }}" class="btn btn-secondary">Volver al menu</a>
+            <a href="{{ route('welcome') }}" class="btn btn-secondary">Volver al menú</a>
         </div>
+    </div>
+</div>
 
 @if(session('success'))
     <script>
@@ -94,39 +101,19 @@
             });
         });
     </script>
-    @endif
-    <script>
-        function confirmarEliminacion(event) {
-            event.preventDefault();
-            const form = event.target.closest('form');
+@endif
 
-            Swal.fire({
-                title: '¿Estás seguro?',
-                text: "¡No podrás revertir esto!",
-                icon: 'warning',
-                showCancelButton: true,
-                confirmButtonColor: '#3085d6',
-                cancelButtonColor: '#d33',
-                confirmButtonText: 'Sí, eliminar',
-                cancelButtonText: 'Cancelar'
-            }).then((result) => {
-                if (result.isConfirmed) {
-                    form.submit();
-                }
-            });
-        }
-</script>
 @if(session('error'))
-<script>
-    document.addEventListener('DOMContentLoaded', function() {
-        Swal.fire({
-            icon: 'error',
-            title: '¡Error!',
-            text: "{{ session('error') }}",
-            confirmButtonText: 'Aceptar',
-            timer: 4000
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            Swal.fire({
+                icon: 'error',
+                title: '¡Error!',
+                text: "{{ session('error') }}",
+                confirmButtonText: 'Aceptar',
+                timer: 4000
+            });
         });
-    });
-</script>
+    </script>
 @endif
 @endsection
