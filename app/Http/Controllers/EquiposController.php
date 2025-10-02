@@ -11,11 +11,32 @@ class EquiposController extends Controller
     /**
      * Display a listing of the resource.
      */
-    public function index()
+    public function index(Request $request)
     {
-        $equipos = Equipos::all();
-        $municipios = municipios::all();
-        return view('equipos.index', compact('equipos', 'municipios'));
+        $query = Equipos::with('municipio');
+
+        // Buscar por nombre
+        if ($request->filled('search')) {
+            $query->where('nombre', 'like', '%' . $request->search . '%');
+        }
+
+        // Buscar por municipio
+        if ($request->filled('IdMunicipio')) {
+            $query->where('IdMunicipio', $request->IdMunicipio);
+        }
+
+        // 🔹 Límite de registros (10, 25, 50 o todos)
+        $perPage = $request->input('per_page', 10); // por defecto 10
+
+        if ($perPage == 'all') {
+            $equipos = $query->get(); // trae todos
+        } else {
+            $equipos = $query->paginate((int)$perPage)->appends($request->query());
+        }
+
+        $municipios = Municipios::all();
+
+        return view('equipos.index', compact('equipos', 'municipios', 'perPage'));
     }
 
     /**
