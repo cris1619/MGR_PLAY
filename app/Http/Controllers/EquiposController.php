@@ -91,8 +91,19 @@ class EquiposController extends Controller
      */
     public function destroy($id)
     {
-        $equipos = Equipos::find($id);
+
+        $equipos = Equipos::findOrFail($id);
+
+        // Validar si el equipo tiene jugadores asociados
+        if ($equipos->jugadores()->count() > 0) {
+            return redirect()->route('equipos.index')
+                ->with('error', 'No puedes eliminar este equipo porque tiene jugadores asociados.');
+        }
+
         $equipos->delete();
-        return redirect()->route('equipos.index')->with('success', 'Equipo eliminado con éxito');
+
+        return redirect()->route('equipos.index')
+            ->with('success', 'Equipo eliminado correctamente.');
     }
 }
+
