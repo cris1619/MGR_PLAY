@@ -69,7 +69,7 @@
                 <tr>
                     <td>{{ $equipo->id }}</td>
                     <td>
-                        <img src="{{ asset('storage/' . $equipo->escudo) }}" 
+                        <img src="{{ asset('resources/img' . $equipo->escudo) }}" 
                              alt="Escudo {{ $equipo->nombre }}" 
                              width="50" height="50"
                              class="rounded-circle border">

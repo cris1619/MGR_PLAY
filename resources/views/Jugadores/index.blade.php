@@ -71,7 +71,7 @@
                 @forelse($jugadores as $jugador)
                     <tr>
                         <td>{{ $jugador->id }}</td>
-                        <td><b>{{ $jugador->nombre }}</b></td>
+                        <td>{{ $jugador->nombre }}</td>
                         <td>{{ $jugador->apellido }}</td>
                         <td>{{ $jugador->posicion }}</td>
                         <td>{{ \Carbon\Carbon::parse($jugador->fechaNacimiento)->format('d/m/Y') }}</td>
@@ -82,7 +82,7 @@
                                 {{ ucfirst($jugador->estado) }}
                             </span>
                         </td>
-                        <td>{{ $jugador->equipo->nombre ?? 'Sin asignar' }}</td>
+                        <td>{{ $jugador->equipos->nombre ?? 'Sin asignar' }}</td>
                         <td>
                             <a href="" 
                                class="btn btn-success btn-sm rounded-pill px-3">
