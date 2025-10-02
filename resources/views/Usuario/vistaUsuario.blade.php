@@ -284,10 +284,10 @@
             </button>
             <div class="collapse mt-2" id="equipos{{ $municipio->id }}">
               <ul class="list-unstyled ps-3">
-                @forelse ($municipio->canchas as $cancha)
+                @forelse ($municipio->equipos as $equipo)
                   <li>
-                    <a href="{{ url('/cancha/' . $cancha->id) }}" class="text-white text-decoration-underline">
-                      {{ $cancha->nombre }}
+                    <a href="{{ url('/equipo/' . $equipo->id) }}" class="text-white text-decoration-underline">
+                      {{ $equipo->nombre }}
                     </a>
                   </li>
                 @empty
