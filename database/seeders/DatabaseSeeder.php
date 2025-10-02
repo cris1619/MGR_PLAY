@@ -16,5 +16,21 @@ class DatabaseSeeder extends Seeder
         $this->call([
             MunicipiosSeeder::class,
         ]);
+
+        $this->call([
+            CanchasSeeder::class,
+        ]);
+
+        $this->call([
+            ArbitrosSeeder::class,
+        ]);
+
+        $this->call([
+            EquiposSeeder::class,
+        ]);
+
+        $this->call([
+            JugadoresSeeder::class,
+        ]);
     }
 }
