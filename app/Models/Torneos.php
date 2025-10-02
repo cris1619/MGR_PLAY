@@ -1,0 +1,29 @@
+<?php
+
+namespace App\Models;
+
+use Illuminate\Database\Eloquent\Model;
+
+class Torneos extends Model
+{
+
+    protected $table = 'torneos';
+     protected $fillable = [
+        'idMunicipio',
+        'nombre',
+        'descripcion',
+        'numeroEquipos',
+        'estado',
+        'tipoTorneo',
+        'fechaInicio',
+        'fechaFin',
+        'reglas',
+        'premio',
+    ];
+
+    public function municipio()
+    {
+        return $this->belongsTo(Municipios::class, 'idMunicipio');
+    }
+
+}
