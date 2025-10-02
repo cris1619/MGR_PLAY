@@ -12,6 +12,7 @@ Arbitros | MGR PLAY
             ⚖️ ARBITROS
         </a>
     </div>
+    <a href="{{ route('welcome') }}" class="btn btn-secondary">Volver al menu</a>
 </nav>
 @endsection
 
