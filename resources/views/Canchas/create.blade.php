@@ -46,7 +46,7 @@ Crear Canchas | MGR PLAY
 
     
     <button type="submit" class="btn btn-success">Guardar</button>
-    <a href="{{ route('municipios.index') }}" class="btn btn-warning">Volver</a>
+    <a href="{{ route('canchas.index') }}" class="btn btn-warning">Volver</a>
 </form>
 
 

@@ -11,21 +11,59 @@ class JugadoresController extends Controller
     /**
      * Display a listing of the resource.
      */
-    public function index()
+    public function index(Request $request)
     {
+        // Obtener equipos para el select
         $equipos = Equipos::all();
-        $jugadores = Jugadores::all();
-        return view('jugadores.index', compact('equipos','jugadores'));
+
+        // Lista de posiciones (puedes cambiarla si usas tabla de posiciones en BD)
+        $posiciones = ['portero', 'defensa', 'mediocentro', 'delantero', 'lateral izquierdo', 'lateral derecho', 'defensa central', 'extremo izquierdo', 'extremo derecho'];
+
+        // Query base
+        $query = Jugadores::with('equipos');
+
+        // 🔍 Filtro por nombre
+        if ($request->filled('search')) {
+            $query->where(function ($q) use ($request) {
+                $q->where('nombre', 'like', '%' . $request->search . '%')
+                    ->orWhere('apellido', 'like', '%' . $request->search . '%');
+            });
+        }
+
+        // 🎯 Filtro por posición
+        if ($request->filled('posicion')) {
+            $query->where('posicion', $request->posicion);
+        }
+
+        // 👥 Filtro por equipo
+        if ($request->filled('idEquipo')) {
+            $query->where('idEquipo', $request->idEquipo);
+        }
+
+        // 📌 Paginación
+        $jugadores = $query->paginate(10)->appends($request->all());
+
+        return view('jugadores.index', compact('equipos', 'jugadores', 'posiciones'));
     }
+
 
     /**
      * Show the form for creating a new resource.
      */
     public function create()
     {
-        $jugadores = Jugadores::all();
         $equipos = Equipos::all();
-        return view('jugadores.create', compact('equipos', 'jugadores'));
+        $posiciones = [
+            'portero',
+            'defensa central',
+            'lateral izquierdo',
+            'lateral derecho',
+            'mediocentro',
+            'extremo izquierdo',
+            'extremo derecho',
+            'delantero centro'
+        ];
+        return view('jugadores.create', compact('equipos', 'posiciones'));
     }
 
     /**
@@ -33,9 +71,10 @@ class JugadoresController extends Controller
      */
     public function store(Request $request)
     {
-        $jugadores = Jugadores::create($request->all());
-        return redirect()->route('jugadores.index')->with('success', 'Jugador creado con éxito');
+        Jugadores::create($request->all());
+        return redirect()->route('jugadores.index')->with('success', 'Jugador creado correctamente ✅');
     }
+
 
     /**
      * Display the specified resource.
@@ -50,16 +89,27 @@ class JugadoresController extends Controller
      */
     public function edit($id)
     {
-        $jugadores = Jugadores::findOrFail($id);
+        $jugadores = Jugadores::find($id);
         $equipos = Equipos::all();
-        return view('jugadores.edit', compact('equipos', 'jugadores'));
+        $posiciones = [
+            'portero',
+            'defensa central',
+            'lateral izquierdo',
+            'lateral derecho',
+            'mediocentro',
+            'extremo izquierdo',
+            'extremo derecho',
+            'delantero centro'
+        ];
+        return view('jugadores.edit', compact('equipos', 'jugadores', 'posiciones'));
     }
 
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, Jugadores $jugadores)
+    public function update(Request $request, $id)
     {
+        $jugadores = Jugadores::find($id);
         $jugadores->update($request->all());
         return redirect()->route('jugadores.index')->with('success', 'Jugador actualizado con éxito');
     }
@@ -69,8 +119,10 @@ class JugadoresController extends Controller
      */
     public function destroy($id)
     {
-        $jugadores = Jugadores::findOrFail($id);
+        $jugadores = Jugadores::findorFail($id);
         $jugadores->delete();
-        return redirect()->route('jugadores.index')->with('success', 'Jugador eliminado con éxito');
+        return redirect()->route('jugadores.index')
+            ->with('success', 'Jugador eliminado correctamente');
     }
 }
+
