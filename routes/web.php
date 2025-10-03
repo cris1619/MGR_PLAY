@@ -15,6 +15,7 @@ Route::get('/', function () {
 //RUTA USUARIO
 Route::get('/usuario/index', [UserController::class, 'index'])->name('usuario.vistaUsuario');
 Route::get('/usuario/listaEquipos', [UserController::class, 'listaEquipos'])->name('usuario.listaEquipos');
+Route::get('/usuario/listaJugadores', [UserController::class, 'listaJugadores'])->name('usuario.listaJugadores');
 
 
 

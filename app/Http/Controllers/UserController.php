@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Canchas;
 use App\Models\Equipos;
+use App\Models\Jugadores;
 use App\Models\municipios;
 use Illuminate\Http\Request;
 
@@ -42,6 +43,44 @@ class UserController extends Controller
 
     return view('Usuario.listaEquipos', compact('equipos', 'municipios'));
 }
+   public function listaJugadores(Request $request)
+{
+    // Filtros
+    $query = Jugadores::with('equipos'); // Cargamos relación con equipos
+
+    // 🔍 Buscar por nombre o apellido
+    if ($request->filled('search')) {
+        $search = $request->search;
+        $query->where(function ($q) use ($search) {
+            $q->where('nombre', 'like', "%$search%")
+              ->orWhere('apellido', 'like', "%$search%");
+        });
+    }
+
+    // 📌 Filtrar por posición
+    if ($request->filled('posicion')) {
+        $query->where('posicion', $request->posicion);
+    }
+
+    // 📌 Filtrar por equipo
+    if ($request->filled('idEquipo')) {
+        $query->where('idEquipo', $request->idEquipo);
+    }
+
+    // 📌 Paginación (con opción "todos")
+    $perPage = $request->get('per_page', 10);
+    if ($perPage === 'all') {
+        $jugadores = $query->get();
+    } else {
+        $jugadores = $query->paginate($perPage)->appends($request->query());
+    }
+
+    // Pasamos también la lista de equipos al filtro
+    $equipos = Equipos::all();
+
+    return view('usuario.listaJugadores', compact('jugadores', 'equipos'));
+}
+
 
 
 }
