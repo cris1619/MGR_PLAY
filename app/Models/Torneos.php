@@ -12,6 +12,7 @@ class Torneos extends Model
         'idMunicipio',
         'nombre',
         'descripcion',
+        'logo',
         'numeroEquipos',
         'estado',
         'tipoTorneo',
