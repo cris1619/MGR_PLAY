@@ -17,6 +17,7 @@ return new class extends Migration
             $table->foreign('idMunicipio')->references('id')->on('municipios');
             $table->string('nombre');
             $table->text('descripcion');
+            $table->string('logo');
             $table->integer('numeroEquipos');
             $table->enum('estado', ['activo', 'inactivo'])->default('activo');
             $table->enum('tipoTorneo', ['FaseGrupos'])->default('FaseGrupos');
