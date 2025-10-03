@@ -182,7 +182,7 @@
                     <ul class="nav-menu">
                         <li><a href="#">TORNEOS</a></li>
                         <li><a href="{{ route('usuario.listaEquipos') }}">EQUIPOS</a></li>
-                        <li><a href="#">JUGADORES</a></li>
+                        <li><a href="{{ route('usuario.listaJugadores') }}">JUGADORES</a></li>
                         <li><a href="#">PARTIDOS</a></li>
                     </ul>
                 </div>
