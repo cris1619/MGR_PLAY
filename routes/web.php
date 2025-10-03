@@ -6,6 +6,7 @@ use App\Http\Controllers\ArbitrosController;
 use App\Http\Controllers\JugadoresController;
 use App\Http\Controllers\MunicipiosController;
 use App\Http\Controllers\UserController;
+use App\Http\Controllers\TorneosController;
 use Illuminate\Support\Facades\Route;
 
 Route::get('/', function () {
@@ -60,3 +61,11 @@ Route::post('/Jugadores/store', [JugadoresController::class, 'store'])->name('ju
 Route::get('/Jugadores/edit/{id}', [JugadoresController::class, 'edit'])->name('jugadores.edit');
 Route::post('/Jugadores/update/{id}', [JugadoresController::class, 'update'])->name('jugadores.update');
 Route::post('/Jugadores/delete/{id}', [JugadoresController::class, 'destroy'])->name('jugadores.destroy');
+
+//Rutas Torneos
+Route::get('/Torneos/index', [TorneosController::class, 'index'])->name('torneos.index');
+Route::get('/Torneos/create', [TorneosController::class, 'create'])->name('torneos.create');
+Route::post('/Torneos/store', [TorneosController::class, 'store'])->name('torneos.store');
+Route::get('/Torneos/edit/{id}', [TorneosController::class, 'edit'])->name('torneos.edit');
+Route::post('/Torneos/update/{id}', [TorneosController::class, 'update'])->name('torneos.update');
+Route::post('/Torneos/delete/{id}', [TorneosController::class, 'destroy'])->name('torneos.destroy');

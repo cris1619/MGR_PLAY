@@ -49,7 +49,7 @@
                     <p class="card-text text-white-50">
                         <i>Gestiona los torneos, organiza sedes y sigue el progreso.</i>
                     </p>
-                    <a href="#" class="btn btn-outline-light px-4 py-2 rounded-pill">
+                    <a href="{{ route('torneos.index') }}" class="btn btn-outline-light px-4 py-2 rounded-pill">
                         ➡️ Ver Torneos
                     </a>
                 </div>

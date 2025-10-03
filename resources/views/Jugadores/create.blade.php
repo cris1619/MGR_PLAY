@@ -45,6 +45,7 @@ Crear Jugador | MGR PLAY
     .btn-primary {
         border-radius: 20px;
     }
+    
 </style>
 
 <div class="container mt-5">
