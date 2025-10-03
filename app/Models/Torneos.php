@@ -23,7 +23,7 @@ class Torneos extends Model
         'premio',
     ];
 
-    public function municipio()
+    public function municipios()
     {
         return $this->belongsTo(Municipios::class, 'idMunicipio');
     }
