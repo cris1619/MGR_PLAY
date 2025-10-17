@@ -77,7 +77,7 @@ Jugadores | MGR PLAY
                     <option value="Defensa" {{ request('posicion') == 'defensa central' ? 'selected' : '' }}>Defensa central</option>
                     <option value="Mediocampo" {{ request('posicion') == 'lateral izquierdo' ? 'selected' : '' }}>Lateral izquierdo</option>
                     <option value="Mediocampo" {{ request('posicion') == 'lateral derecho' ? 'selected' : '' }}>Lateral derecho</option>
-                    <option value="Mediocampo" {{ request('posicion') == 'mediocentro' ? 'selected' : '' }}>Mediocentro</option>
+                    <option value="Mediocampo" {{ request('posicion') == 'Mediocentro' ? 'selected' : '' }}>Mediocentro</option>
                     <option value="Delantero" {{ request('posicion') == 'extremo izquierdo' ? 'selected' : '' }}>Extremo izquierdo</option>
                     <option value="Delantero" {{ request('posicion') == 'extremo derecho' ? 'selected' : '' }}>Extremo derecho</option>
                     <option value="Delantero" {{ request('posicion') == 'delantero centro' ? 'selected' : '' }}>Delantero centro</option>

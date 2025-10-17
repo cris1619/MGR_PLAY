@@ -139,6 +139,7 @@ Torneos | MGR PLAY
             <tr>
                 <th>#</th>
                 <th>Nombre</th>
+                <th>Descripción</th>
                 <th>Municipio</th>
                 <th>Deporte</th>
                 <th>Formato</th>
@@ -159,6 +160,7 @@ Torneos | MGR PLAY
                     @endif
                     {{ $torneo->nombre }}
                 </td>
+                <td>{{ $torneo->descripcion }}</td>
                 <td>{{ $torneo->municipios->nombre ?? 'Sin asignar' }}</td>
                 <td>{{ $torneo->tipoDeporte }}</td>
                 <td>{{ $torneo->formato }}</td>

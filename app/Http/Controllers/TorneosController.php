@@ -109,7 +109,8 @@ class TorneosController extends Controller
     public function edit($id)
     {
         $torneos = Torneos::findOrFail($id);
-        return view('torneos.edit', compact('torneos'));
+        $municipios = municipios::all();
+        return view('torneos.edit', compact('torneos', 'municipios'));
     }
 
     /**

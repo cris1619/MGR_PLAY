@@ -57,6 +57,7 @@ Arbitros | MGR PLAY
         <table class="table table-striped table-bordered text-center align-middle shadow-sm">
             <thead class="table-dark">
                 <tr>
+                    <th>Id</th>
                     <th>Nombre</th>
                     <th>Apellido</th>
                     <th>Acciones</th>
@@ -65,6 +66,7 @@ Arbitros | MGR PLAY
             <tbody>
                 @forelse($arbitros as $arbitro)
                     <tr>
+                        <td><b>{{ $arbitro->id }}</b></td>
                         <td><b>{{ $arbitro->nombre }}</b></td>
                         <td><b>{{ $arbitro->apellido }}</b></td>
                         <td>
