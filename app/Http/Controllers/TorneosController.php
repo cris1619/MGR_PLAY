@@ -2,13 +2,22 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Torneo;
+use App\Models\Equipo;
+use App\Models\Grupo;
+use App\Models\GrupoEquipo;
+use App\Models\Partido;
+use App\Models\Clasificacion;
+use App\Models\Equipos;
+use App\Models\Grupo_Equipo;
 use App\Models\Torneos;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 
 class TorneosController extends Controller
 {
     /**
-     * Display a listing of the resource.
+     * Muestra todos los torneos
      */
     public function index()
     {
@@ -17,7 +26,7 @@ class TorneosController extends Controller
     }
 
     /**
-     * Show the form for creating a new resource.
+     * Formulario de creación
      */
     public function create()
     {
@@ -25,7 +34,7 @@ class TorneosController extends Controller
     }
 
     /**
-     * Store a newly created resource in storage.
+     * Guarda un nuevo torneo
      */
     public function store(Request $request)
     {
@@ -39,13 +48,34 @@ class TorneosController extends Controller
     /**
      * Display the specified resource.
      */
-    public function show(Torneos $torneos)
+    public function show($id)
     {
-        //
+        $torneo = Torneos::with(['equipos', 'grupos.equipos', 'clasificacion'])->findOrFail($id);
+        return view('torneos.show', compact('torneo'));
     }
 
     /**
-     * Show the form for editing the specified resource.
+     * Editar torneo
+     */
+    public function edit($id)
+    {
+        $torneo = Torneos::findOrFail($id);
+        $equipos = Equipos::where('estado', 'activo')->get();
+        return view('torneos.edit', compact('torneo', 'equipos'));
+    }
+
+    /**
+     * Actualizar torneo
+     */
+    public function update(Request $request, $id)
+    {
+        $torneo = Torneos::findOrFail($id);
+        $torneo->update($request->all());
+        return redirect()->route('torneos.index')->with('success', 'Torneo actualizado correctamente.');
+    }
+
+    /**
+     * Eliminar torneo
      */
     public function edit($id)
     {
