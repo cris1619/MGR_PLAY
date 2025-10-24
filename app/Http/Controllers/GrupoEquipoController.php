@@ -2,10 +2,10 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Torneos;
+use App\Models\Grupo_Equipo;
 use Illuminate\Http\Request;
 
-class TorneosController extends Controller
+class GrupoEquipoController extends Controller
 {
     /**
      * Display a listing of the resource.
@@ -34,7 +34,7 @@ class TorneosController extends Controller
     /**
      * Display the specified resource.
      */
-    public function show(Torneos $torneos)
+    public function show(Grupo_Equipo $grupo_Equipo)
     {
         //
     }
@@ -42,7 +42,7 @@ class TorneosController extends Controller
     /**
      * Show the form for editing the specified resource.
      */
-    public function edit(Torneos $torneos)
+    public function edit(Grupo_Equipo $grupo_Equipo)
     {
         //
     }
@@ -50,7 +50,7 @@ class TorneosController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, Torneos $torneos)
+    public function update(Request $request, Grupo_Equipo $grupo_Equipo)
     {
         //
     }
@@ -58,7 +58,7 @@ class TorneosController extends Controller
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(Torneos $torneos)
+    public function destroy(Grupo_Equipo $grupo_Equipo)
     {
         //
     }

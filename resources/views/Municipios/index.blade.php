@@ -60,6 +60,9 @@
                         <h5 class="card-title text-white mb-3">
                             🏘️ <b>{{ $municipio->nombre }}</b>
                         </h5>
+                        <p class="text-white-50 mb-3">
+                         Id: <b>{{ $municipio->id }}</b>
+                        </p>
 
                         <div class="d-flex justify-content-center gap-2 mt-3">
                             <a href="{{ route('municipios.edit', $municipio->id) }}" 

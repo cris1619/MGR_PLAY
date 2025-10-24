@@ -18,6 +18,16 @@ Equipos | MGR PLAY
 
 @section('content')
 <style>
+
+    /* Estilo para la fila resaltada */
+    @keyframes highlight-fade {
+        from { background-color: #2d3748; }
+        to { background-color: transparent; }
+    }
+
+    .highlight {
+        animation: highlight-fade 3s ease-out;
+    }
     .navbar {
         background-color: #1B1F23;
         padding: 0 20px;
@@ -142,7 +152,7 @@ Equipos | MGR PLAY
             </thead>
             <tbody>
                 @forelse($equipos as $equipo)
-                <tr>
+                <tr class="{{ session('highlighted_equipo_id') == $equipo->id ? 'highlight' : '' }}">
                     <td>{{ $equipo->id }}</td>
                     <td>
                         <img src="{{ asset('resources/img' . $equipo->escudo) }}"

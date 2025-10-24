@@ -85,23 +85,9 @@ Crear Torneo | MGR PLAY
                     <label class="form-label">Logo</label>
                     <input type="file" name="logo" class="form-control" accept="image/*">
                 </div>
-
-                <!-- Número de equipos -->
-                <div class="col-md-6">
-                    <label class="form-label">Número de equipos</label>
-                    <input type="number" name="numeroEquipos" class="form-control" min="2" required>
-                </div>
-
-                <!-- Estado -->
-                <div class="col-md-6">
-                    <label class="form-label">Estado</label>
-                    <select name="estado" class="form-select" required>
-                        <option value="activo">Activo</option>
-                        <option value="inactivo">Inactivo</option>
-                    </select>
-                </div>
-
+                
                 <!-- Tipo de deporte -->
+
                 <div class="col-md-6">
                     <label class="form-label">Tipo de deporte</label>
                     <select name="tipoDeporte" class="form-select" required>
@@ -124,6 +110,32 @@ Crear Torneo | MGR PLAY
                     </select>
                 </div>
 
+                <!-- Número de equipos -->
+                 <div class="col-md-6">
+                    <label class="form-label">Número de equipos</label>
+                    <select name="numeroEquipos" class="form-select" required>
+                        <option value="4">4</option>
+                        <option value="8">8</option>
+                        <option value="12">12</option>
+                        <option value="16">16</option>
+                        <option value="20">20</option>
+                        <option value="24">24</option>
+                        <option value="28">28</option>
+                        <option value="32">32</option>
+                        <option value="OTRO">Otro</option>
+                    </select>
+                </div>
+
+
+                <!-- Estado -->
+                <div class="col-md-6">
+                    <label class="form-label">Estado</label>
+                    <select name="estado" class="form-select" required>
+                        <option value="activo">Activo</option>
+                        <option value="inactivo">Inactivo</option>
+                    </select>
+                </div>
+                
                 <!-- Fechas -->
                 <div class="col-md-6">
                     <label class="form-label">Fecha de inicio</label>

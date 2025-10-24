@@ -309,10 +309,10 @@
             </button>
             <div class="collapse mt-2" id="torneos{{ $municipio->id }}">
               <ul class="list-unstyled ps-3">
-                @forelse ($municipio->canchas as $cancha)
+                @forelse ($municipio->torneos as $torneo)
                   <li>
-                    <a href="{{ url('/cancha/' . $cancha->id) }}" class="text-white text-decoration-underline">
-                      {{ $cancha->nombre }}
+                    <a href="{{ url('/torneo/' . $torneo->id) }}" class="text-white text-decoration-underline">
+                      {{ $torneo->nombre }}
                     </a>
                   </li>
                 @empty

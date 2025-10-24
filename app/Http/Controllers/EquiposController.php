@@ -81,9 +81,11 @@ class EquiposController extends Controller
      */
     public function update(Request $request, $id)
     {
-        $equipos = Equipos::find($id);
-        $equipos->update($request->all());
-        return redirect()->route('equipos.index')->with('success', 'Equipo actualizado con éxito');
+        $equipo = Equipos::find($id);
+        $equipo->update($request->all());
+        return redirect()->route('equipos.index')
+            ->with('success', 'Equipo actualizado con éxito')
+            ->with('highlighted_equipo_id', $equipo->id);
     }
 
     /**
