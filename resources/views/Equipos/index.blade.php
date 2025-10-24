@@ -7,8 +7,7 @@ Equipos | MGR PLAY
 @section('titleContent')
 <nav class="navbar">
     <div class="navbar-left">
-        <a href="{{ route('welcome') }}" class="logo">
-            <img src="{{ url('img/logoSinFondo.png') }}" alt="MGR PLAY" style="height: 50px; margin-right: 30px;">
+        <a href="{{ route('welcome') }}" class="logo">          
             👥 EQUIPOS
         </a>
     </div>
@@ -73,11 +72,12 @@ Equipos | MGR PLAY
 
 <div class="container mt-5">
     <div class="d-flex justify-content-between align-items-center mb-4">
+        <img src="{{ url('img/logoSinFondo.png') }}" alt="MGR PLAY" style="height: 50px; margin-right: 30px;">
         <h2 class="text-white"> 👥 Equipos Registrados</h2>
         <a href="{{ route('equipos.create') }}" class="btn btn-secondary rounded-pill px-4">➕ Crear Equipo</a>
     </div>
 
-    <!-- 🔍 Barra de filtros avanzada -->
+        <!-- 🔍 Barra de filtros avanzada -->
     <div class="filter-card shadow-sm">
         <form method="GET" action="{{ route('equipos.index') }}" class="row g-3 align-items-end">
 
@@ -136,10 +136,14 @@ Equipos | MGR PLAY
     </div>
     @endif
 
+
+
     <!-- 📋 Tabla de equipos -->
     <div class="table-responsive">
+        
         <table class="table table-hover table-bordered text-center align-middle">
             <thead class="table-dark">
+                
                 <tr>
                     <th>#</th>
                     <th>Escudo</th>

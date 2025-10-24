@@ -12,7 +12,8 @@ class TorneosController extends Controller
      */
     public function index()
     {
-        //
+        $torneos = Torneos::all();
+        return view('Torneos.index', compact('torneos'));
     }
 
     /**
@@ -20,7 +21,7 @@ class TorneosController extends Controller
      */
     public function create()
     {
-        //
+        return view('Torneos.create');
     }
 
     /**
@@ -28,7 +29,11 @@ class TorneosController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        $torneos = new Torneos();
+        $torneos->nombre = $request->input('nombre');
+        $torneos->descripcion = $request->input('descripcion');
+        $torneos->save();
+        return redirect()->route('torneos.index');
     }
 
     /**
@@ -42,24 +47,31 @@ class TorneosController extends Controller
     /**
      * Show the form for editing the specified resource.
      */
-    public function edit(Torneos $torneos)
+    public function edit($id)
     {
-        //
+        $torneos = Torneos::find($id);
+        return view('Torneos.edit', compact('torneos'));
     }
 
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, Torneos $torneos)
+    public function update(Request $request, $id)
     {
-        //
+        $torneos = Torneos::find($id);
+        $torneos->nombre = $request->input('nombre');
+        $torneos->descripcion = $request->input('descripcion');
+        $torneos->save();
+        return redirect()->route('torneos.index');
     }
 
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(Torneos $torneos)
+    public function destroy( $id)
     {
-        //
+        $torneos = Torneos::find($id);
+        $torneos->delete();
+        return redirect()->route('torneos.index');
     }
 }
