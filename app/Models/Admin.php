@@ -12,4 +12,9 @@ class Admin extends Model
         'apellido',
         'email',
         'password'];
+
+    public function torneos()
+    {
+        return $this->hasMany(Torneos::class, 'idAdmin');
+    }
 }

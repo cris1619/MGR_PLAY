@@ -7,6 +7,7 @@ use Illuminate\Database\Eloquent\Model;
 class Torneos extends Model
 {
     protected $table = 'torneos';
+
     protected $fillable = [
         'idAdmin',
         'idMunicipio',
@@ -24,19 +25,35 @@ class Torneos extends Model
         'premio',
     ];
 
-    public function equipos()
+    public function admin()
     {
-        return $this->belongsToMany(Equipos::class, 'Torneo_Equipo', 'id_torneo', 'id_equipo')
-                    ->withPivot('grupo')->withTimestamps();
+        return $this->belongsTo(Admin::class, 'idAdmin');
+    }
+
+    public function municipio()
+    {
+        return $this->belongsTo(municipios::class, 'idMunicipio');
     }
 
     public function grupos()
     {
-        return $this->hasMany(Grupo::class, 'id_torneo');
+        return $this->hasMany(Grupo::class, 'idTorneo');
+    }
+
+    public function equipos()
+    {
+        return $this->belongsToMany(Equipos::class, 'torneo_equipo', 'idTorneo', 'idEquipo')
+                    ->withPivot('grupo')
+                    ->withTimestamps();
     }
 
     public function partidos()
     {
         return $this->hasMany(Partido::class, 'id_torneo');
+    }
+
+    public function clasificacion()
+    {
+        return $this->hasMany(Clasificacion::class, 'id_torneo');
     }
 }
