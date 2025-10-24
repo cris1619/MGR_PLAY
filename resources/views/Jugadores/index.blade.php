@@ -8,7 +8,7 @@ Jugadores | MGR PLAY
 <nav class="navbar">
     <div class="navbar-left">
         <a href="{{ route('welcome') }}" class="logo">
-
+            <img src="{{ url('img/logoSinFondo.png') }}" alt="MGR PLAY" style="height: 50px; margin-right: 30px;">
             🎽 JUGADORES
         </a>
     </div>
@@ -63,7 +63,6 @@ Jugadores | MGR PLAY
 
 <div class="container mt-5">
     <div class="d-flex justify-content-between align-items-center mb-4">
-        <img src="{{ url('img/logoSinFondo.png') }}" alt="MGR PLAY" style="height: 50px; margin-right: 30px;">
         <h2 class="text-white">🎽 Jugadores Registrados</h2>
         <a href="{{ route('jugadores.create') }}" class="btn btn-secondary rounded-pill px-4">➕ Crear Jugador</a>
     </div>
@@ -82,22 +81,26 @@ Jugadores | MGR PLAY
                 </div>
             </div>
 
-                <div class="col-md-4">
+            <!-- Posición -->
+            <div class="col-md-4">
+                <label class="form-label text-light">Posición</label>
                 <select name="posicion" class="form-select">
-                    <option value="">Todas las posiciones</option>
-                    @foreach($posiciones as $pos)
-                    <option value="{{ $pos }}" {{ ($filtros['posicion'] ?? '') == $pos ? 'selected' : '' }}>
-                        {{ ucfirst($pos) }}
+                    <option value="">-- Todas --</option>
+                    @foreach($posiciones as $posicion)
+                    <option value="{{ $posicion }}" {{ request('posicion') == $posicion ? 'selected' : '' }}>
+                        {{ ucfirst($posicion) }}
                     </option>
                     @endforeach
                 </select>
             </div>
 
+            <!-- Equipo -->
             <div class="col-md-4">
+                <label class="form-label text-light">Equipo</label>
                 <select name="idEquipo" class="form-select">
-                    <option value="">Todos los equipos</option>
+                    <option value="">-- Todos --</option>
                     @foreach($equipos as $equipo)
-                    <option value="{{ $equipo->id }}" {{ ($filtros['idEquipo'] ?? '') == $equipo->id ? 'selected' : '' }}>
+                    <option value="{{ $equipo->id }}" {{ request('idEquipo') == $equipo->id ? 'selected' : '' }}>
                         {{ $equipo->nombre }}
                     </option>
                     @endforeach

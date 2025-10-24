@@ -69,7 +69,3 @@ Route::post('/Torneos/store', [TorneosController::class, 'store'])->name('torneo
 Route::get('/Torneos/edit/{id}', [TorneosController::class, 'edit'])->name('torneos.edit');
 Route::post('/Torneos/update/{id}', [TorneosController::class, 'update'])->name('torneos.update');
 Route::post('/Torneos/delete/{id}', [TorneosController::class, 'destroy'])->name('torneos.destroy');
-
-
-//ruta para el buscador
-

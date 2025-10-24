@@ -11,67 +11,40 @@ class JugadoresController extends Controller
     /**
      * Display a listing of the resource.
      */
-public function index(Request $request)
-{
-    // Obtener equipos para el select
-    $equipos = Equipos::all();
+    public function index(Request $request)
+    {
+        // Obtener equipos para el select
+        $equipos = Equipos::all();
 
-    // Lista de posiciones (puedes cambiarla si usas tabla de posiciones en BD)
-    $posiciones = [
-        'portero', 'mediocentro', 'delantero',
-        'lateral izquierdo', 'lateral derecho', 'defensa central',
-        'extremo izquierdo', 'extremo derecho'
-    ];
+        // Lista de posiciones (puedes cambiarla si usas tabla de posiciones en BD)
+        $posiciones = ['portero', 'defensa', 'mediocentro', 'delantero', 'lateral izquierdo', 'lateral derecho', 'defensa central', 'extremo izquierdo', 'extremo derecho'];
 
-    // Query base
-    $query = Jugadores::with('equipos');
+        // Query base
+        $query = Jugadores::with('equipos');
 
-    // 🧩 Hashtable (arreglo asociativo) de filtros
-    $filtros = [
-        'posicion' => $request->posicion,
-        'idEquipo' => $request->idEquipo,
-    ];
-
-    // 🔍 Filtro por nombre o apellido
-    if ($request->filled('search')) {
-        $query->where(function ($q) use ($request) {
-            $q->where('nombre', 'like', '%' . $request->search . '%')
-              ->orWhere('apellido', 'like', '%' . $request->search . '%');
-        });
-    }
-
-    // 🔁 Aplicar automáticamente los filtros del hashtable
-    foreach ($filtros as $campo => $valor) {
-        if (!empty($valor)) {
-            $query->where($campo, $valor);
+        // 🔍 Filtro por nombre
+        if ($request->filled('search')) {
+            $query->where(function ($q) use ($request) {
+                $q->where('nombre', 'like', '%' . $request->search . '%')
+                    ->orWhere('apellido', 'like', '%' . $request->search . '%');
+            });
         }
+
+        // 🎯 Filtro por posición
+        if ($request->filled('posicion')) {
+            $query->where('posicion', $request->posicion);
+        }
+
+        // 👥 Filtro por equipo
+        if ($request->filled('idEquipo')) {
+            $query->where('idEquipo', $request->idEquipo);
+        }
+
+        // 📌 Paginación
+        $jugadores = $query->paginate(10)->appends($request->all());
+
+        return view('jugadores.index', compact('equipos', 'jugadores', 'posiciones'));
     }
-
-    // 📌 Paginación
-    $jugadores = $query->paginate(10)->appends($request->all());
-
-    // Retornar vista
-    return view('jugadores.index', compact('equipos', 'jugadores', 'posiciones', 'filtros'));
-}
-
-
-
-    public function buscar(Request $request)
-{
-    $query = Jugadores::with('equipos');
-
-    if ($request->filled('search')) {
-        $query->where(function ($q) use ($request) {
-            $q->where('nombre', 'like', '%' . $request->search . '%')
-              ->orWhere('apellido', 'like', '%' . $request->search . '%');
-        });
-    }
-
-    $jugadores = $query->limit(10)->get(); // muestra los primeros 10 resultados
-
-    return response()->json($jugadores);
-}
-
 
 
     /**
