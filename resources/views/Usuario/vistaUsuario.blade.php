@@ -8,7 +8,13 @@
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-sRIl4kxILFvY47J16cr9ZwB07vP4J8+LH7qKQnuqkuIAvNWLzeN8tE5YBujZqJLB" crossorigin="anonymous">
     <link href="https://fonts.googleapis.com/css2?family=Play:wght@400;700&display=swap" rel="stylesheet">
     <style>
-        body{
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
             font-family: "Play", sans-serif;
             font-optical-sizing: auto;
             background-image: url("{{ asset('img/2713.jpg') }}");
@@ -16,11 +22,19 @@
             background-position: center;
             background-repeat: no-repeat;
             background-attachment: fixed;
+            min-height: 100vh;
         }
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
+
+        /* Overlay oscuro sobre el fondo */
+        body::before {
+            content: '';
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.5);
+            z-index: -1;
         }
 
         .navbar {
@@ -30,7 +44,7 @@
             display: flex;
             align-items: center;
             justify-content: space-between;
-            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            box-shadow: 0 2px 8px rgba(0,0,0,0.3);
         }
 
         .navbar-left {
@@ -47,76 +61,40 @@
             font-size: 18px;
             font-weight: bold;
             text-decoration: none;
+            transition: transform 0.3s ease;
         }
 
-        .logo-icon {
-            width: 24px;
-            height: 24px;
-            background: linear-gradient(45deg, #00ff88, #00ccff);
-            border-radius: 4px;
-            display: flex;
-            align-items: center;
-            align-items: center;
-            font-weight: bold;
-            font-size: 14px;
-            color: #000;
+        .logo:hover {
+            transform: scale(1.05);
+        }
+
+        .logo img {
+            height: 50px;
+            margin-right: 30px;
         }
 
         .nav-menu {
             display: flex;
             align-items: center;
             list-style: none;
-            gap: 200px;
-        }
-        .nav-menu2 {
-            display: flex;
-            align-items: center;
-            list-style: none;
-            gap: 200px;
+            gap: 30px;
+            margin: 0;
         }
 
         .nav-menu li a {
             color: #ccc;
             text-decoration: none;
-            font-size: 20px;
-            padding:  24px;
+            font-size: 16px;
+            padding: 8px 16px;
             border-radius: 4px;
             transition: all 0.3s ease;
-        }
-
-        .nav-menu2 li a {
-            color: #ccc;
-            text-decoration: none;
-            font-size: 13px;
-            padding:  10px;
-            border-radius: 4px;
-            transition: all 0.3s ease;
+            display: block;
         }
 
         .nav-menu li a:hover {
-            color: yellow;
+            color: #ffd700;
             background-color: rgba(255,255,255,0.1);
-        }
-
-        .nav-menu2 li a:hover {
-            color: green;
-            background-color: rgba(255,255,255,0.1);
-        }
-
-        .container-principal{
-            background-color: #000;
-            color: white;
-            padding: 40px 20px;
-            text-align: center;
-        }
-
-        .card-body {
-            background-color: #1a1a1a !important;
-        }
-
-        .list-group-item {
-            background-color: #1a1a1a !important;
-            color: #fff !important;
+            transform: translateY(-2px);
         }
 
         .navbar-right {
@@ -133,11 +111,12 @@
             color: #ccc;
             cursor: pointer;
             padding: 0;
-            transition: color 0.3s ease;
+            transition: all 0.3s ease;
         }
 
         .search-icon:hover, .user-icon:hover {
             color: white;
+            transform: scale(1.2);
         }
 
         .search-icon svg, .user-icon svg {
@@ -147,46 +126,229 @@
         }
 
         .top-news {
-            background-color: #1a1a1a;
+            background-color: #2a2e33;
+            border-bottom: 2px solid #ffd700;
+            padding: 8px 0;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.2);
+        }
+
+        .nav-menu2 {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            list-style: none;
+            gap: 40px;
+            margin: 0;
+            padding: 0;
+        }
+
+        .nav-menu2 li a {
+            color: #ccc;
+            text-decoration: none;
+            font-size: 13px;
+            padding: 6px 12px;
+            border-radius: 4px;
+            transition: all 0.3s ease;
+            display: block;
+            font-weight: 500;
+        }
+
+        .nav-menu2 li a:hover {
+            color: #00ff88;
+            background-color: rgba(255,255,255,0.1);
+        }
+
+        .main-content {
+            padding: 30px 20px;
+        }
+
+        .card {
+            background-color: rgba(26, 31, 36, 0.95);
+            border: 1px solid #2a2e33;
+            border-radius: 8px;
+            overflow: hidden;
+            backdrop-filter: blur(10px);
+        }
+
+        .card-header {
+            background: linear-gradient(135deg, #1a1f24 0%, #2a2e33 100%);
+            border-bottom: 2px solid #ffd700;
+            padding: 15px;
+        }
+
+        .card-header h5 {
+            margin: 0;
+            font-weight: 700;
+            letter-spacing: 1px;
+        }
+
+        .card-body {
+            background-color: rgba(26, 31, 36, 0.95);
+            padding: 20px;
+        }
+
+        .accordion-item {
+            background-color: #1a1f24;
+            border: 1px solid #2a2e33;
+            margin-bottom: 8px;
+            border-radius: 6px;
+            overflow: hidden;
+        }
+
+        .accordion-button {
+            background-color: #2a2e33;
             color: white;
-            padding: 10px 20px;
-            font-size: 14px;
-            border-top: 1px solid #333;
-            background-color: #333;
-            padding: 1px 0; /* Reduce el padding vertical para hacer la barra más delgada */
+            font-weight: 600;
+            border: none;
+            padding: 12px 16px;
+        }
+
+        .accordion-button:not(.collapsed) {
+            background-color: #3a3e43;
+            color: #ffd700;
+        }
+
+        .accordion-button:focus {
+            box-shadow: none;
+            border: none;
+        }
+
+        .accordion-button::after {
+            filter: brightness(0) invert(1);
+        }
+
+        .accordion-body {
+            background-color: #1a1f24;
+            padding: 15px;
+        }
+
+        .btn-secondary {
+            background-color: #3a3e43;
+            border: none;
+            transition: all 0.3s ease;
+        }
+
+        .btn-secondary:hover {
+            background-color: #4a4e53;
+            transform: translateX(5px);
+        }
+
+        .list-unstyled li {
+            padding: 6px 0;
+        }
+
+        .list-unstyled a {
+            color: #00ccff;
+            text-decoration: none;
+            transition: all 0.3s ease;
+        }
+
+        .list-unstyled a:hover {
+            color: #00ff88;
+            text-decoration: underline;
+            padding-left: 5px;
+        }
+
+        .list-unstyled em {
+            color: #999;
+            font-size: 0.9em;
+        }
+
+        .quick-access-img {
+            width: 100%;
+            height: 200px;
+            object-fit: cover;
+            border-radius: 8px;
+            transition: transform 0.3s ease;
+            cursor: pointer;
+        }
+
+        .quick-access-img:hover {
+            transform: scale(1.05);
+            box-shadow: 0 4px 12px rgba(0, 255, 136, 0.3);
         }
 
         /* Responsive */
+        @media (max-width: 992px) {
+            .nav-menu {
+                gap: 15px;
+            }
+            
+            .nav-menu li a {
+                font-size: 14px;
+                padding: 6px 12px;
+            }
+
+            .logo {
+                font-size: 14px;
+            }
+
+            .logo img {
+                height: 40px;
+            }
+        }
+
         @media (max-width: 768px) {
             .nav-menu {
                 display: none;
             }
             
             .navbar-left {
-                gap: 20px;
+                gap: 10px;
             }
-            
+
+            .logo {
+                font-size: 12px;
+            }
+
+            .nav-menu2 {
+                gap: 15px;
+                flex-wrap: wrap;
+            }
+
+            .nav-menu2 li a {
+                font-size: 11px;
+                padding: 4px 8px;
+            }
+
+            .main-content {
+                padding: 15px 10px;
+            }
+        }
+
+        /* Scrollbar personalizada */
+        ::-webkit-scrollbar {
+            width: 10px;
+        }
+
+        ::-webkit-scrollbar-track {
+            background: #1a1f24;
+        }
+
+        ::-webkit-scrollbar-thumb {
+            background: #3a3e43;
+            border-radius: 5px;
+        }
+
+        ::-webkit-scrollbar-thumb:hover {
+            background: #4a4e53;
         }
     </style>
 </head>
 
 <body>
-   <nav class="navbar">
+    <nav class="navbar">
         <div class="navbar-left">
             <a href="{{ route('welcome') }}" class="logo">
-                <img src="{{ url('img/logoSinFondo.png') }}" alt="MGR PLAY" style="height: 50px; margin-right: 30px;">
+                <img src="{{ url('img/logoSinFondo.png') }}" alt="MGR PLAY">
                 MALAGA GARCIA ROVIRA PLAY
             </a>
-            <div class="container">
-                <div class="center">
-                    <ul class="nav-menu">
-                        <li><a href="#">TORNEOS</a></li>
-                        <li><a href="{{ route('usuario.listaEquipos') }}">EQUIPOS</a></li>
-                        <li><a href="{{ route('usuario.listaJugadores') }}">JUGADORES</a></li>
-                        <li><a href="#">PARTIDOS</a></li>
-                    </ul>
-                </div>
-            </div>
+            <ul class="nav-menu">
+                <li><a href="#">TORNEOS</a></li>
+                <li><a href="{{ route('usuario.listaEquipos') }}">EQUIPOS</a></li>
+                <li><a href="{{ route('usuario.listaJugadores') }}">JUGADORES</a></li>
+                <li><a href="#">PARTIDOS</a></li>
+            </ul>
         </div>
         
         <div class="navbar-right">
@@ -205,162 +367,131 @@
     </nav>
     
     <div class="top-news">
-
         <div class="container">
-            <div class="center">
             <ul class="nav-menu2">
-                <li><a href="#">FAVORITOS</a></li>
-                <li><a href="#">FUTBOL</a></li>
-                <li><a href="#">FUTBOL-5</a></li>
-                <li><a href="#">FUTBOL-8</a></li>
-                <li><a href="#">MICRO-FUTBOL</a></li>
+                <li><a href="#">⭐ FAVORITOS</a></li>
+                <li><a href="#">⚽ FUTBOL</a></li>
+                <li><a href="#">🥅 FUTBOL-5</a></li>
+                <li><a href="#">🏃 FUTBOL-8</a></li>
+                <li><a href="#">🎯 MICRO-FUTBOL</a></li>
             </ul>
+        </div>
+    </div>
+
+    <div class="container main-content">
+        <div class="row">
+            <!-- Contenedor Ubicaciones -->
+            <div class="col-lg-3 col-md-4 mb-4">
+                <div class="card shadow-lg">
+                    <div class="card-header text-white text-center">
+                        <h5 class="mb-0">📍 Ubicaciones</h5>
+                    </div>
+                    <div class="card-body">
+                        <div class="accordion" id="accordionMunicipios">
+                            @foreach ($municipios as $municipio)
+                            <div class="accordion-item">
+                                <h2 class="accordion-header" id="heading{{ $municipio->id }}">
+                                    <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapse{{ $municipio->id }}" aria-expanded="false" aria-controls="collapse{{ $municipio->id }}">
+                                        {{ $municipio->nombre }}
+                                    </button>
+                                </h2>
+                                <div id="collapse{{ $municipio->id }}" class="accordion-collapse collapse" aria-labelledby="heading{{ $municipio->id }}" data-bs-parent="#accordionMunicipios">
+                                    <div class="accordion-body">
+                                        <!-- Canchas -->
+                                        <div class="mb-2">
+                                            <button class="btn btn-sm btn-secondary w-100 text-start" type="button" data-bs-toggle="collapse" data-bs-target="#canchas{{ $municipio->id }}" aria-expanded="false" aria-controls="canchas{{ $municipio->id }}">
+                                                ⚽ Canchas
+                                            </button>
+                                            <div class="collapse mt-2" id="canchas{{ $municipio->id }}">
+                                                <ul class="list-unstyled ps-3">
+                                                    @forelse ($municipio->canchas as $cancha)
+                                                    <li><a href="{{ url('/cancha/' . $cancha->id) }}">{{ $cancha->nombre }}</a></li>
+                                                    @empty
+                                                    <li><em>No hay canchas por ahora :/</em></li>
+                                                    @endforelse
+                                                </ul>
+                                            </div>
+                                        </div>
+                                        
+                                        <!-- Equipos -->
+                                        <div class="mb-2">
+                                            <button class="btn btn-sm btn-secondary w-100 text-start" type="button" data-bs-toggle="collapse" data-bs-target="#equipos{{ $municipio->id }}" aria-expanded="false" aria-controls="equipos{{ $municipio->id }}">
+                                                👥 Equipos
+                                            </button>
+                                            <div class="collapse mt-2" id="equipos{{ $municipio->id }}">
+                                                <ul class="list-unstyled ps-3">
+                                                    @forelse ($municipio->equipos as $equipo)
+                                                    <li><a href="{{ url('/equipo/' . $equipo->id) }}">{{ $equipo->nombre }}</a></li>
+                                                    @empty
+                                                    <li><em>No hay equipos por ahora :(</em></li>
+                                                    @endforelse
+                                                </ul>
+                                            </div>
+                                        </div>
+                                        
+                                        <!-- Torneos -->
+                                        <div class="mb-2">
+                                            <button class="btn btn-sm btn-secondary w-100 text-start" type="button" data-bs-toggle="collapse" data-bs-target="#torneos{{ $municipio->id }}" aria-expanded="false" aria-controls="torneos{{ $municipio->id }}">
+                                                📅 Torneos
+                                            </button>
+                                            <div class="collapse mt-2" id="torneos{{ $municipio->id }}">
+                                                <ul class="list-unstyled ps-3">
+                                                    @forelse ($municipio->torneos as $torneo)
+                                                    <li><a href="{{ url('/torneo/' . $torneo->id) }}">{{ $torneo->nombre }}</a></li>
+                                                    @empty
+                                                    <li><em>No hay torneos por ahora :)</em></li>
+                                                    @endforelse
+                                                </ul>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            @endforeach
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Contenedor Accesos Rápidos -->
+            <div class="col-lg-9 col-md-8 mb-4">
+                <div class="card shadow-lg">
+                    <div class="card-header text-white text-center">
+                        <h5 class="mb-0">🚀 Accesos Rápidos</h5>
+                    </div>
+                    <div class="card-body">
+                        <div class="row g-3">
+                              <div class="card shadow-sm border-left-primary">
+                                  <div class="card-body text-center">
+                                    <div class="background-color text-white p-2 rounded">
+                                      <h5>Jugadores Totales</h5>
+                                    </div>
+                                      <h3 class="text-success">{{ $accesosRapidos['totalJugadores'] }}</h3>
+                                  </div>
+                              </div>
+                            <div class="card shadow-sm border-left-primary">
+                                  <div class="card-body text-center">
+                                    <div class="background-color text-white p-2 rounded">
+                                      <h5>Equipos Totales</h5>
+                                    </div>
+                                      <h3 class="text-success">{{ $accesosRapidos['totalEquipos'] }}</h3>
+                                  </div>
+                            </div>
+                            <div class="card shadow-sm border-left-primary">
+                                  <div class="card-body text-center">
+                                    <div class="background-color text-white p-2 rounded">
+                                      <h5>Canchas Totales</h5>
+                                    </div>
+                                      <h3 class="text-success">{{ $accesosRapidos['totalCanchas'] }}</h3>
+                                  </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
             </div>
         </div>
     </div>
 
-    <div class="row">
-      <!-- Contenedor Ubicaciones -->
-<div class="col-md-3 mb-4">
-  <div class="card shadow-lg border-0">
-    <div class="card-header bg-dark text-white text-center">
-      <h5 class="mb-0">Ubicaciones</h5>
-    </div>
-    <div class="card-body">
-      <div class="accordion" id="accordionMunicipios">
-  @foreach ($municipios as $municipio)
-    <div class="accordion-item bg-dark border-0">
-      <h2 class="accordion-header" id="heading{{ $municipio->id }}">
-        <button class="accordion-button collapsed bg-dark text-white"
-                type="button"
-                data-bs-toggle="collapse"
-                data-bs-target="#collapse{{ $municipio->id }}"
-                aria-expanded="false"
-                aria-controls="collapse{{ $municipio->id }}">
-          {{ $municipio->nombre }}
-        </button>
-      </h2>
-
-      <div id="collapse{{ $municipio->id }}"
-           class="accordion-collapse collapse"
-           aria-labelledby="heading{{ $municipio->id }}"
-           data-bs-parent="#accordionMunicipios">
-        <div class="accordion-body">
-
-          <!-- ⚽ Canchas -->
-          <div class="mb-2">
-            <button class="btn btn-sm w-100 text-start text-white bg-secondary"
-                    type="button"
-                    data-bs-toggle="collapse"
-                    data-bs-target="#canchas{{ $municipio->id }}"
-                    aria-expanded="false"
-                    aria-controls="canchas{{ $municipio->id }}">
-              ⚽ Canchas
-            </button>
-            <div class="collapse mt-2" id="canchas{{ $municipio->id }}">
-              <ul class="list-unstyled ps-3">
-                @forelse ($municipio->canchas as $cancha)
-                  <li>
-                    <a href="{{ url('/cancha/' . $cancha->id) }}" class="text-white text-decoration-underline">
-                      {{ $cancha->nombre }}
-                    </a>
-                  </li>
-                @empty
-                  <li class="text-white"><em>No hay canchas por ahora :/ .</em></li>
-                @endforelse
-              </ul>
-            </div>
-          </div>
-
-          <!-- 👥 Equipos -->
-          <div class="mb-2">
-            <button class="btn btn-sm w-100 text-start text-white bg-secondary"
-                    type="button"
-                    data-bs-toggle="collapse"
-                    data-bs-target="#equipos{{ $municipio->id }}"
-                    aria-expanded="false"
-                    aria-controls="equipos{{ $municipio->id }}">
-              👥 Equipos
-            </button>
-            <div class="collapse mt-2" id="equipos{{ $municipio->id }}">
-              <ul class="list-unstyled ps-3">
-                @forelse ($municipio->equipos as $equipo)
-                  <li>
-                    <a href="{{ url('/equipo/' . $equipo->id) }}" class="text-white text-decoration-underline">
-                      {{ $equipo->nombre }}
-                    </a>
-                  </li>
-                @empty
-                  <li class="text-white"><em>No hay equipos por ahora :( .</em></li>
-                @endforelse
-              </ul>
-            </div>
-          </div>
-
-          <!-- 📅 Torneos -->
-          <div class="mb-2">
-            <button class="btn btn-sm w-100 text-start text-white bg-secondary"
-                    type="button"
-                    data-bs-toggle="collapse"
-                    data-bs-target="#torneos{{ $municipio->id }}"
-                    aria-expanded="false"
-                    aria-controls="torneos{{ $municipio->id }}">
-              📅 Torneos
-            </button>
-            <div class="collapse mt-2" id="torneos{{ $municipio->id }}">
-              <ul class="list-unstyled ps-3">
-                @forelse ($municipio->torneos as $torneo)
-                  <li>
-                    <a href="{{ url('/torneo/' . $torneo->id) }}" class="text-white text-decoration-underline">
-                      {{ $torneo->nombre }}
-                    </a>
-                  </li>
-                @empty
-                  <li class="text-white"><em>No hay torneos por ahora :) .</em></li>
-                @endforelse
-              </ul>
-            </div>
-          </div>
-
-        </div>
-      </div>
-    </div>
-  @endforeach
-</div>
-    </div>
-  </div>
-</div>
-
-
-      <!-- Contenedor Imágenes -->
-      <div class="col-md-9 mb-4">
-        <div class="card shadow-lg border-0">
-          <div class="card-header bg-dark text-white text-center">
-            <h5 class="mb-0">Accesos Rapidos</h5>
-          </div>
-          <div class="card-body text-center">
-            <div class="row g-2">
-              <div class="col-6">
-                <img src="https://via.placeholder.com/150" class="img-fluid rounded" alt="Imagen 1">
-              </div>
-              <div class="col-6">
-                <img src="https://via.placeholder.com/150" class="img-fluid rounded" alt="Imagen 2">
-              </div>
-              <div class="col-6">
-                <img src="https://via.placeholder.com/150" class="img-fluid rounded" alt="Imagen 3">
-              </div>
-              <div class="col-6">
-                <img src="https://via.placeholder.com/150" class="img-fluid rounded" alt="Imagen 4">
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
-
-    </div>
-
-
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js" integrity="sha384-FKyoEForCGlyvwx9Hj09JcYn3nv7wiPVlz7YYwJrWVcXK/BmnVDxM+D2scQbITxI" crossorigin="anonymous"></script>  
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js" integrity="sha384-FKyoEForCGlyvwx9Hj09JcYn3nv7wiPVlz7YYwJrWVcXK/BmnVDxM+D2scQbITxI" crossorigin="anonymous"></script>
 </body>
 </html>
