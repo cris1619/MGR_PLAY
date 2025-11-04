@@ -2,17 +2,14 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Torneo;
-use App\Models\Equipo;
+
 use App\Models\Equipos;
 use App\Models\Grupo;
 use App\Models\Grupo_Equipo;
-use App\Models\GrupoEquipo;
+use App\Models\municipios;
 use App\Models\Partido;
 use App\Models\Partido_Equipo;
-use App\Models\PartidoEquipo;
 use App\Models\Torneo_Equipo;
-use App\Models\TorneoEquipo;
 use App\Models\Torneos;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
@@ -28,50 +25,55 @@ class TorneosController extends Controller
     public function create()
     {
         $equipos = Equipos::where('estado', 'activo')->get();
-        return view('torneos.create', compact('equipos'));
+        $municipios = municipios::all();
+        return view('torneos.create', compact('equipos', 'municipios'));
     }
 
     public function store(Request $request)
-    {
-        $request->validate([
-            'nombre' => 'required',
-            'tipo_torneo' => 'required',
-            'equipos' => 'required|array|min:2',
+{
+    $request->validate([
+        'nombre' => 'required',
+        'tipo_torneo' => 'required',
+        'equipos' => 'required|array|min:2',
+    ]);
+
+    $torneo = Torneos::create([
+        'idAdmin' => $request->idAdmin,
+        'idMunicipio' => $request->idMunicipio,
+        'nombre' => $request->nombre,
+        'descripcion' => $request->descripcion,
+        'tipo' => $request->tipo_torneo,
+        'estado' => 'Pendiente',
+        'fecha_inicio' => $request->fecha_inicio,
+        'fecha_fin' => $request->fecha_fin,
+        'num_equipos' => count($request->equipos),
+        'cantidad_grupos' => $request->num_grupos ?? null,
+        'equipos_por_grupo' => $request->equipos_por_grupo ?? null,
+        'clasificados_por_grupo' => $request->clasifican_por_grupo ?? null,
+        'partidos_por_enfrentamiento' => $request->ida_vuelta ?? 1,
+        'premio' => $request->premio ?? null,
+    ]);
+
+    // Asociar equipos
+    foreach ($request->equipos as $idEquipo) {
+        Torneo_Equipo::create([
+            'idTorneo' => $torneo->id,
+            'idEquipo' => $idEquipo,
         ]);
-
-        // Crear torneo
-        $torneo = Torneos::create([
-            'nombre' => $request->nombre,
-            'tipo' => $request->tipo_torneo,
-            'fecha_inicio' => $request->fecha_inicio,
-            'fecha_fin' => $request->fecha_fin,
-            'num_equipos' => count($request->equipos),
-            'cantidad_grupos' => $request->num_grupos ?? null,
-            'clasificados_por_grupo' => $request->clasifican_por_grupo ?? null,
-            'partidos_por_enfrentamiento' => $request->ida_vuelta ?? 1,
-        ]);
-
-        // Asociar equipos a torneo
-        foreach ($request->equipos as $idEquipo) {
-            Torneo_Equipo::create([
-                'idTorneo' => $torneo->id,
-                'idEquipo' => $idEquipo,
-            ]);
-        }
-
-        // Tipos de torneo
-        if ($request->tipo_torneo == 'grupos') {
-            $this->generarGrupos($torneo, $request->equipos, $request->num_grupos);
-        }
-        elseif ($request->tipo_torneo == 'liguilla') {
-            $this->generarLiguilla($torneo, $request->equipos, $request->ida_vuelta);
-        }
-        elseif ($request->tipo_torneo == 'eliminacion') {
-            $this->generarEliminacion($torneo, $request->equipos);
-        }
-
-        return redirect()->route('torneos.index')->with('success', 'Torneo creado correctamente');
     }
+
+    // Generar partidos según tipo
+    if ($request->tipo_torneo === 'Grupos') {
+        $this->generarGrupos($torneo, $request->equipos, $request->num_grupos);
+    } elseif ($request->tipo_torneo === 'Liguilla') {
+        $this->generarLiguilla($torneo, $request->equipos, $request->ida_vuelta);
+    } elseif ($request->tipo_torneo === 'Eliminacion') {
+        $this->generarEliminacion($torneo, $request->equipos);
+    }
+
+    return redirect()->route('torneos.index')->with('success', 'Torneo creado correctamente');
+}
+
 
 
     // ==========================
