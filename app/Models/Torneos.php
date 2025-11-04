@@ -39,4 +39,9 @@ class Torneos extends Model
     {
         return $this->hasMany(Partido::class, 'id_torneo');
     }
+
+    public function municipio()
+    {
+        return $this->belongsTo(Municipios::class, 'idMunicipio');
+    }
 }
