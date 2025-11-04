@@ -4,244 +4,217 @@ namespace App\Http\Controllers;
 
 use App\Models\Torneo;
 use App\Models\Equipo;
+use App\Models\Equipos;
 use App\Models\Grupo;
+use App\Models\Grupo_Equipo;
 use App\Models\GrupoEquipo;
 use App\Models\Partido;
-use App\Models\Clasificacion;
-use App\Models\Equipos;
-use App\Models\Grupo_Equipo;
+use App\Models\Partido_Equipo;
+use App\Models\PartidoEquipo;
+use App\Models\Torneo_Equipo;
+use App\Models\TorneoEquipo;
 use App\Models\Torneos;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 
 class TorneosController extends Controller
 {
-    /**
-     * Muestra todos los torneos
-     */
     public function index()
     {
-        $torneos = Torneos::with('municipio')->get();
+        $torneos = Torneos::all();
         return view('torneos.index', compact('torneos'));
     }
 
-    /**
-     * Formulario de creación
-     */
     public function create()
     {
         $equipos = Equipos::where('estado', 'activo')->get();
         return view('torneos.create', compact('equipos'));
     }
 
-    /**
-     * Guarda un nuevo torneo
-     */
     public function store(Request $request)
     {
         $request->validate([
-            'nombre' => 'required|string|max:255',
-            'tipo' => 'required|in:Grupos,Liguilla,Eliminacion',
-            'fecha_inicio' => 'nullable|date',
-            'fecha_fin' => 'nullable|date|after_or_equal:fecha_inicio',
-            'num_equipos' => 'nullable|integer|min:2',
+            'nombre' => 'required',
+            'tipo_torneo' => 'required',
+            'equipos' => 'required|array|min:2',
         ]);
 
-        $torneo = Torneos::create($request->all());
+        // Crear torneo
+        $torneo = Torneos::create([
+            'nombre' => $request->nombre,
+            'tipo' => $request->tipo_torneo,
+            'fecha_inicio' => $request->fecha_inicio,
+            'fecha_fin' => $request->fecha_fin,
+            'num_equipos' => count($request->equipos),
+            'cantidad_grupos' => $request->num_grupos ?? null,
+            'clasificados_por_grupo' => $request->clasifican_por_grupo ?? null,
+            'partidos_por_enfrentamiento' => $request->ida_vuelta ?? 1,
+        ]);
 
-        // Si seleccionó equipos en el formulario
-        if ($request->has('equipos')) {
-            foreach ($request->equipos as $idEquipo) {
-                DB::table('torneo_equipo')->insert([
-                    'idTorneo' => $torneo->id,
-                    'idEquipo' => $idEquipo,
-                    'created_at' => now(),
-                    'updated_at' => now(),
-                ]);
-            }
+        // Asociar equipos a torneo
+        foreach ($request->equipos as $idEquipo) {
+            Torneo_Equipo::create([
+                'idTorneo' => $torneo->id,
+                'idEquipo' => $idEquipo,
+            ]);
         }
 
-        // Generar automáticamente según tipo
-        switch ($torneo->tipo) {
-            case 'Grupos':
-                $this->generarGrupos($torneo->id);
-                $this->generarPartidosGrupos($torneo->id);
-                break;
-
-            case 'Liguilla':
-                $this->generarLiguilla($torneo->id);
-                break;
-
-            case 'Eliminacion':
-                $this->generarEliminacion($torneo->id);
-                break;
+        // Tipos de torneo
+        if ($request->tipo_torneo == 'grupos') {
+            $this->generarGrupos($torneo, $request->equipos, $request->num_grupos);
+        }
+        elseif ($request->tipo_torneo == 'liguilla') {
+            $this->generarLiguilla($torneo, $request->equipos, $request->ida_vuelta);
+        }
+        elseif ($request->tipo_torneo == 'eliminacion') {
+            $this->generarEliminacion($torneo, $request->equipos);
         }
 
-        return redirect()->route('torneos.index')->with('success', 'Torneo creado correctamente.');
+        return redirect()->route('torneos.index')->with('success', 'Torneo creado correctamente');
     }
 
-    /**
-     * Mostrar detalles del torneo
-     */
-    public function show($id)
+
+    // ==========================
+    // GENERAR GRUPOS
+    // ==========================
+
+    private function generarGrupos($torneo, $equipos, $num_grupos)
     {
-        $torneo = Torneos::with(['equipos', 'grupos.equipos', 'clasificacion'])->findOrFail($id);
-        return view('torneos.show', compact('torneo'));
-    }
+        $equiposMezclados = collect($equipos)->shuffle();
+        $grupos = [];
 
-    /**
-     * Editar torneo
-     */
-    public function edit($id)
-    {
-        $torneo = Torneos::findOrFail($id);
-        $equipos = Equipos::where('estado', 'activo')->get();
-        return view('torneos.edit', compact('torneo', 'equipos'));
-    }
-
-    /**
-     * Actualizar torneo
-     */
-    public function update(Request $request, $id)
-    {
-        $torneo = Torneos::findOrFail($id);
-        $torneo->update($request->all());
-        return redirect()->route('torneos.index')->with('success', 'Torneo actualizado correctamente.');
-    }
-
-    /**
-     * Eliminar torneo
-     */
-    public function destroy($id)
-    {
-        Torneos::findOrFail($id)->delete();
-        return back()->with('success', 'Torneo eliminado correctamente.');
-    }
-
-    /* ================================================================
-     *                  LÓGICA DEL TORNEO
-     * ================================================================*/
-
-    /**
-     * Generar grupos según número de equipos
-     */
-    private function generarGrupos($idTorneo)
-    {
-        $torneo = Torneos::with('equipos')->findOrFail($idTorneo);
-        $equipos = $torneo->equipos;
-
-        if ($equipos->count() < 4) return;
-
-        $numGrupos = $torneo->cantidad_grupos ?? 2;
-        $equiposPorGrupo = ceil($equipos->count() / $numGrupos);
-        $equiposAleatorios = $equipos->shuffle()->values();
-
-        Grupo::where('idTorneo', $torneo->id)->delete();
-
-        for ($i = 0; $i < $numGrupos; $i++) {
+        // Crear grupos A, B, C...
+        for ($i = 0; $i < $num_grupos; $i++) {
             $grupo = Grupo::create([
                 'nombre' => 'Grupo ' . chr(65 + $i),
-                'idTorneo' => $torneo->id,
+                'idTorneo' => $torneo->id
             ]);
-
-            $subset = $equiposAleatorios->slice($i * $equiposPorGrupo, $equiposPorGrupo);
-
-            foreach ($subset as $equipo) {
-                Grupo_Equipo::create([
-                    'idGrupo' => $grupo->id,
-                    'idEquipo' => $equipo->id,
-                ]);
-            }
+            $grupos[] = $grupo;
         }
+
+        // Asignar equipos a grupos
+        $index = 0;
+        foreach ($equiposMezclados as $equipo) {
+            Grupo_Equipo::create([
+                'idGrupo' => $grupos[$index % $num_grupos]->id,
+                'idEquipo' => $equipo,
+            ]);
+            $index++;
+        }
+
+        $this->generarPartidosGrupos($torneo);
     }
 
-    /**
-     * Generar partidos de fase de grupos (Round Robin)
-     */
-    private function generarPartidosGrupos($idTorneo)
+    private function generarPartidosGrupos($torneo)
     {
-        $torneo = Torneos::with('grupos.equipos')->findOrFail($idTorneo);
+        $grupos = Grupo::where('idTorneo', $torneo->id)->with('equipos')->get();
 
-        foreach ($torneo->grupos as $grupo) {
+        foreach ($grupos as $grupo) {
             $equipos = $grupo->equipos;
 
-            for ($i = 0; $i < $equipos->count(); $i++) {
-                for ($j = $i + 1; $j < $equipos->count(); $j++) {
+            for ($i = 0; $i < count($equipos); $i++) {
+                for ($j = $i + 1; $j < count($equipos); $j++) {
+
                     $partido = Partido::create([
                         'id_torneo' => $torneo->id,
                         'id_grupo' => $grupo->id,
-                        'fase' => 'Grupos',
-                        'fecha' => now()->addDays(rand(1, 10)),
-                        'hora' => '15:00:00',
+                        'fase' => 'Grupos'
                     ]);
 
-                    DB::table('partido_equipos')->insert([
-                        [
-                            'id_partido' => $partido->id,
-                            'id_equipo' => $equipos[$i]->id,
-                            'rol' => 'Local',
-                            'created_at' => now(),
-                            'updated_at' => now(),
-                        ],
-                        [
-                            'id_partido' => $partido->id,
-                            'id_equipo' => $equipos[$j]->id,
-                            'rol' => 'Visitante',
-                            'created_at' => now(),
-                            'updated_at' => now(),
-                        ]
+                    Partido_Equipo::create([
+                        'id_partido' => $partido->id,
+                        'id_equipo' => $equipos[$i]->id,
+                        'rol' => 'Local'
+                    ]);
+
+                    Partido_Equipo::create([
+                        'id_partido' => $partido->id,
+                        'id_equipo' => $equipos[$j]->id,
+                        'rol' => 'Visitante'
                     ]);
                 }
             }
         }
     }
 
-    /**
-     * Generar liguilla (todos contra todos)
-     */
-    private function generarLiguilla($idTorneo)
-    {
-        $torneo = Torneos::with('equipos')->findOrFail($idTorneo);
-        $equipos = $torneo->equipos;
 
-        for ($i = 0; $i < $equipos->count(); $i++) {
-            for ($j = $i + 1; $j < $equipos->count(); $j++) {
+    // ==========================
+    // LIGUILLA
+    // ==========================
+
+    private function generarLiguilla($torneo, $equipos, $ida_vuelta)
+    {
+        for ($i = 0; $i < count($equipos); $i++) {
+            for ($j = $i + 1; $j < count($equipos); $j++) {
+
+                // Partido ida
                 $partido = Partido::create([
                     'id_torneo' => $torneo->id,
-                    'fase' => 'Liguilla',
-                    'fecha' => now()->addDays(rand(1, 10)),
-                    'hora' => '16:00:00',
+                    'fase' => 'Liguilla'
                 ]);
 
-                DB::table('partido_equipos')->insert([
-                    ['id_partido' => $partido->id, 'id_equipo' => $equipos[$i]->id, 'rol' => 'Local', 'created_at' => now(), 'updated_at' => now()],
-                    ['id_partido' => $partido->id, 'id_equipo' => $equipos[$j]->id, 'rol' => 'Visitante', 'created_at' => now(), 'updated_at' => now()],
+                Partido_Equipo::create([
+                    'id_partido' => $partido->id,
+                    'id_equipo' => $equipos[$i],
+                    'rol' => 'Local'
                 ]);
+
+                Partido_Equipo::create([
+                    'id_partido' => $partido->id,
+                    'id_equipo' => $equipos[$j],
+                    'rol' => 'Visitante'
+                ]);
+
+                // Partido vuelta si aplica
+                if ($ida_vuelta == 1) {
+                    $partido2 = Partido::create([
+                        'id_torneo' => $torneo->id,
+                        'fase' => 'Liguilla'
+                    ]);
+
+                    Partido_Equipo::create([
+                        'id_partido' => $partido2->id,
+                        'id_equipo' => $equipos[$j],
+                        'rol' => 'Local'
+                    ]);
+
+                    Partido_Equipo::create([
+                        'id_partido' => $partido2->id,
+                        'id_equipo' => $equipos[$i],
+                        'rol' => 'Visitante'
+                    ]);
+                }
             }
         }
     }
 
-    /**
-     * Generar torneo de eliminación directa
-     */
-    private function generarEliminacion($idTorneo)
+
+    // ==========================
+    // ELIMINACIÓN DIRECTA
+    // ==========================
+
+    private function generarEliminacion($torneo, $equipos)
     {
-        $torneo = Torneos::with('equipos')->findOrFail($idTorneo);
-        $equipos = $torneo->equipos->shuffle();
+        shuffle($equipos);
 
-        if ($equipos->count() % 2 != 0) return;
+        for ($i = 0; $i < count($equipos); $i += 2) {
+            if (!isset($equipos[$i + 1])) break;
 
-        for ($i = 0; $i < $equipos->count(); $i += 2) {
             $partido = Partido::create([
                 'id_torneo' => $torneo->id,
-                'fase' => 'Eliminación directa',
-                'fecha' => now()->addDays(rand(1, 5)),
-                'hora' => '18:00:00',
+                'fase' => 'Eliminación Ronda 1'
             ]);
 
-            DB::table('partido_equipos')->insert([
-                ['id_partido' => $partido->id, 'id_equipo' => $equipos[$i]->id, 'rol' => 'Local', 'created_at' => now(), 'updated_at' => now()],
-                ['id_partido' => $partido->id, 'id_equipo' => $equipos[$i + 1]->id, 'rol' => 'Visitante', 'created_at' => now(), 'updated_at' => now()],
+            Partido_Equipo::create([
+                'id_partido' => $partido->id,
+                'id_equipo' => $equipos[$i],
+                'rol' => 'Local'
+            ]);
+
+            Partido_Equipo::create([
+                'id_partido' => $partido->id,
+                'id_equipo' => $equipos[$i + 1],
+                'rol' => 'Visitante'
             ]);
         }
     }

@@ -1,171 +1,148 @@
 @extends('layouts.app')
 
-@section('title')
-Crear Torneo | MGR PLAY
-@endsection
-
-@section('titleContent')
-<nav class="navbar">
-    <div class="navbar-left">
-        <a href="{{ route('welcome') }}" class="logo">
-            <img src="{{ url('img/logoSinFondo.png') }}" alt="MGR PLAY" style="height: 50px; margin-right: 30px;">
-            🏆 NUEVO TORNEO
-        </a>
-    </div>
-    <a href="{{ route('torneos.index') }}" class="btn btn-secondary">Volver a torneos</a>
-</nav>
-@endsection
+@section('title', 'Crear Torneo')
 
 @section('content')
-<style>
-    .navbar {
-        background-color: #1B1F23;
-        padding: 0 20px;
-        height: 60px;
-        display: flex;
-        align-items: center;
-        justify-content: space-between;
-        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-    }
+<div class="container mt-4">
+    <div class="card shadow-lg border-0 rounded-4">
+        <div class="card-header bg-dark text-white">
+            <h4><i class="fas fa-plus"></i> Crear Torneo</h4>
+        </div>
 
-    .form-card {
-        background-color: #1B1F23;
-        border-radius: 15px;
-        padding: 25px 30px;
-        margin-bottom: 25px;
-        color: white;
-    }
-
-    .form-select,
-    .form-control {
-        border-radius: 15px;
-        font-size: 14px;
-    }
-
-    .btn-primary {
-        border-radius: 20px;
-    }
-
-    
-</style>
-
-<div class="container mt-5">
-    <div class="form-card shadow-sm">
-        <h3 class="mb-4">➕ Registrar nuevo torneo</h3>
-
-        <form method="POST" action="{{ route('torneos.store') }}" enctype="multipart/form-data">
+        <form action="{{ route('torneos.store') }}" method="POST">
             @csrf
+            <div class="card-body">
 
-            <div class="row g-3">
-                <!-- Nombre -->
-                <div class="col-md-6">
-                    <label class="form-label">Nombre</label>
+                {{-- Nombre --}}
+                <div class="mb-3">
+                    <label class="form-label">Nombre del Torneo</label>
                     <input type="text" name="nombre" class="form-control" required>
                 </div>
 
-                <!-- Municipio -->
-                <div class="col-md-6">
-                    <label class="form-label">Municipio</label>
-                    <select name="idMunicipio" class="form-select" required>
-                        <option value="">-- Selecciona un municipio --</option>
-                        @foreach($municipios as $municipio)
-                        <option value="{{ $municipio->id }}">{{ $municipio->nombre }}</option>
+                {{-- Tipo de torneo --}}
+                <div class="mb-3">
+                    <label class="form-label">Tipo de Torneo</label>
+                    <select name="tipo_torneo" id="tipo_torneo" class="form-control" required>
+                        <option value="">Seleccione una opción</option>
+                        <option value="grupos">Fase de Grupos</option>
+                        <option value="eliminacion">Eliminación Directa</option>
+                        <option value="liguilla">Liguilla (todos contra todos)</option>
+                    </select>
+                </div>
+
+                {{-- Fechas --}}
+                <div class="row">
+                    <div class="col-md-6 mb-3">
+                        <label class="form-label">Fecha Inicio</label>
+                        <input type="date" name="fecha_inicio" class="form-control">
+                    </div>
+                    <div class="col-md-6 mb-3">
+                        <label class="form-label">Fecha Fin</label>
+                        <input type="date" name="fecha_fin" class="form-control">
+                    </div>
+                </div>
+
+                {{-- Equipos --}}
+                <div class="mb-3">
+                    <label class="form-label">Equipos Participantes</label>
+                    <select name="equipos[]" class="form-control select2" multiple required>
+                        @foreach ($equipos as $eq)
+                            <option value="{{ $eq->id }}">{{ $eq->nombre }}</option>
                         @endforeach
                     </select>
+                    <small class="text-muted">Seleccione los equipos que jugarán este torneo</small>
                 </div>
 
-                <!-- Descripción -->
-                <div class="col-md-12">
-                    <label class="form-label">Descripción</label>
-                    <textarea name="descripcion" class="form-control" rows="3" required></textarea>
+                {{-- ✅ Config Fase de Grupos --}}
+                <div id="config_grupos" class="mt-3 d-none">
+                    <h5 class="text-primary"><i class="fas fa-layer-group"></i> Configuración de Grupos</h5>
+
+                    <div class="row">
+                        <div class="col-md-4 mb-3">
+                            <label class="form-label">Número de Grupos</label>
+                            <input type="number" min="1" name="num_grupos" id="num_grupos" class="form-control">
+                        </div>
+
+                        <div class="col-md-4 mb-3">
+                            <label class="form-label">Equipos por Grupo</label>
+                            <input type="number" min="1" id="equipos_por_grupo" class="form-control" readonly>
+                        </div>
+
+                        <div class="col-md-4 mb-3">
+                            <label class="form-label">Clasifican por Grupo</label>
+                            <input type="number" min="1" name="clasifican_por_grupo" id="clasifican_por_grupo" class="form-control">
+                        </div>
+                    </div>
+
+                    <p class="text-muted" id="info_grupos"></p>
                 </div>
 
-                <!-- Logo -->
-                <div class="col-md-6">
-                    <label class="form-label">Logo</label>
-                    <input type="file" name="logo" class="form-control" accept="image/*">
-                </div>
-                
-                <!-- Tipo de deporte -->
+                {{-- ✅ Config Liguilla --}}
+                <div id="config_liguilla" class="mt-3 d-none">
+                    <h5 class="text-primary"><i class="fas fa-sync-alt"></i> Configuración Liguilla</h5>
 
-                <div class="col-md-6">
-                    <label class="form-label">Tipo de deporte</label>
-                    <select name="tipoDeporte" class="form-select" required>
-                        <option value="FUTBOL">Fútbol</option>
-                        <option value="FUTBOL-5">Fútbol 5</option>
-                        <option value="FUTBOL-8">Fútbol 8</option>
-                        <option value="MICRO-FUTBOL">Microfútbol</option>
-                        <option value="OTRO">Otro</option>
+                    <label class="form-label">¿Ida y vuelta?</label>
+                    <select name="ida_vuelta" class="form-control">
+                        <option value="0">No, solo ida</option>
+                        <option value="1">Sí, ida y vuelta</option>
                     </select>
                 </div>
 
-                <!-- Formato -->
-                <div class="col-md-6">
-                    <label class="form-label">Formato</label>
-                    <select name="formato" class="form-select" required>
-                        <option value="FASE_GRUPOS">Fase de Grupos</option>
-                        <option value="LIGUILLA">Liguilla</option>
-                        <option value="ELIMINACION_DIRECTA">Eliminación Directa</option>
-                        <option value="MIXTO">Mixto</option>
-                    </select>
+                {{-- ✅ Config Eliminación directa --}}
+                <div id="config_eliminacion" class="mt-3 d-none">
+                    <h5 class="text-primary"><i class="fas fa-times-circle"></i> Eliminación Directa</h5>
+                    <p class="text-muted">Las llaves se generarán automáticamente según el número de equipos.</p>
                 </div>
 
-                <!-- Número de equipos -->
-                 <div class="col-md-6">
-                    <label class="form-label">Número de equipos</label>
-                    <select name="numeroEquipos" class="form-select" required>
-                        <option value="4">4</option>
-                        <option value="8">8</option>
-                        <option value="12">12</option>
-                        <option value="16">16</option>
-                        <option value="20">20</option>
-                        <option value="24">24</option>
-                        <option value="28">28</option>
-                        <option value="32">32</option>
-                        <option value="OTRO">Otro</option>
-                    </select>
-                </div>
-
-
-                <!-- Estado -->
-                <div class="col-md-6">
-                    <label class="form-label">Estado</label>
-                    <select name="estado" class="form-select" required>
-                        <option value="activo">Activo</option>
-                        <option value="inactivo">Inactivo</option>
-                    </select>
-                </div>
-                
-                <!-- Fechas -->
-                <div class="col-md-6">
-                    <label class="form-label">Fecha de inicio</label>
-                    <input type="date" name="fechaInicio" class="form-control" required>
-                </div>
-
-                <div class="col-md-6">
-                    <label class="form-label">Fecha de fin</label>
-                    <input type="date" name="fechaFin" class="form-control" required>
-                </div>
-
-                <!-- Reglas -->
-                <div class="col-md-12">
-                    <label class="form-label">Reglas del torneo</label>
-                    <textarea name="reglas" class="form-control" rows="3"></textarea>
-                </div>
-
-                <!-- Premio -->
-                <div class="col-md-6">
-                    <label class="form-label">Premio</label>
-                    <input type="number" name="premio" step="0.01" class="form-control">
-                </div>
-            </div>
-
-            <!-- Botones -->
-            <div class="mt-4 d-flex justify-content-end gap-2">
-                <button type="submit" class="btn btn-success">Guardar</button>
-                <a href="{{ route('torneos.index') }}" class="btn btn-warning">Volver</a>
+                <button class="btn btn-success w-100 mt-3">
+                    <i class="fas fa-check"></i> Guardar Torneo
+                </button>
             </div>
         </form>
     </div>
 </div>
+@endsection
+
+
+@section('scripts')
+<script>
+function actualizarGrupos() {
+    let equiposSeleccionados = document.querySelectorAll('select[name="equipos[]"] option:checked').length;
+    let numGrupos = document.getElementById('num_grupos').value;
+
+    if (numGrupos > 0 && equiposSeleccionados > 0) {
+        let porGrupo = Math.floor(equiposSeleccionados / numGrupos);
+        let sobrantes = equiposSeleccionados % numGrupos;
+
+        document.getElementById('equipos_por_grupo').value = porGrupo;
+
+        document.getElementById('info_grupos').innerText =
+            `Con ${equiposSeleccionados} equipos: ${numGrupos} grupos de ${porGrupo} equipos`
+            + (sobrantes > 0 ? ` y ${sobrantes} grupo(s) con un equipo adicional` : ``);
+    }
+}
+
+function mostrarConfig() {
+    let tipo = document.getElementById('tipo_torneo').value;
+
+    document.getElementById('config_grupos').classList.add('d-none');
+    document.getElementById('config_liguilla').classList.add('d-none');
+    document.getElementById('config_eliminacion').classList.add('d-none');
+
+    if (tipo === 'grupos') {
+        document.getElementById('config_grupos').classList.remove('d-none');
+        actualizarGrupos();
+    } else if (tipo === 'liguilla') {
+        document.getElementById('config_liguilla').classList.remove('d-none');
+    } else if (tipo === 'eliminacion') {
+        document.getElementById('config_eliminacion').classList.remove('d-none');
+    }
+}
+
+// ✅ Detectar cambios
+document.querySelector('select[name="equipos[]"]').addEventListener('change', actualizarGrupos);
+document.getElementById('num_grupos').addEventListener('input', actualizarGrupos);
+document.getElementById('tipo_torneo').addEventListener('change', mostrarConfig);
+window.addEventListener('load', mostrarConfig);
+</script>
 @endsection

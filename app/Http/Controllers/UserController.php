@@ -6,15 +6,28 @@ use App\Models\Canchas;
 use App\Models\Equipos;
 use App\Models\Jugadores;
 use App\Models\municipios;
+use App\Services\userService;
 use Illuminate\Http\Request;
 
 class UserController extends Controller
 {
+    protected $userService;
+
+    public function __construct(userService $userService)
+    {
+        $this->userService = $userService;
+    }
     public function index()
     {
         $municipios = municipios::all();
         $canchas = Canchas::all();
-        return view('usuario.vistaUsuario', compact('municipios', 'canchas'));
+        $accesosRapidos = [
+            'totalJugadores' => $this->userService->totalJugadores(),
+            'totalEquipos' => $this->userService->totalEquipos(),
+            'totalCanchas' => $this->userService->totalCanchas(),
+        ];
+
+        return view('usuario.vistaUsuario', compact('municipios', 'canchas', 'accesosRapidos'));
     }
 
     public function listaEquipos(Request $request)
