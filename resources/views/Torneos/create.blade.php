@@ -4,8 +4,6 @@
 
 @section('content')
 
-<link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
-
 <div class="container mt-4">
     <div class="card shadow-lg border-0 rounded-4">
         <div class="card-header bg-dark text-white">
@@ -25,7 +23,7 @@
                 {{-- Municipio --}}
                 <div class="mb-3">
                     <label class="form-label">Municipio</label>
-                    <select name="idMunicipio" class="form-control" required>
+                    <select name="idMunicipio" class="form-control">
                         <option value="">Seleccione un municipio</option>
                         @foreach ($municipios as $mun)
                             <option value="{{ $mun->id }}" {{ old('idMunicipio') == $mun->id ? 'selected' : '' }}>
@@ -80,27 +78,35 @@
                 {{-- Equipos Participantes --}}
                 <div class="mb-3">
                     <label class="form-label">Equipos Participantes</label>
-                    <select name="equipos[]" class="form-control select2" multiple required size="6">
+                    <select name="equipos[]" 
+                            class="selectpicker w-100" 
+                            data-style="btn-dark"
+                            multiple 
+                            data-live-search="true" 
+                            required>
                         @foreach ($equipos as $eq)
                             <option value="{{ $eq->id }}" {{ collect(old('equipos'))->contains($eq->id) ? 'selected' : '' }}>
                                 {{ $eq->nombre }}
                             </option>
                         @endforeach
                     </select>
-                    <small class="text-muted">Seleccione los equipos que jugarán este torneo</small><br>
-                    <a href="{{ route('equipos.create') }}" class="btn btn-sm btn-outline-primary mt-2">
-                        <i class="fas fa-plus"></i> Agregar nuevo equipo
-                    </a>
+
+                    <small class="text-muted">Seleccione los equipos participantes</small>
                 </div>
 
+                {{-- Botón Modal Crear Equipo --}}
+                <button type="button" class="btn btn-sm btn-outline-success mt-2" data-bs-toggle="modal" data-bs-target="#modalCrearEquipo">
+                    <i class="fas fa-plus"></i> Crear nuevo equipo
+                </button>
+
                 {{-- Configuración Grupos --}}
-                <div id="config_grupos" class="mt-3 border rounded p-3 {{ old('tipo') == 'Grupos' ? '' : 'd-none' }}">
+                <div id="config_grupos" class="mt-3 border rounded p-3 d-none">
                     <h5 class="text-primary"><i class="fas fa-layer-group"></i> Configuración de Grupos</h5>
 
                     <div class="row">
                         <div class="col-md-4 mb-3">
                             <label class="form-label">Número de Grupos</label>
-                            <input type="number" min="1" name="cantidad_grupos" id="num_grupos" class="form-control" value="{{ old('cantidad_grupos') }}">
+                            <input type="number" min="1" name="cantidad_grupos" id="num_grupos" class="form-control">
                         </div>
 
                         <div class="col-md-4 mb-3">
@@ -110,7 +116,7 @@
 
                         <div class="col-md-4 mb-3">
                             <label class="form-label">Clasifican por Grupo</label>
-                            <input type="number" min="1" name="clasificados_por_grupo" id="clasifican_por_grupo" class="form-control" value="{{ old('clasificados_por_grupo') }}">
+                            <input type="number" min="1" name="clasificados_por_grupo" id="clasifican_por_grupo" class="form-control">
                         </div>
                     </div>
 
@@ -118,18 +124,17 @@
                 </div>
 
                 {{-- Configuración Liguilla --}}
-                <div id="config_liguilla" class="mt-3 border rounded p-3 {{ old('tipo') == 'Liguilla' ? '' : 'd-none' }}">
+                <div id="config_liguilla" class="mt-3 border rounded p-3 d-none">
                     <h5 class="text-primary"><i class="fas fa-sync-alt"></i> Configuración Liguilla</h5>
-
                     <label class="form-label">¿Ida y Vuelta?</label>
                     <select name="partidos_por_enfrentamiento" class="form-control">
-                        <option value="1" {{ old('partidos_por_enfrentamiento') == '1' ? 'selected' : '' }}>Solo Ida</option>
-                        <option value="2" {{ old('partidos_por_enfrentamiento') == '2' ? 'selected' : '' }}>Ida y Vuelta</option>
+                        <option value="1">Solo Ida</option>
+                        <option value="2">Ida y Vuelta</option>
                     </select>
                 </div>
 
                 {{-- Configuración Eliminación --}}
-                <div id="config_eliminacion" class="mt-3 border rounded p-3 {{ old('tipo') == 'Eliminacion' ? '' : 'd-none' }}">
+                <div id="config_eliminacion" class="mt-3 border rounded p-3 d-none">
                     <h5 class="text-primary"><i class="fas fa-times-circle"></i> Eliminación Directa</h5>
                     <p class="text-muted">Las llaves se generarán automáticamente según el número de equipos.</p>
                 </div>
@@ -143,23 +148,123 @@
     </div>
 </div>
 
+{{-- Modal Crear Equipo --}}
+<div class="modal fade" id="modalCrearEquipo" tabindex="-1" aria-labelledby="modalCrearEquipoLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <form id="formCrearEquipo" enctype="multipart/form-data">
+          @csrf
+          <div class="modal-header">
+            <h5 class="modal-title" id="modalCrearEquipoLabel">Crear Nuevo Equipo</h5>
+            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Cerrar"></button>
+          </div>
+          <div class="modal-body">
+            <div class="mb-3">
+                <label class="form-label">Nombre del equipo</label>
+                <input type="text" name="nombre" class="form-control" placeholder="Ingrese nombre del equipo" required>
+            </div>
+            <div class="mb-3">
+                <label class="form-label">Escudo del equipo</label>
+                <input type="file" name="escudo" class="form-control" accept="image/*" required>
+            </div>
+            <div class="mb-3">
+                <label class="form-label">Entrenador</label>
+                <input type="text" name="entrenador" class="form-control" placeholder="Ingrese nombre del entrenador" required>
+            </div>
+            <div class="mb-3">
+                <label class="form-label">Municipio</label>
+                <select name="idMunicipio" class="form-select" required>
+                    <option value="">Seleccione un municipio</option>
+                    @foreach($municipios as $municipio)
+                        <option value="{{ $municipio->id }}">{{ $municipio->nombre }}</option>
+                    @endforeach
+                </select>
+            </div>
+            <div class="mb-3">
+                <label class="form-label">Estado</label>
+                <select name="estado" class="form-select" required>
+                    <option value="activo">Activo</option>
+                    <option value="inactivo">Inactivo</option>
+                </select>
+            </div>
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
+            <button type="submit" class="btn btn-success">💾 Guardar Equipo</button>
+          </div>
+      </form>
+    </div>
+  </div>
+</div>
+
 @endsection
 
 @section('scripts')
-<script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
-
 <script>
 $(document).ready(function() {
-    $('.select2').select2({
-        placeholder: "Seleccione equipos",
-        width: '100%'
-    });
+    // Inicializar bootstrap select
+    $('.selectpicker').selectpicker();
 
-    mostrarConfig();
+    // Mostrar config según tipo
+    $('#tipo_torneo').on('change', mostrarConfig);
+
+    // Autocalcular equipos y grupos
     actualizarGrupos();
+    $('select[name="equipos[]"]').on('changed.bs.select', actualizarGrupos);
+    $('#num_grupos').on('keyup change', actualizarGrupos);
+
+    // Guardar equipo vía AJAX
+    $('#formCrearEquipo').submit(function(e) {
+        e.preventDefault();
+
+        let formData = new FormData(this);
+
+        $.ajax({
+            url: "{{ route('equipos.store') }}",
+            type: "POST",
+            data: formData,
+            contentType: false,
+            processData: false,
+            success: function(response) {
+                // Cerrar modal
+                $('#modalCrearEquipo').modal('hide');
+
+                // Limpiar formulario
+                $('#formCrearEquipo')[0].reset();
+
+                // Agregar nuevo equipo al select
+                let newOption = new Option(response.nombre, response.id, true, true);
+                $('select[name="equipos[]"]').append(newOption).trigger('change');
+                $('.selectpicker').selectpicker('refresh');
+
+                // Mostrar mensaje éxito
+                Swal.fire({
+                    icon: 'success',
+                    title: '¡Equipo creado!',
+                    text: response.nombre + ' se ha agregado correctamente.',
+                    timer: 2000,
+                    showConfirmButton: false
+                });
+
+                // Actualizar número de equipos
+                actualizarGrupos();
+            },
+            error: function(xhr) {
+                let errors = xhr.responseJSON.errors;
+                let errorText = '';
+                $.each(errors, function(key, value) {
+                    errorText += value + '\n';
+                });
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Error',
+                    text: errorText
+                });
+            }
+        });
+    });
 });
 
-// Mostrar/Ocultar configuración según tipo
 function mostrarConfig() {
     let tipo = $('#tipo_torneo').val();
 
@@ -172,15 +277,14 @@ function mostrarConfig() {
     } else if (tipo === 'Eliminacion') {
         $('#config_eliminacion').removeClass('d-none');
     }
+
     actualizarGrupos();
 }
 
-// Calcular número de equipos y equipos por grupo
 function actualizarGrupos() {
     let selectedEquipos = $('select[name="equipos[]"]').val() || [];
     let numEquipos = selectedEquipos.length;
 
-    // Actualiza el campo Número de Equipos automáticamente
     $('#num_equipos_form').val(numEquipos);
 
     let numGrupos = parseInt($('#num_grupos').val()) || 0;
@@ -200,11 +304,5 @@ function actualizarGrupos() {
         $('#info_grupos').text('');
     }
 }
-
-// Detectar cambios
-$('select[name="equipos[]"]').on('change', actualizarGrupos);
-$('#num_grupos').on('keyup change', actualizarGrupos);
-$('#tipo_torneo').on('change', mostrarConfig);
-
 </script>
 @endsection

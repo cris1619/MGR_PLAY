@@ -32,29 +32,31 @@ class TorneosController extends Controller
     public function store(Request $request)
 {
     $request->validate([
-        'nombre' => 'required',
-        'tipo_torneo' => 'required',
+        'nombre' => 'required|string',
+        'tipo' => 'required|in:Grupos,Liguilla,Eliminacion',
         'equipos' => 'required|array|min:2',
+        'equipos.*' => 'integer|exists:equipos,id',
+        'cantidad_grupos' => 'nullable|integer|min:1',
+        'partidos_por_enfrentamiento' => 'nullable|in:1,2',
     ]);
 
     $torneo = Torneos::create([
-        'idAdmin' => $request->idAdmin,
-        'idMunicipio' => $request->idMunicipio,
+        'idMunicipio' => $request->idMunicipio ?? null,
         'nombre' => $request->nombre,
-        'descripcion' => $request->descripcion,
-        'tipo' => $request->tipo_torneo,
+        'descripcion' => $request->descripcion ?? null,
+        'tipo' => $request->tipo,
         'estado' => 'Pendiente',
-        'fecha_inicio' => $request->fecha_inicio,
-        'fecha_fin' => $request->fecha_fin,
+        'fecha_inicio' => $request->fecha_inicio ?? null,
+        'fecha_fin' => $request->fecha_fin ?? null,
         'num_equipos' => count($request->equipos),
-        'cantidad_grupos' => $request->num_grupos ?? null,
+        'cantidad_grupos' => $request->cantidad_grupos ?? null,
         'equipos_por_grupo' => $request->equipos_por_grupo ?? null,
-        'clasificados_por_grupo' => $request->clasifican_por_grupo ?? null,
-        'partidos_por_enfrentamiento' => $request->ida_vuelta ?? 1,
+        'clasificados_por_grupo' => $request->clasificados_por_grupo ?? null,
+        'partidos_por_enfrentamiento' => $request->partidos_por_enfrentamiento ?? 1,
         'premio' => $request->premio ?? null,
     ]);
 
-    // Asociar equipos
+    // Asociar equipos (usa tu modelo Torneo_Equipo)
     foreach ($request->equipos as $idEquipo) {
         Torneo_Equipo::create([
             'idTorneo' => $torneo->id,
@@ -63,16 +65,17 @@ class TorneosController extends Controller
     }
 
     // Generar partidos según tipo
-    if ($request->tipo_torneo === 'Grupos') {
-        $this->generarGrupos($torneo, $request->equipos, $request->num_grupos);
-    } elseif ($request->tipo_torneo === 'Liguilla') {
-        $this->generarLiguilla($torneo, $request->equipos, $request->ida_vuelta);
-    } elseif ($request->tipo_torneo === 'Eliminacion') {
+    if ($request->tipo === 'Grupos') {
+        $this->generarGrupos($torneo, $request->equipos, $request->cantidad_grupos ?? 1);
+    } elseif ($request->tipo === 'Liguilla') {
+        $this->generarLiguilla($torneo, $request->equipos, $request->partidos_por_enfrentamiento ?? 1);
+    } elseif ($request->tipo === 'Eliminacion') {
         $this->generarEliminacion($torneo, $request->equipos);
     }
 
     return redirect()->route('torneos.index')->with('success', 'Torneo creado correctamente');
 }
+
 
 
 
