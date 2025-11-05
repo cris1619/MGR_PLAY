@@ -127,7 +127,7 @@
     }
 
     .card-title {
-        color: #ffd700;
+        color: #ccc;
         font-size: 1.4rem;
         font-weight: 700;
         margin-bottom: 15px;

@@ -11,20 +11,25 @@ class CanchasController extends Controller
     /**
      * Display a listing of the resource.
      */
-    public function index(Request $request)
-    {
-        $municipios = municipios::all();
+        public function index(Request $request)
+        {
+            // Obtener todos los municipios para llenar el select
+            $municipios = \App\Models\Municipios::all();
 
-        // Si hay filtro, solo trae las canchas de ese municipio
-        if ($request->filled('IdMunicipio')) {
-            $canchas = Canchas::where('IdMunicipio', $request->IdMunicipio)->get();
-        } else {
-            // Si no hay filtro, muestra todas
-            $canchas = Canchas::all();
+            // Iniciar la consulta de canchas
+            $query = \App\Models\Canchas::with('municipio');
+
+            // Filtrar por municipio si se selecciona uno
+            if ($request->filled('IdMunicipio')) {
+                $query->where('IdMunicipio', $request->IdMunicipio);
+            }
+
+            // Ejecutar la consulta final
+            $canchas = $query->get();
+
+            // Retornar la vista con los datos
+            return view('canchas.index', compact('canchas', 'municipios'));
         }
-
-        return view('canchas.index', compact('canchas', 'municipios'));
-    }
 
     /**
      * Show the form for creating a new resource.

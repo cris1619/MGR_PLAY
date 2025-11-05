@@ -55,7 +55,7 @@ Equipos | MGR PLAY
     box-shadow: 0 8px 16px rgba(0,0,0,0.3);
 }
 .hero-section h1 {
-    color: #ffd700;
+    color: #fdfdfcff;
     font-size: 2.2rem;
     font-weight: 700;
     margin-bottom: 10px;
@@ -216,8 +216,7 @@ Equipos | MGR PLAY
 
     <h2 class="section-title">📋 Listado de Equipos</h2>
 
-    <div class="d-flex justify-content-between align-items-center mb-4">
-        <h4 class="text-white">Equipos Registrados</h4>
+    <div class="d-flex justify-content-left-between align-items-center mb-4">
         <a href="{{ route('equipos.create') }}" class="btn btn-admin">➕ Crear Equipo</a>
     </div>
 
