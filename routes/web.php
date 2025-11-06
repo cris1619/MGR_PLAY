@@ -61,6 +61,8 @@ Route::post('/Equipos/store', [EquiposController::class, 'store'])->name('equipo
 Route::get('/Equipos/edit/{id}', [EquiposController::class, 'edit'])->name('equipos.edit');
 Route::post('/Equipos/update/{id}', [EquiposController::class, 'update'])->name('equipos.update');
 Route::post('/Equipos/delete/{id}', [EquiposController::class, 'destroy'])->name('equipos.destroy');
+Route::get('/Equipos/show/{id}', [EquiposController::class, 'show'])->name('equipos.show');
+
 
 //Rutas arbitros
 Route::get('/Arbitros/index',[ArbitrosController::class,'index'])->name('Arbitros.index');
@@ -85,3 +87,5 @@ Route::post('/Torneos/store', [TorneosController::class, 'store'])->name('torneo
 Route::get('/Torneos/edit/{id}', [TorneosController::class, 'edit'])->name('torneos.edit');
 Route::post('/Torneos/update/{id}', [TorneosController::class, 'update'])->name('torneos.update');
 Route::post('/Torneos/delete/{id}', [TorneosController::class, 'destroy'])->name('torneos.destroy');
+Route::get('/Torneos/show/{id}', [TorneosController::class, 'show'])->name('torneos.show');
+

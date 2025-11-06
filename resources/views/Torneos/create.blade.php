@@ -44,6 +44,16 @@
                     <label class="form-label">Premio</label>
                     <input type="text" name="premio" class="form-control" value="{{ old('premio') }}">
                 </div>
+                
+                {{-- Estado --}}
+                <div class="mb-3">
+                    <label class="form-label">Estado del Torneo</label>
+                    <select name="estado" class="form-control" required>
+                        <option value="Pendiente" selected>Pendiente</option>
+                        <option value="En curso" {{ old('estado') == 'En curso' ? 'selected' : '' }}>En curso</option>
+                        <option value="Finalizado" {{ old('estado') == 'Finalizado' ? 'selected' : '' }}>Finalizado</option>
+                    </select>
+                </div>
 
                 {{-- Tipo de torneo --}}
                 <div class="mb-3">
