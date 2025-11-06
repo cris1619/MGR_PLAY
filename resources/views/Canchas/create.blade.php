@@ -161,7 +161,7 @@
                    class="form-control"
                    placeholder="Ingrese el nombre de la cancha"
                    value="{{ old('nombre') }}"
-                   style="color: white; background-color: #222;"
+                   style="color: white; background-color: #2a2e33"
                    required>
         </div>
 
