@@ -17,7 +17,7 @@ return new class extends Migration
             $table->unsignedBigInteger('id_equipo');
             $table->enum('rol', ['Local','Visitante']);
             $table->integer('goles')->default(0);
-            $table->foreign('id_partido')->references('id')->on('partido');
+            $table->foreign('id_partido')->references('id')->on('partidos');
             $table->foreign('id_equipo')->references('id')->on('equipos');
             $table->timestamps();
         });
