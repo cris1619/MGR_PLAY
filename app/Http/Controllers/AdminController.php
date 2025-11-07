@@ -4,62 +4,79 @@ namespace App\Http\Controllers;
 
 use App\Models\Admin;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Hash;
+use Illuminate\Validation\ValidationException;
 
 class AdminController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     */
-    public function index()
-    {
-        //
+    public function verlogin(){
+        //verificar si el usuario ya ha iniciado sesión
+        if(Auth::check()){
+            return redirect()->route('welcome');
+        }
+        return view('login');
     }
 
-    /**
-     * Show the form for creating a new resource.
-     */
-    public function create()
-    {
-        //
+    public function login(Request $request){
+        //validar los datos del formulario
+        $credentials = $request->validate([
+            'email' => 'required|email',
+            'password' => 'required',
+        ]);
+
+        if(Auth::attempt($credentials)){
+            //si las credenciales son válidas, regenerar la sesión
+            $request->session()->regenerate();
+            
+            //redireccionar a la ruta principal
+            return redirect()->route('welcome')
+                ->with('success','Bienvenido');
+        }
+        throw ValidationException::withMessages([
+            'email' => ['Las credenciales no coinciden con nuestros registros.'],
+        ]);
     }
 
-    /**
-     * Store a newly created resource in storage.
-     */
-    public function store(Request $request)
-    {
-        //
+    public function logout(Request $request){
+        //desautenticar al usuario
+        Auth::logout();
+
+        //invalidate la sesión
+        $request->session()->invalidate();
+
+        //regenerar el token de sesión
+        $request->session()->regenerateToken();
+
+        //redireccionar a la página de inicio de sesión
+        return redirect()->route('login')
+            ->with('success','Has cerrado sesión');
     }
 
-    /**
-     * Display the specified resource.
-     */
-    public function show(Admin $admin)
-    {
-        //
-    }
+    public function verRegistro()
+{
+    return view('registro'); 
+}
 
-    /**
-     * Show the form for editing the specified resource.
-     */
-    public function edit(Admin $admin)
-    {
-        //
-    }
+    public function registro(Request $request)
+{
+    // Validar
+    $request->validate([
+        'nombre' => 'required|string|max:100',
+        'apellido' => 'required|string|max:100',
+        'email' => 'required|email|unique:admin,email',
+        'password' => 'required|min:6'
+    ]);
 
-    /**
-     * Update the specified resource in storage.
-     */
-    public function update(Request $request, Admin $admin)
-    {
-        //
-    }
+    // Crear usuario
+    Admin::create([
+        'nombre' => $request->nombre,
+        'apellido' => $request->apellido,
+        'email' => $request->email,
+        'password' => Hash::make($request->password),
+    ]);
 
-    /**
-     * Remove the specified resource from storage.
-     */
-    public function destroy(Admin $admin)
-    {
-        //
-    }
+    // Redirigir al login con mensaje
+    return redirect()->route('login')->with('success','Registro exitoso, ahora puedes iniciar sesión.');
+}
 }

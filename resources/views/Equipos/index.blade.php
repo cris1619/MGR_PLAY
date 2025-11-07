@@ -308,10 +308,13 @@ Equipos | MGR PLAY
                 <tr class="{{ session('highlighted_equipo_id') == $equipo->id ? 'highlight' : '' }}">
                     <td>{{ $equipo->id }}</td>
                     <td>
-                        <img src="{{ asset('resources/img' . $equipo->escudo) }}"
-                             alt="Escudo {{ $equipo->nombre }}"
-                             width="50" height="50"
-                             class="rounded-circle border">
+                        @if($equipo->escudo)
+                        <img src="{{ asset('storage/public/escudos/' . $equipo->escudo) }}" 
+                            alt="Escudo {{ $equipo->nombre }}" 
+                            style="width:50px; height:50px; object-fit:cover; border-radius:50%;">
+                    @else
+                        Sin escudo
+                    @endif
                     </td>
                     <td><b>{{ $equipo->nombre }}</b></td>
                     <td>{{ $equipo->entrenador }}</td>

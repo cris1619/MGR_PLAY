@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Equipos;
 use App\Models\municipios;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Storage;
 
 class EquiposController extends Controller
 {
@@ -53,10 +54,33 @@ class EquiposController extends Controller
      * Store a newly created resource in storage.
      */
     public function store(Request $request)
-    {
-        $equipos = Equipos::create($request->all());
-        return redirect()->route('equipos.index')->with('success', 'Equipo creado con éxito');
+{
+    // Validar primero
+    $validated = $request->validate([
+        'nombre' => 'required|string|max:255',
+        'entrenador' => 'required|string|max:255',
+        'idMunicipio' => 'required|exists:municipios,id',
+        'estado' => 'required|in:activo,inactivo',
+        'escudo' => 'required|image|mimes:jpeg,png,jpg,gif|max:2048',
+    ]);
+
+    // Guardar archivo
+    if ($request->hasFile('escudo')) {
+        $file = $request->file('escudo');
+        $filename = time() . '_' . $file->getClientOriginalName();
+
+
+        // Guardar en storage/app/public/escudos
+        Storage::putFileAs('public/escudos', $file, $filename);
+
+        $validated['escudo'] = $filename; // Guardar nombre en la BD
     }
+
+    // Crear equipo
+    Equipos::create($validated);
+
+    return redirect()->route('equipos.index')->with('success', 'Equipo creado con éxito');
+}
 
     /**
      * Display the specified resource.
@@ -80,13 +104,37 @@ class EquiposController extends Controller
      * Update the specified resource in storage.
      */
     public function update(Request $request, $id)
-    {
-        $equipo = Equipos::find($id);
-        $equipo->update($request->all());
-        return redirect()->route('equipos.index')
-            ->with('success', 'Equipo actualizado con éxito')
-            ->with('highlighted_equipo_id', $equipo->id);
+{
+    $equipo = Equipos::findOrFail($id);
+    $data = $request->all();
+
+
+
+   // Guardar archivo
+    if ($request->hasFile('escudo')) {
+        $file = $request->file('escudo');
+        $filename = time() . '_' . $file->getClientOriginalName();
+
+
+        // Guardar en storage/app/public/escudos
+        Storage::putFileAs('public/escudos', $file, $filename);
+
+        $data['escudo'] = $filename; // Guardar nombre en la BD
+
+        // Eliminar el escudo antiguo si existe
+        if ($equipo->escudo && Storage::exists('public/escudos/' . $equipo->escudo)) {
+            Storage::delete('public/escudos/' . $equipo->escudo);
+        }
+
+
     }
+
+    $equipo->update($data);
+
+    return redirect()->route('equipos.index')
+        ->with('success', 'Equipo actualizado con éxito');
+}
+
 
     /**
      * Remove the specified resource from storage.
@@ -102,10 +150,19 @@ class EquiposController extends Controller
                 ->with('error', 'No puedes eliminar este equipo porque tiene jugadores asociados.');
         }
 
+
+        // Eliminar el escudo 
+        if ($equipos->escudo && Storage::exists('public/escudos/' . $equipos->escudo)) {
+            Storage::delete('public/escudos/' . $equipos->escudo);
+        }
+
+
         $equipos->delete();
 
         return redirect()->route('equipos.index')
             ->with('success', 'Equipo eliminado correctamente.');
     }
+
+
 }
 

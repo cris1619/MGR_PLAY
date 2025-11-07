@@ -26,8 +26,7 @@ class Torneos extends Model
 
     public function equipos()
     {
-        return $this->belongsToMany(Equipos::class, 'Torneo_Equipo', 'id_torneo', 'id_equipo')
-                    ->withPivot('grupo')->withTimestamps();
+        return $this->belongsToMany(Equipos::class, 'torneo_equipo', 'idTorneo', 'idEquipo');
     }
 
     public function grupos()

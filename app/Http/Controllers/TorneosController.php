@@ -2,17 +2,14 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Torneo;
-use App\Models\Equipo;
+
 use App\Models\Equipos;
 use App\Models\Grupo;
 use App\Models\Grupo_Equipo;
-use App\Models\GrupoEquipo;
+use App\Models\municipios;
 use App\Models\Partido;
 use App\Models\Partido_Equipo;
-use App\Models\PartidoEquipo;
 use App\Models\Torneo_Equipo;
-use App\Models\TorneoEquipo;
 use App\Models\Torneos;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
@@ -28,50 +25,138 @@ class TorneosController extends Controller
     public function create()
     {
         $equipos = Equipos::where('estado', 'activo')->get();
-        return view('torneos.create', compact('equipos'));
+        $municipios = municipios::all();
+        return view('torneos.create', compact('equipos', 'municipios'));
     }
 
     public function store(Request $request)
-    {
-        $request->validate([
-            'nombre' => 'required',
-            'tipo_torneo' => 'required',
-            'equipos' => 'required|array|min:2',
+{
+    $request->validate([
+        'nombre' => 'required|string',
+        'tipo' => 'required|in:Grupos,Liguilla,Eliminacion',
+        'equipos' => 'required|array|min:2',
+        'equipos.*' => 'integer|exists:equipos,id',
+        'cantidad_grupos' => 'nullable|integer|min:1',
+        'partidos_por_enfrentamiento' => 'nullable|in:1,2',
+    ]);
+
+    $torneo = Torneos::create([
+        'idMunicipio' => $request->idMunicipio ?? null,
+        'nombre' => $request->nombre,
+        'descripcion' => $request->descripcion ?? null,
+        'tipo' => $request->tipo,
+        'estado' => 'Pendiente',
+        'fecha_inicio' => $request->fecha_inicio ?? null,
+        'fecha_fin' => $request->fecha_fin ?? null,
+        'num_equipos' => count($request->equipos),
+        'cantidad_grupos' => $request->cantidad_grupos ?? null,
+        'equipos_por_grupo' => $request->equipos_por_grupo ?? null,
+        'clasificados_por_grupo' => $request->clasificados_por_grupo ?? null,
+        'partidos_por_enfrentamiento' => $request->partidos_por_enfrentamiento ?? 1,
+        'premio' => $request->premio ?? null,
+    ]);
+
+    // Asociar equipos (usa tu modelo Torneo_Equipo)
+    foreach ($request->equipos as $idEquipo) {
+        Torneo_Equipo::create([
+            'idTorneo' => $torneo->id,
+            'idEquipo' => $idEquipo,
         ]);
-
-        // Crear torneo
-        $torneo = Torneos::create([
-            'nombre' => $request->nombre,
-            'tipo' => $request->tipo_torneo,
-            'fecha_inicio' => $request->fecha_inicio,
-            'fecha_fin' => $request->fecha_fin,
-            'num_equipos' => count($request->equipos),
-            'cantidad_grupos' => $request->num_grupos ?? null,
-            'clasificados_por_grupo' => $request->clasifican_por_grupo ?? null,
-            'partidos_por_enfrentamiento' => $request->ida_vuelta ?? 1,
-        ]);
-
-        // Asociar equipos a torneo
-        foreach ($request->equipos as $idEquipo) {
-            Torneo_Equipo::create([
-                'idTorneo' => $torneo->id,
-                'idEquipo' => $idEquipo,
-            ]);
-        }
-
-        // Tipos de torneo
-        if ($request->tipo_torneo == 'grupos') {
-            $this->generarGrupos($torneo, $request->equipos, $request->num_grupos);
-        }
-        elseif ($request->tipo_torneo == 'liguilla') {
-            $this->generarLiguilla($torneo, $request->equipos, $request->ida_vuelta);
-        }
-        elseif ($request->tipo_torneo == 'eliminacion') {
-            $this->generarEliminacion($torneo, $request->equipos);
-        }
-
-        return redirect()->route('torneos.index')->with('success', 'Torneo creado correctamente');
     }
+
+    // Generar partidos según tipo
+    if ($request->tipo === 'Grupos') {
+        $this->generarGrupos($torneo, $request->equipos, $request->cantidad_grupos ?? 1);
+    } elseif ($request->tipo === 'Liguilla') {
+        $this->generarLiguilla($torneo, $request->equipos, $request->partidos_por_enfrentamiento ?? 1);
+    } elseif ($request->tipo === 'Eliminacion') {
+        $this->generarEliminacion($torneo, $request->equipos);
+    }
+
+    return redirect()->route('torneos.index')->with('success', 'Torneo creado correctamente');
+}
+
+    public function show($id)
+{
+    // Buscar torneo con su municipio y equipos participantes
+    $torneo = Torneos::with(['municipio', 'equipos'])->findOrFail($id);
+
+    return view('torneos.show', compact('torneo'));
+}
+
+public function edit($id)
+{
+    $torneos = Torneos::with('equipos')->findOrFail($id);
+    $equipos = Equipos::where('estado', 'activo')->get();
+    $municipios = municipios::all();
+
+    return view('torneos.edit', compact('torneos', 'equipos', 'municipios'));
+}
+
+public function update(Request $request, $id)
+{
+    $request->validate([
+        'nombre' => 'required|string',
+        'tipo' => 'required|in:Grupos,Liguilla,Eliminacion',
+        'equipos' => 'required|array|min:2',
+        'equipos.*' => 'integer|exists:equipos,id',
+        'cantidad_grupos' => 'nullable|integer|min:1',
+        'partidos_por_enfrentamiento' => 'nullable|in:1,2',
+    ]);
+
+    $torneo = Torneos::findOrFail($id);
+
+    $torneo->update([
+        'idMunicipio' => $request->idMunicipio ?? null,
+        'nombre' => $request->nombre,
+        'descripcion' => $request->descripcion ?? null,
+        'tipo' => $request->tipo,
+        'estado' => $request->estado ?? $torneo->estado,
+        'fecha_inicio' => $request->fecha_inicio ?? null,
+        'fecha_fin' => $request->fecha_fin ?? null,
+        'num_equipos' => count($request->equipos),
+        'cantidad_grupos' => $request->cantidad_grupos ?? null,
+        'equipos_por_grupo' => $request->equipos_por_grupo ?? null,
+        'clasificados_por_grupo' => $request->clasificados_por_grupo ?? null,
+        'partidos_por_enfrentamiento' => $request->partidos_por_enfrentamiento ?? 1,
+        'premio' => $request->premio ?? null,
+    ]);
+
+    // Actualizar equipos asociados
+    Torneo_Equipo::where('idTorneo', $torneo->id)->delete(); // eliminar antiguos
+    foreach ($request->equipos as $idEquipo) {
+        Torneo_Equipo::create([
+            'idTorneo' => $torneo->id,
+            'idEquipo' => $idEquipo,
+        ]);
+    }
+
+    return redirect()->route('torneos.index')->with('success', 'Torneo actualizado correctamente');
+}
+
+public function destroy($id)
+{
+    $torneo = Torneos::findOrFail($id);
+
+    // Eliminar relaciones con equipos
+    Torneo_Equipo::where('idTorneo', $torneo->id)->delete();
+
+    // Opcional: eliminar grupos y partidos si existen
+    Grupo::where('idTorneo', $torneo->id)->delete();
+    Partido::where('id_torneo', $torneo->id)->delete();
+    // No olvides eliminar también los registros de Partido_Equipo si quieres limpiar todo
+    Partido_Equipo::whereIn('id_partido', function($query) use ($torneo) {
+        $query->select('id')->from('partidos')->where('id_torneo', $torneo->id);
+    })->delete();
+
+    // Finalmente eliminar el torneo
+    $torneo->delete();
+
+    return redirect()->route('torneos.index')->with('success', 'Torneo eliminado correctamente');
+}
+
+
+
 
 
     // ==========================

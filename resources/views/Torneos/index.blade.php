@@ -18,10 +18,13 @@
                     <tr>
                         <th>ID</th>
                         <th>Nombre</th>
+                        <th>Municipio</th>
                         <th>Tipo</th>
                         <th>Estado</th>
                         <th>Fechas</th>
-                        <th>N° Equipos</th>
+                        <th>Equipos</th>
+                        <th>Configuración</th>
+                        <th>Premio</th>
                         <th>Acciones</th>
                     </tr>
                 </thead>
@@ -29,10 +32,21 @@
                     @foreach ($torneos as $torneo)
                         <tr>
                             <td>{{ $torneo->id }}</td>
-                            <td>{{ $torneo->nombre }}</td>
+
+                            {{-- Nombre --}}
+                            <td><strong>{{ $torneo->nombre }}</strong></td>
+
+                            {{-- Municipio --}}
+                            <td>
+                                {{ $torneo->municipio ? $torneo->municipio->nombre : 'Sin municipio' }}
+                            </td>
+
+                            {{-- Tipo --}}
                             <td>
                                 <span class="badge bg-primary">{{ $torneo->tipo }}</span>
                             </td>
+
+                            {{-- Estado --}}
                             <td>
                                 <span class="badge 
                                     @if($torneo->estado == 'Pendiente') bg-warning 
@@ -41,28 +55,60 @@
                                     {{ $torneo->estado }}
                                 </span>
                             </td>
+
+                            {{-- Fechas --}}
                             <td>
                                 {{ $torneo->fecha_inicio ? date('d/m/Y', strtotime($torneo->fecha_inicio)) : '-' }} <br>
                                 {{ $torneo->fecha_fin ? date('d/m/Y', strtotime($torneo->fecha_fin)) : '-' }}
                             </td>
-                            <td>{{ $torneo->num_equipos ?? '-' }}</td>
+
+                            {{-- Número de Equipos --}}
+                            <td>
+                                <span class="badge bg-dark">
+                                    {{ $torneo->num_equipos ?? 0 }}
+                                </span>
+                            </td>
+
+                            {{-- Configuración según tipo --}}
+                            <td>
+                                @if($torneo->tipo == 'Grupos')
+                                    <span class="small text-muted">
+                                        {{ $torneo->cantidad_grupos }} grupos <br>
+                                        {{ $torneo->equipos_por_grupo }} por grupo <br>
+                                        Clasifican {{ $torneo->clasificados_por_grupo }}
+                                    </span>
+                                @elseif($torneo->tipo == 'Liguilla')
+                                    <span class="small text-muted">
+                                        {{ $torneo->partidos_por_enfrentamiento == 2 ? 'Ida y Vuelta' : 'Solo Ida' }}
+                                    </span>
+                                @else
+                                    Eliminación directa
+                                @endif
+                            </td>
+
+                            {{-- Premio --}}
+                            <td>{{ $torneo->premio ?? '-' }}</td>
+
+                            {{-- Acciones --}}
                             <td>
                                 <div class="d-flex gap-2">
-                                    <a href="#" class="btn btn-info btn-sm" title="Ver">
+                                    <a href="{{ route('torneos.show', $torneo->id) }}" class="btn btn-info btn-sm" title="Ver">
                                         <i class="fas fa-eye"></i>
                                     </a>
+
                                     <a href="{{ route('torneos.edit', $torneo->id) }}" class="btn btn-warning btn-sm" title="Editar">
                                         <i class="fas fa-edit"></i>
                                     </a>
+
                                     <form action="{{ route('torneos.destroy', $torneo->id) }}" method="POST" onsubmit="return confirmarEliminacion()">
                                         @csrf
-                                        @method('DELETE')
                                         <button type="submit" class="btn btn-danger btn-sm" title="Eliminar">
                                             <i class="fas fa-trash-alt"></i>
                                         </button>
                                     </form>
                                 </div>
                             </td>
+
                         </tr>
                     @endforeach
                 </tbody>
@@ -74,18 +120,14 @@
 
 @section('scripts')
 <script>
-    // Inicializar DataTable
     $(document).ready(function() {
         $('#tablaTorneos').DataTable({
-            language: {
-                url: '//cdn.datatables.net/plug-ins/1.13.4/i18n/es-ES.json'
-            },
+            language: { url: '//cdn.datatables.net/plug-ins/1.13.4/i18n/es-ES.json' },
             responsive: true,
             order: [[0, 'desc']]
         });
     });
 
-    // Confirmación antes de eliminar
     function confirmarEliminacion() {
         return confirm('¿Estás seguro de que deseas eliminar este torneo?');
     }
