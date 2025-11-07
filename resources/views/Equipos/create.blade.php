@@ -8,7 +8,7 @@
     <nav class="navbar">
         <div class="navbar-left">
             <a href="{{ route('equipos.index') }}" class="logo">
-                <img src="{{ url('img/logoSinFondo.png') }}" alt="MGR PLAY">
+                <img style="width: 200px;" src="{{ url('img/logoSinFondo.png') }}" alt="MGR PLAY">
                 👥 CREAR EQUIPO
             </a>
         </div>
@@ -111,6 +111,15 @@ h2.section-title::after {
     height: 3px;
     background: linear-gradient(90deg, transparent, #ffd700, transparent);
 }
+#nombre::placeholder {
+    color: white;
+    opacity: 1; /* Para Chrome, Safari */
+}
+#entrenador::placeholder {
+    color: white;
+    opacity: 1; /* Para Chrome, Safari */
+}
+
 </style>
 
 <div class="container fade-in-up">

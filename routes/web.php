@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\AdminController;
 use App\Http\Controllers\CanchasController;
 use App\Http\Controllers\EquiposController;
 use App\Http\Controllers\ArbitrosController;
@@ -7,19 +8,35 @@ use App\Http\Controllers\JugadoresController;
 use App\Http\Controllers\MunicipiosController;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\TorneosController;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
 
 Route::get('/', function () {
+    return redirect()->route('login');
+});
+
+Route::get('/welcome', function () {
     return view('welcome');
 })->name('welcome');
+
+
+//rutas para login
+Route::get('/login',[AdminController::class,'verlogin'])->name('login');
+Route::post('/loginsubmit',[AdminController::class,'login'])->name('login.submit');
+
+Route::get('/logout', function () {
+    Auth::logout();
+    return redirect()->route('login');
+})->name('logout');
+
+//RUTAS REGISTRO
+Route::get('/registro', [AdminController::class, 'verRegistro'])->name('registro');
+Route::post('/registro-submit', [AdminController::class, 'registro'])->name('registro.submit');
 
 //RUTA USUARIO
 Route::get('/usuario/index', [UserController::class, 'index'])->name('usuario.vistaUsuario');
 Route::get('/usuario/listaEquipos', [UserController::class, 'listaEquipos'])->name('usuario.listaEquipos');
 Route::get('/usuario/listaJugadores', [UserController::class, 'listaJugadores'])->name('usuario.listaJugadores');
-
-
-
 
 //RUTAS MUNICIPIOS
 Route::get('/Municipios/index', [MunicipiosController::class, 'index'])->name('municipios.index');
@@ -44,6 +61,7 @@ Route::post('/Equipos/store', [EquiposController::class, 'store'])->name('equipo
 Route::get('/Equipos/edit/{id}', [EquiposController::class, 'edit'])->name('equipos.edit');
 Route::post('/Equipos/update/{id}', [EquiposController::class, 'update'])->name('equipos.update');
 Route::post('/Equipos/delete/{id}', [EquiposController::class, 'destroy'])->name('equipos.destroy');
+Route::get('/Equipos/show/{id}', [EquiposController::class, 'show'])->name('equipos.show');
 
 
 //Rutas arbitros
@@ -69,3 +87,5 @@ Route::post('/Torneos/store', [TorneosController::class, 'store'])->name('torneo
 Route::get('/Torneos/edit/{id}', [TorneosController::class, 'edit'])->name('torneos.edit');
 Route::post('/Torneos/update/{id}', [TorneosController::class, 'update'])->name('torneos.update');
 Route::post('/Torneos/delete/{id}', [TorneosController::class, 'destroy'])->name('torneos.destroy');
+Route::get('/Torneos/show/{id}', [TorneosController::class, 'show'])->name('torneos.show');
+

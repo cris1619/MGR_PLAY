@@ -12,6 +12,7 @@
                 MALAGA GARCIA ROVIRA PLAY
             </a>
         </div>
+            <a href="{{ route('logout') }}">Cerrar sesión</a>
     </nav>
 @endsection
 
