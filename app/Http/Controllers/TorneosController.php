@@ -40,6 +40,12 @@ class TorneosController extends Controller
         'partidos_por_enfrentamiento' => 'nullable|in:1,2',
     ]);
 
+    $equiposPorGrupo = null;
+        if ($request->tipo === 'Grupos' && $request->cantidad_grupos > 0) {
+            $equiposPorGrupo = floor(count($request->equipos) / $request->cantidad_grupos);
+        }
+
+
     $torneo = Torneos::create([
         'idMunicipio' => $request->idMunicipio ?? null,
         'nombre' => $request->nombre,
@@ -50,7 +56,7 @@ class TorneosController extends Controller
         'fecha_fin' => $request->fecha_fin ?? null,
         'num_equipos' => count($request->equipos),
         'cantidad_grupos' => $request->cantidad_grupos ?? null,
-        'equipos_por_grupo' => $request->equipos_por_grupo ?? null,
+        'equipos_por_grupo' => $equiposPorGrupo ?? null,
         'clasificados_por_grupo' => $request->clasificados_por_grupo ?? null,
         'partidos_por_enfrentamiento' => $request->partidos_por_enfrentamiento ?? 1,
         'premio' => $request->premio ?? null,
@@ -179,14 +185,14 @@ public function destroy($id)
 
         // Asignar equipos a grupos
         $index = 0;
-        foreach ($equiposMezclados as $equipo) {
-            Grupo_Equipo::create([
-                'idGrupo' => $grupos[$index % $num_grupos]->id,
-                'idEquipo' => $equipo,
-            ]);
-            $index++;
-        }
-
+    foreach ($equiposMezclados as $equipo) {
+        $grupoIndex = $index % $num_grupos;
+        Grupo_Equipo::create([
+            'idGrupo' => $grupos[$grupoIndex]->id,
+            'idEquipo' => $equipo,
+        ]);
+        $index++;
+    }
         $this->generarPartidosGrupos($torneo);
     }
 

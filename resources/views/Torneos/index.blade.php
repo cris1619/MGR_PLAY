@@ -10,6 +10,9 @@
             <a href="{{ route('torneos.create') }}" class="btn btn-success btn-sm">
                 <i class="fas fa-plus"></i> Nuevo Torneo
             </a>
+            <a href="{{ route('welcome') }}" class="btn btn-success btn-sm">
+                <i class="fas fa-plus"></i> Volver
+            </a>
         </div>
 
         <div class="card-body">
