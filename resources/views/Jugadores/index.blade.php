@@ -216,7 +216,7 @@ Jugadores | MGR PLAY
     <h2 class="section-title">📋 Listado de Jugadores</h2>
 
     <div class="d-flex justify-content-between align-items-center mb-4">
-        <h4 class="text-white">Jugadores Registrados</h4>
+        
         <a href="{{ route('jugadores.create') }}" class="btn btn-admin">➕ Crear Jugador</a>
     </div>
 

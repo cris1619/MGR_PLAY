@@ -65,7 +65,7 @@
     }
 
     .hero-section h1 {
-        color: #ffd700;
+        color: #fcfcfcff;
         font-size: 2.3rem;
         font-weight: 700;
         margin-bottom: 10px;
@@ -115,7 +115,7 @@
     }
 
     .card-title {
-        color: #ffd700;
+        color: #f3f3f0ff;
         font-size: 1.3rem;
         font-weight: bold;
     }
@@ -211,7 +211,7 @@
             <div class="col-md-4">
                 <div class="card municipio-card shadow-lg fade-in-up">
                     <div class="card-body text-center">
-                        <h5 class="card-title mb-3">🏘️ {{ $municipio->nombre }}</h5>
+                        <h5 class="card-title mb-3"> {{ $municipio->nombre }}</h5>
                         <p class="card-text">ID: <b>{{ $municipio->id }}</b></p>
 
                         <div class="d-flex justify-content-center gap-2 mt-3">
@@ -235,7 +235,7 @@
 
     <!-- Volver -->
     <div class="text-center mt-5">
-        <a href="{{ route('welcome') }}" class="btn-secondary">⬅️ Volver al menú</a>
+        <a href="{{ route('welcome') }}" class="btn-admin">Volver al menú</a>
     </div>
 </div>
 

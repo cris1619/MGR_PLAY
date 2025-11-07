@@ -1,7 +1,7 @@
 @extends('layouts.app')
 
 @section('title')
-    Editar Municipio | MGR PLAY
+Editar Municipio | MGR PLAY
 @endsection
 
 @section('titleContent')
@@ -17,8 +17,7 @@
 
 @section('content')
 <style>
-
-
+    /* ==== NAVBAR ==== */
     .navbar {
         background-color: #1B1F23;
         padding: 0 20px;
@@ -26,7 +25,7 @@
         display: flex;
         align-items: center;
         justify-content: space-between;
-        box-shadow: 0 4px 8px rgba(0,0,0,0.3);
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
     }
 
     .navbar-left {
@@ -55,17 +54,40 @@
         margin-right: 30px;
     }
 
-    /* Tarjeta del formulario */
+    /* ==== ANIMACIONES ==== */
+    @keyframes fadeInUp {
+        from {
+            opacity: 0;
+            transform: translateY(40px);
+        }
+
+        to {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    }
+
+    @keyframes glowIn {
+        0% {
+            box-shadow: 0 0 0 rgba(255, 215, 0, 0);
+        }
+
+        100% {
+            box-shadow: 0 0 20px rgba(255, 215, 0, 0.4);
+        }
+    }
+
+    /* ==== TARJETA FORMULARIO ==== */
     .edit-card {
         background: linear-gradient(145deg, #1B1F23 0%, #252a2f 100%);
         border: 2px solid #2a2e33;
         border-radius: 20px;
         padding: 40px;
         max-width: 600px;
-        margin: 60px auto;
-        box-shadow: 0 12px 24px rgba(0,0,0,0.3);
+        margin: 80px auto;
         color: #fff;
-        animation: fadeInUp 0.6s ease forwards;
+        opacity: 0;
+        animation: fadeInUp 0.8s ease forwards, glowIn 1.5s ease 0.3s forwards;
     }
 
     .edit-card h2 {
@@ -75,8 +97,10 @@
         text-align: center;
         text-transform: uppercase;
         letter-spacing: 2px;
+        animation: fadeInUp 0.8s ease 0.2s forwards;
     }
 
+    /* ==== CAMPOS ==== */
     label {
         color: #ffd700;
         font-weight: 600;
@@ -91,74 +115,82 @@
         border-radius: 10px;
         padding: 12px;
         font-size: 1rem;
+        transition: all 0.3s ease;
     }
 
     input.form-control:focus {
         border-color: #ffd700;
-        box-shadow: 0 0 10px rgba(255,215,0,0.4);
+        box-shadow: 0 0 10px rgba(255, 215, 0, 0.4);
         background-color: #2f3339;
+        transform: scale(1.02);
     }
 
-    /* Botones */
-    .btn-guardar {
-        background: linear-gradient(135deg, #ffd700 0%, #ffed4e 100%);
-        color: #1B1F23;
+    #nombre::placeholder {
+        color: #fff;
+        opacity: 0.6;
+        transition: opacity 0.3s ease;
+    }
+
+    input:focus::placeholder {
+        opacity: 0.3;
+    }
+
+    /* ==== BOTONES ==== */
+    .btn-guardar,
+    .btn-cancelar {
         border: none;
         padding: 12px 30px;
         border-radius: 25px;
         font-weight: 700;
-        transition: all 0.3s ease;
         text-decoration: none;
         display: inline-block;
+        transition: all 0.3s ease;
+        transform-origin: center;
+    }
+
+    .btn-guardar {
+        background: linear-gradient(135deg, #ffd700 0%, #ffed4e 100%);
+        color: #1B1F23;
         box-shadow: 0 4px 8px rgba(255, 215, 0, 0.3);
     }
 
     .btn-guardar:hover {
+        transform: scale(1.07);
         background: linear-gradient(135deg, #ffed4e 0%, #ffd700 100%);
-        transform: scale(1.05);
-        box-shadow: 0 6px 12px rgba(255, 215, 0, 0.5);
-        color: #000;
+        box-shadow: 0 6px 14px rgba(255, 215, 0, 0.6);
     }
 
     .btn-cancelar {
         background: linear-gradient(135deg, #00ff88 0%, #00ccff 100%);
         color: #1B1F23;
-        border: none;
-        padding: 12px 30px;
-        border-radius: 25px;
-        font-weight: 700;
-        transition: all 0.3s ease;
-        text-decoration: none;
-        display: inline-block;
         box-shadow: 0 4px 8px rgba(0, 255, 136, 0.4);
     }
 
     .btn-cancelar:hover {
+        transform: scale(1.07);
         background: linear-gradient(135deg, #00ccff 0%, #00ff88 100%);
-        transform: scale(1.05);
-        box-shadow: 0 6px 12px rgba(0, 255, 136, 0.6);
-        color: #000;
+        box-shadow: 0 6px 14px rgba(0, 255, 136, 0.6);
     }
 
-    @keyframes fadeInUp {
-        from { opacity: 0; transform: translateY(30px); }
-        to { opacity: 1; transform: translateY(0); }
-    }
+
 </style>
 
 <div class="edit-card">
     <h2>Editar Municipio</h2>
     <form action="{{ route('municipios.update', $municipio->id) }}" method="POST">
         @csrf
+
+
         <div class="mb-4">
             <label for="nombre">Nombre del Municipio</label>
             <input type="text"
-                   name="nombre"
-                   id="nombre"
-                   class="form-control"
-                   placeholder="Ingrese el nombre"
-                   value="{{ old('nombre', $municipio->nombre) }}"
-                   required>
+                name="nombre"
+                id="nombre"
+                class="form-control"
+                placeholder="Ingrese el nombre"
+                value="{{ old('nombre', $municipio->nombre) }}"
+                style="color: white; background-color: #222;"
+                required>
         </div>
 
         <div class="d-flex justify-content-center gap-3">
