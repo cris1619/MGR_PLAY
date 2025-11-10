@@ -6,5 +6,26 @@ use Illuminate\Database\Eloquent\Model;
 
 class Grupo extends Model
 {
-    //
+    protected $table = 'grupos';
+
+    protected $fillable = [
+        'nombre',
+        'idTorneo',
+    ];
+
+    public function torneo()
+    {
+        return $this->belongsTo(Torneos::class, 'idTorneo');
+    }
+
+    public function equipos()
+{
+    return $this->belongsToMany(
+        Equipos::class,
+        'grupo_equipos', // ✅ nombre correcto
+        'idGrupo',
+        'idEquipo'
+    );
+}
+
 }

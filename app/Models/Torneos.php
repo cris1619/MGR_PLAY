@@ -31,8 +31,9 @@ class Torneos extends Model
 
     public function grupos()
     {
-        return $this->hasMany(Grupo::class, 'id_torneo');
+        return $this->hasMany(Grupo::class, 'idTorneo');
     }
+
 
     public function partidos()
     {
