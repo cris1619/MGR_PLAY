@@ -91,7 +91,7 @@ Editar Municipio | MGR PLAY
     }
 
     .edit-card h2 {
-        color: #ffd700;
+        color: #f8f8f5ff;
         font-weight: 700;
         margin-bottom: 25px;
         text-align: center;
@@ -189,7 +189,7 @@ Editar Municipio | MGR PLAY
                 class="form-control"
                 placeholder="Ingrese el nombre"
                 value="{{ old('nombre', $municipio->nombre) }}"
-                style="color: white; background-color: #222;"
+                style="color: white; background-color: #2a2e33;"
                 required>
         </div>
 

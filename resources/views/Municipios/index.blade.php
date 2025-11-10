@@ -197,6 +197,7 @@
         <p>Administra los municipios registrados en MGR PLAY</p>
     </div>
 
+    
     <!-- Título + Botón -->
     <div class="d-flex justify-content-between align-items-center mb-4">
         <h2 class="section-title">🏘️ Municipios Registrados</h2>

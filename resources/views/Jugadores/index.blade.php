@@ -205,6 +205,21 @@ Jugadores | MGR PLAY
     height: 3px;
     background: linear-gradient(90deg, transparent, #ffd700, transparent);
 }
+
+.filter-card {
+        background: linear-gradient(145deg, #1B1F23 0%, #252a2f 100%);
+        border: 1px solid #2a2e33;
+        border-radius: 20px;
+        padding: 20px 25px;
+        margin-bottom: 30px;
+        box-shadow: 0 6px 12px rgba(0,0,0,0.3);
+        transition: all 0.3s ease;
+    }
+
+    .filter-card:hover {
+        transform: translateY(-3px);
+        box-shadow: 0 8px 16px rgba(255, 215, 0, 0.2);
+    }
 </style>
 
 <div class="container mt-4">
@@ -221,53 +236,57 @@ Jugadores | MGR PLAY
     </div>
 
     <!-- 🔍 Barra de filtros avanzada -->
-    <div class="filter-card">
-        <form method="GET" action="{{ route('jugadores.index') }}" class="row g-3 align-items-end">
+    <!-- 🔍 Barra de filtros avanzada -->
+<div class="filter-card">
+    <form method="GET" action="{{ route('jugadores.index') }}" class="row g-3 align-items-end">
 
-            <!-- Nombre -->
-            <div class="col-md-4">
-                <label class="col-md-4">Nombre</label>
-                <div class="input-group">
-                    <span class="input-group-text bg-secondary text-white">🔍</span>
-                    <input type="text" name="search" class="form-control"
-                        placeholder="Escribe un nombre..." value="{{ request('search') }}">
-                </div>
+        <!-- Nombre -->
+        <div class="col-md-4">
+            <label>Nombre</label>
+            <div class="input-group">
+                <span class="input-group-text">🔍</span>
+                <input type="text"
+                       name="search"
+                       class="form-control"
+                       placeholder="Escribe el nombre del jugador..."
+                       value="{{ request('search') }}">
             </div>
+        </div>
 
-            <!-- Posición -->
-            <div class="col-md-4">
-                <label class="col-md-4">Posición</label>
-                <select name="posicion" class="form-select">
-                    <option value="">-- Todas --</option>
-                    @foreach($posiciones as $posicion)
+        <!-- Posición -->
+        <div class="col-md-4">
+            <label>Posición</label>
+            <select name="posicion" class="form-select">
+                <option value="">-- Todas --</option>
+                @foreach($posiciones as $posicion)
                     <option value="{{ $posicion }}" {{ request('posicion') == $posicion ? 'selected' : '' }}>
                         {{ ucfirst($posicion) }}
                     </option>
-                    @endforeach
-                </select>
-            </div>
+                @endforeach
+            </select>
+        </div>
 
-            <!-- Equipo -->
-            <div class="col-md-4">
-                <label class="col-md-4">Equipo</label>
-                <select name="idEquipo" class="form-select">
-                    <option value="">-- Todos --</option>
-                    @foreach($equipos as $equipo)
+        <!-- Equipo -->
+        <div class="col-md-4">
+            <label>Equipo</label>
+            <select name="idEquipo" class="form-select">
+                <option value="">-- Todos --</option>
+                @foreach($equipos as $equipo)
                     <option value="{{ $equipo->id }}" {{ request('idEquipo') == $equipo->id ? 'selected' : '' }}>
                         {{ $equipo->nombre }}
                     </option>
-                    @endforeach
-                </select>
-            </div>
+                @endforeach
+            </select>
+        </div>
 
+        <!-- Botones -->
+        <div class="col-md-2 d-flex gap-2 mt-3">
+            <button type="submit" class="btn btn-admin w-100">Buscar</button>
+            <a href="{{ route('jugadores.index') }}" class="btn btn-outline-light w-100 rounded-pill">Limpiar</a>
+        </div>
+    </form>
+</div>
 
-            <!-- Botones -->
-            <div class="col-md-2 d-flex gap-2">
-                <button type="submit" class="btn btn-admin w-100">Buscar</button>
-                <a href="{{ route('jugadores.index') }}" class="btn btn-outline-light w-100 rounded-pill">Limpiar</a>
-            </div>
-        </form>
-    </div>
 
     <!-- 📋 Tabla de jugadores -->
     <div class="table-responsive">
@@ -327,7 +346,7 @@ Jugadores | MGR PLAY
     </div>
 
     <div class="container text-center mt-4">
-        <a href="{{ route('welcome') }}" class="btn btn-secondary">Volver al menú</a>
+        <a href="{{ route('welcome') }}" class="btn btn-admin">Volver al menú</a>
     </div>
 </div>
 @endsection

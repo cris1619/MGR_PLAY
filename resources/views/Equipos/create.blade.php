@@ -92,7 +92,7 @@
 }
 
 h2.section-title {
-    color: #ffd700;
+    color: #f5f4f2ff;
     text-align: center;
     font-size: 1.8rem;
     font-weight: 700;
@@ -109,8 +109,16 @@ h2.section-title::after {
     transform: translateX(-50%);
     width: 100px;
     height: 3px;
-    background: linear-gradient(90deg, transparent, #ffd700, transparent);
+    
 }
+<<<<<<< HEAD
+
+    .form-control::placeholder {
+        color: #fff;
+        opacity: 0.6;
+        transition: opacity 0.3s ease;
+    }
+=======
 #nombre::placeholder {
     color: white;
     opacity: 1; /* Para Chrome, Safari */
@@ -119,13 +127,13 @@ h2.section-title::after {
     color: white;
     opacity: 1; /* Para Chrome, Safari */
 }
+>>>>>>> eacf04f1cd48b2d25454056c99b251c0505a8547
 
 </style>
 
-<div class="container fade-in-up">
-    <h2 class="section-title">⚽ Registro de Nuevo Equipo</h2>
 
     <div class="form-container">
+        <h2 class="section-title">⚽ Registro de Nuevo Equipo</h2>
         <form action="{{ route('equipos.store') }}" method="POST" enctype="multipart/form-data">
             @csrf
 
@@ -137,6 +145,7 @@ h2.section-title::after {
                        class="form-control" 
                        value="{{ old('nombre') }}" 
                        placeholder="Ingrese el nombre del equipo"
+                       style="color: white; background-color: #2a2e33;;" 
                        required>
             </div>
 
@@ -158,6 +167,7 @@ h2.section-title::after {
                        class="form-control" 
                        value="{{ old('entrenador') }}" 
                        placeholder="Ingrese el nombre del entrenador"
+                       style="color: white; background-color: #2a2e33;"
                        required>
             </div>
 
@@ -189,5 +199,5 @@ h2.section-title::after {
             </div>
         </form>
     </div>
-</div>
+
 @endsection

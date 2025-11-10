@@ -138,6 +138,11 @@ Crear Jugador | MGR PLAY
     @media (max-width: 768px) {
         .form-card { padding: 25px; }
     }
+    .form-control::placeholder {
+        color: #fff;
+        opacity: 0.6;
+        transition: opacity 0.3s ease;
+    }
 </style>
 
 <div class="container mt-5 mb-5">
@@ -150,27 +155,28 @@ Crear Jugador | MGR PLAY
             <div class="row g-4">
                 <div class="col-md-6">
                     <label class="form-label">Nombre</label>
-                    <input type="text" name="nombre" class="form-control" required>
+                    <input type="text" name="nombre" class="form-control" style="color: white; background-color: #2a2e33;" required placeholder="Ingrese el Nombre del jugador"> 
+                    
                 </div>
 
                 <div class="col-md-6">
                     <label class="form-label">Apellido</label>
-                    <input type="text" name="apellido" class="form-control" required>
+                    <input type="text" name="apellido" class="form-control" style="color: white; background-color: #2a2e33;" required placeholder="Ingrese el Apellido del Jugador">
                 </div>
 
                 <div class="col-md-6">
                     <label class="form-label">Fecha de nacimiento</label>
-                    <input type="date" name="fechaNacimiento" class="form-control" required>
+                    <input type="date" name="fechaNacimiento" class="form-control" style="color: white; background-color: #2a2e33;" required >
                 </div>
 
                 <div class="col-md-3">
                     <label class="form-label">Altura (m)</label>
-                    <input type="number" step="0.01" name="altura" class="form-control" required>
+                    <input type="number" step="0.01" name="altura" class="form-control" style="color: white; background-color: #2a2e33;" required>
                 </div>
 
                 <div class="col-md-3">
                     <label class="form-label">Peso (kg)</label>
-                    <input type="number" step="0.01" name="peso" class="form-control" required>
+                    <input type="number" step="0.01" name="peso" class="form-control" style="color: white; background-color: #2a2e33;" required>
                 </div>
 
                 <div class="col-md-6">

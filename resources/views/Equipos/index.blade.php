@@ -205,6 +205,22 @@ Equipos | MGR PLAY
     height: 3px;
     background: linear-gradient(90deg, transparent, #ffd700, transparent);
 }
+.filter-card {
+        background: linear-gradient(145deg, #1B1F23 0%, #252a2f 100%);
+        border: 1px solid #2a2e33;
+        border-radius: 20px;
+        padding: 20px 25px;
+        margin-bottom: 30px;
+        box-shadow: 0 6px 12px rgba(0,0,0,0.3);
+        transition: all 0.3s ease;
+    }
+
+    .filter-card:hover {
+        transform: translateY(-3px);
+        box-shadow: 0 8px 16px rgba(255, 215, 0, 0.2);
+    }
+
+
 </style>
 
 <div class="container mt-4">
@@ -222,45 +238,44 @@ Equipos | MGR PLAY
 
     <!-- Filtros -->
     <div class="filter-card">
-        <form method="GET" action="{{ route('equipos.index') }}" class="row g-3 align-items-end">
-            <div class="col-md-4">
-                <label>Municipio</label>
-                <select name="IdMunicipio" class="form-select">
-                    <option value="">-- Todos --</option>
-                    @foreach($municipios as $municipio)
-                    <option value="{{ $municipio->id }}" {{ request('IdMunicipio') == $municipio->id ? 'selected' : '' }}>
-                        {{ $municipio->nombre }}
-                    </option>
-                    @endforeach
-                </select>
-            </div>
+    <form method="GET" action="{{ route('equipos.index') }}" class="row g-3 align-items-end">
+        <div class="col-md-4">
+            <label>Municipio</label>
+            <select name="IdMunicipio" class="form-select">
+                <option value="">-- Todos --</option>
+                @foreach($municipios as $municipio)
+                <option value="{{ $municipio->id }}" {{ request('IdMunicipio') == $municipio->id ? 'selected' : '' }}>
+                    {{ $municipio->nombre }}
+                </option>
+                @endforeach
+            </select>
+        </div>
 
-            <div class="col-md-4">
-                <label>Nombre</label>
-                <div class="input-group">
-                    <span class="input-group-text">🔍</span>
-                    <input type="text" name="search" class="form-control" placeholder="Escribe un nombre..."
-                        value="{{ request('search') }}">
-                </div>
+        <div class="col-md-4">
+            <label>Nombre</label>
+            <div class="input-group">
+                <span class="input-group-text">🔍</span>
+                <input type="text" name="search" class="form-control" placeholder="Escribe un nombre..."
+                    value="{{ request('search') }}">
             </div>
+        </div>
 
-            <div class="col-md-2">
-                <label>Mostrar</label>
-                <select name="per_page" class="form-select" onchange="this.form.submit()">
-                    <option value="10" {{ $perPage == 10 ? 'selected' : '' }}>10</option>
-                    <option value="25" {{ $perPage == 25 ? 'selected' : '' }}>25</option>
-                    <option value="50" {{ $perPage == 50 ? 'selected' : '' }}>50</option>
-                    <option value="all" {{ $perPage == 'all' ? 'selected' : '' }}>Todos</option>
-                </select>
-            </div>
+        <div class="col-md-2">
+            <label>Mostrar</label>
+            <select name="per_page" class="form-select" onchange="this.form.submit()">
+                <option value="10" {{ $perPage == 10 ? 'selected' : '' }}>10</option>
+                <option value="25" {{ $perPage == 25 ? 'selected' : '' }}>25</option>
+                <option value="50" {{ $perPage == 50 ? 'selected' : '' }}>50</option>
+                <option value="all" {{ $perPage == 'all' ? 'selected' : '' }}>Todos</option>
+            </select>
+        </div>
 
-            <div class="col-md-2 d-flex gap-2">
-                <button type="submit" class="btn btn-admin w-100">Buscar</button>
-                <a href="{{ route('equipos.index') }}" class="btn btn-outline-light w-100 rounded-pill">Limpiar</a>
-            </div>
-        </form>
-    </div>
-
+        <div class="col-md-2 d-flex gap-2">
+            <button type="submit" class="btn btn-admin w-100">Buscar</button>
+            <a href="{{ route('equipos.index') }}" class="btn btn-outline-light w-100 rounded-pill">Limpiar</a>
+        </div>
+    </form>
+</div>
     <!-- Mensajes de filtros -->
     @if(request('IdMunicipio'))
     <div class="alert alert-info text-center rounded-pill">

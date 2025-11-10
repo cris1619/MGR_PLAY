@@ -36,7 +36,7 @@
 
     .form-container h2 {
         text-align: center;
-        color: #ffd700;
+        color: #fcfbfaff;
         font-weight: 700;
         margin-bottom: 25px;
         text-transform: uppercase;
@@ -114,6 +114,10 @@
         from { opacity: 0; transform: translateY(30px); }
         to { opacity: 1; transform: translateY(0); }
     }
+        #nombre::placeholder {
+        color: white;
+        opacity: 1; /* Asegura que se vea bien en todos los navegadores */
+    }
 </style>
 
 <div class="form-container">
@@ -129,7 +133,8 @@
                    name="nombre" 
                    id="nombre" 
                    class="form-control" 
-                   value="{{ old('nombre', $equipos->nombre) }}" 
+                   value="{{ old('nombre', $equipos->nombre) }}"
+                   style="color: white; background-color: #2a2e33;" 
                    required>
         </div>
 
@@ -157,6 +162,7 @@
                    id="entrenador" 
                    class="form-control" 
                    value="{{ old('entrenador', $equipos->entrenador) }}" 
+                   style="color: white; background-color: #2a2e33;"
                    required>
         </div>
 
