@@ -6,25 +6,27 @@ use Illuminate\Support\Facades\Schema;
 
 return new class extends Migration
 {
-    /**
-     * Run the migrations.
-     */
     public function up(): void
     {
         Schema::create('grupos', function (Blueprint $table) {
             $table->id();
             $table->string('nombre');
-            $table->unsignedBigInteger('idTorneo');
-            $table->foreign('idTorneo')->references('id')->on('torneos');
+            $table->unsignedBigInteger('idTorneo'); // <--- agregar aquí
             $table->timestamps();
+
+            $table->foreign('idTorneo')
+                ->references('id')
+                ->on('torneos')
+                ->onDelete('cascade');
         });
     }
 
-    /**
-     * Reverse the migrations.
-     */
+
     public function down(): void
     {
-        Schema::dropIfExists('grupos');
+        Schema::table('grupos', function (Blueprint $table) {
+            $table->dropForeign(['idTorneo']);
+            $table->dropColumn('idTorneo');
+        });
     }
 };

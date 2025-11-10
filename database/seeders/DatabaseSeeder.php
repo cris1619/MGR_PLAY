@@ -32,9 +32,5 @@ class DatabaseSeeder extends Seeder
         $this->call([
             JugadoresSeeder::class,
         ]);
-
-        $this->call([
-            TorneosSeeder::class,
-        ]);
     }
 }

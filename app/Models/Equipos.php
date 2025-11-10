@@ -23,4 +23,15 @@ class Equipos extends Model
         {
             return $this->hasMany(Jugadores::class, 'idEquipo');
         }
+
+        public function grupos()
+{
+    return $this->belongsToMany(
+        Grupo::class,
+        'grupo_equipos', // ✅ mismo nombre
+        'idEquipo',
+        'idGrupo'
+    );
+}
+
 }

@@ -28,12 +28,51 @@
 
             <p><strong>Premio:</strong> {{ $torneo->premio ?? '-' }}</p>
 
-            <p><strong>Equipos Participantes:</strong></p>
+            <hr>
+            <h5>Equipos Participantes:</h5>
             <ul>
                 @foreach($torneo->equipos as $equipo)
                     <li>{{ $equipo->nombre }}</li>
                 @endforeach
             </ul>
+
+            @if($torneo->tipo == 'Grupos')
+                <hr>
+                <h5>Grupos y Partidos:</h5>
+
+                @foreach($torneo->grupos as $grupo)
+                    <div class="mb-3">
+                        <h6>{{ $grupo->nombre }}</h6>
+                        <strong>Equipos:</strong>
+                        <ul>
+                            @foreach($grupo->equipos as $equipo)
+                                <li>{{ $equipo->nombre }}</li>
+                            @endforeach
+                        </ul>
+
+                        <strong>Partidos:</strong>
+                        <ul>
+                            @foreach($torneo->partidos->where('id_grupo', $grupo->id) as $partido)
+                                @php
+                                    $equiposPartido = $partido->partido_equipos;
+                                @endphp
+
+                                @if($equiposPartido && $equiposPartido->count() == 2)
+                                    <li>
+                                        {{ $equiposPartido[0]->equipo->nombre ?? 'Equipo Local' }}
+                                        vs
+                                        {{ $equiposPartido[1]->equipo->nombre ?? 'Equipo Visitante' }}
+                                        - Jugado: {{ $partido->jugado ? 'Sí' : 'No' }}
+                                        @if($partido->fecha)
+                                            - Fecha: {{ $partido->fecha }} {{ $partido->hora }}
+                                        @endif
+                                    </li>
+                                @endif
+                            @endforeach
+                        </ul>
+                    </div>
+                @endforeach
+            @endif
 
             <a href="{{ route('torneos.index') }}" class="btn btn-secondary mt-2">Volver</a>
         </div>
