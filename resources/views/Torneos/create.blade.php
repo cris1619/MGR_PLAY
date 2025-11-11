@@ -113,6 +113,11 @@
                 <div id="config_grupos" class="mt-3 border rounded p-3 d-none">
                     <h5 class="text-primary"><i class="fas fa-layer-group"></i> Configuración de Grupos</h5>
 
+                    <div id="grupos_manual" class="mt-3">
+                        <h6>Distribución manual de grupos</h6>
+                        <div id="contenedor_grupos"></div>
+                    </div>
+
                     <div class="row">
                         <div class="col-md-4 mb-3">
                             <label class="form-label">Número de Grupos</label>
@@ -215,15 +220,20 @@ $(document).ready(function() {
     // Inicializar bootstrap select
     $('.selectpicker').selectpicker();
 
-    // Mostrar config según tipo
+    // Mostrar configuración según tipo de torneo
     $('#tipo_torneo').on('change', mostrarConfig);
+
+    // Ejecutar una vez al cargar (por si hay old() o validación)
+    mostrarConfig();
+
 
     // Autocalcular equipos y grupos
     actualizarGrupos();
     $('select[name="equipos[]"]').on('changed.bs.select', actualizarGrupos);
     $('#num_grupos').on('keyup change', actualizarGrupos);
 
-    // Guardar equipo vía AJAX
+
+    // Guardar equipo con AJAX
     $('#formCrearEquipo').submit(function(e) {
         e.preventDefault();
 
@@ -236,18 +246,18 @@ $(document).ready(function() {
             contentType: false,
             processData: false,
             success: function(response) {
+
                 // Cerrar modal
                 $('#modalCrearEquipo').modal('hide');
 
                 // Limpiar formulario
                 $('#formCrearEquipo')[0].reset();
 
-                // Agregar nuevo equipo al select
+                // Agregar al select
                 let newOption = new Option(response.nombre, response.id, true, true);
                 $('select[name="equipos[]"]').append(newOption).trigger('change');
                 $('.selectpicker').selectpicker('refresh');
 
-                // Mostrar mensaje éxito
                 Swal.fire({
                     icon: 'success',
                     title: '¡Equipo creado!',
@@ -256,8 +266,8 @@ $(document).ready(function() {
                     showConfirmButton: false
                 });
 
-                // Actualizar número de equipos
                 actualizarGrupos();
+                mostrarConfig();  // <<< ✅ Aquí sí se puede llamar también
             },
             error: function(xhr) {
                 let errors = xhr.responseJSON.errors;
@@ -275,44 +285,54 @@ $(document).ready(function() {
     });
 });
 
+
+function actualizarGrupos() {
+    let equiposSeleccionados = $('select[name="equipos[]"]').val()?.length || 0;
+
+    $('#num_equipos_form').val(equiposSeleccionados);
+
+    let grupos = $('#num_grupos').val();
+
+    if (grupos > 0 && equiposSeleccionados > 0) {
+
+        let equiposPorGrupo = Math.floor(equiposSeleccionados / grupos);
+        $('#equipos_por_grupo').val(equiposPorGrupo);
+
+        if (equiposSeleccionados % grupos !== 0) {
+            $('#info_grupos').html(
+                `<span class="text-danger">⚠ Algunos grupos tendrán un equipo más que otros</span>`
+            );
+        } else {
+            $('#info_grupos').html(
+                `<span class="text-success">✔ Reparto equitativo entre grupos</span>`
+            );
+        }
+    } else {
+        $('#equipos_por_grupo').val('');
+        $('#info_grupos').html('');
+    }
+}
+
+
 function mostrarConfig() {
     let tipo = $('#tipo_torneo').val();
 
-    $('#config_grupos, #config_liguilla, #config_eliminacion').addClass('d-none');
+    $('#config_grupos').addClass('d-none');
+    $('#config_liguilla').addClass('d-none');
+    $('#config_eliminacion').addClass('d-none');
 
     if (tipo === 'Grupos') {
         $('#config_grupos').removeClass('d-none');
-    } else if (tipo === 'Liguilla') {
+    } 
+    else if (tipo === 'Liguilla') {
         $('#config_liguilla').removeClass('d-none');
-    } else if (tipo === 'Eliminacion') {
+    }
+    else if (tipo === 'Eliminacion') {
         $('#config_eliminacion').removeClass('d-none');
     }
-
-    actualizarGrupos();
 }
 
-function actualizarGrupos() {
-    let selectedEquipos = $('select[name="equipos[]"]').val() || [];
-    let numEquipos = selectedEquipos.length;
 
-    $('#num_equipos_form').val(numEquipos);
 
-    let numGrupos = parseInt($('#num_grupos').val()) || 0;
-
-    if (numGrupos > 0 && numEquipos > 0) {
-        let porGrupo = Math.floor(numEquipos / numGrupos);
-        let sobrantes = numEquipos % numGrupos;
-
-        $('#equipos_por_grupo').val(porGrupo);
-
-        $('#info_grupos').text(
-            `Con ${numEquipos} equipos: ${numGrupos} grupos de ${porGrupo} equipos` +
-            (sobrantes > 0 ? ` y ${sobrantes} grupo(s) con 1 extra` : ``)
-        );
-    } else {
-        $('#equipos_por_grupo').val('');
-        $('#info_grupos').text('');
-    }
-}
 </script>
 @endsection
