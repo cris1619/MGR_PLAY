@@ -85,10 +85,15 @@ class EquiposController extends Controller
     /**
      * Display the specified resource.
      */
-    public function show(Equipos $equipos)
-    {
-        //
-    }
+public function show($id)
+{
+    $equipo = Equipos::with('municipio')
+        ->withCount(['partidos', 'jugadores'])
+        ->findOrFail($id);
+    
+    return view('equipos.show', compact('equipo'));
+}
+
 
     /**
      * Show the form for editing the specified resource.
