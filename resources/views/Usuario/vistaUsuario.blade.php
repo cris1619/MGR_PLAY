@@ -5,403 +5,337 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Inicio | MGR PLAY</title>
     <link rel="icon" href="{{ asset('img/balonPestaña.png') }}">
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-sRIl4kxILFvY47J16cr9ZwB07vP4J8+LH7qKQnuqkuIAvNWLzeN8tE5YBujZqJLB" crossorigin="anonymous">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css2?family=Play:wght@400;700&display=swap" rel="stylesheet">
+
     <style>
+        :root {
+            --verde-neon: #00ff88;
+            --gris-oscuro: #1a1f24;
+            --gris-medio: #2a2e33;
+            --gris-claro: #3a3e43;
+            --blanco: #f2f2f2;
+        }
+
         * {
+            box-sizing: border-box;
             margin: 0;
             padding: 0;
-            box-sizing: border-box;
         }
 
         body {
             font-family: "Play", sans-serif;
-            font-optical-sizing: auto;
             background-image: url("{{ asset('img/2713.jpg') }}");
             background-size: cover;
             background-position: center;
             background-repeat: no-repeat;
             background-attachment: fixed;
+            position: relative;
+            color: var(--blanco);
             min-height: 100vh;
         }
 
-        /* Overlay oscuro sobre el fondo */
         body::before {
-            content: '';
+            content: "";
             position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: rgba(0, 0, 0, 0.5);
+            inset: 0;
+            background: rgba(0, 0, 0, 0.75);
+            backdrop-filter: blur(4px);
             z-index: -1;
         }
 
+        /* NAVBAR */
         .navbar {
-            background-color: #1B1F23;
-            padding: 0 20px;
-            height: 60px;
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            box-shadow: 0 2px 8px rgba(0,0,0,0.3);
+            background: linear-gradient(90deg, #0f0f0f, #1a1f24);
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.6);
+            padding: 10px 30px;
         }
 
         .navbar-left {
             display: flex;
             align-items: center;
-            gap: 40px;
+            gap: 25px;
         }
 
         .logo {
             display: flex;
             align-items: center;
-            gap: 8px;
-            color: white;
-            font-size: 18px;
-            font-weight: bold;
             text-decoration: none;
-            transition: transform 0.3s ease;
-        }
-
-        .logo:hover {
-            transform: scale(1.05);
+            color: var(--blanco);
+            font-weight: bold;
+            letter-spacing: 1px;
+            transition: all 0.3s ease;
         }
 
         .logo img {
             height: 50px;
-            margin-right: 30px;
+            margin-right: 15px;
+        }
+
+        .logo:hover {
+            color: var(--verde-neon);
+            transform: scale(1.05);
         }
 
         .nav-menu {
             display: flex;
-            align-items: center;
             list-style: none;
-            gap: 30px;
-            margin: 0;
+            gap: 20px;
         }
 
         .nav-menu li a {
-            color: #ccc;
             text-decoration: none;
-            font-size: 16px;
-            padding: 8px 16px;
-            border-radius: 4px;
+            color: #ddd;
+            padding: 8px 14px;
+            border-radius: 6px;
             transition: all 0.3s ease;
-            display: block;
         }
 
         .nav-menu li a:hover {
-            color: #ffd700;
-            background-color: rgba(255,255,255,0.1);
-            transform: translateY(-2px);
+            color: var(--verde-neon);
+            background-color: rgba(255, 255, 255, 0.08);
         }
 
         .navbar-right {
             display: flex;
             align-items: center;
-            gap: 20px;
+            gap: 15px;
         }
 
-        .search-icon, .user-icon {
-            width: 24px;
-            height: 24px;
+        .navbar-right a {
+            color: var(--blanco);
+            text-decoration: none;
+            font-weight: bold;
+            transition: color 0.3s ease;
+        }
+
+        .navbar-right a:hover {
+            color: var(--verde-neon);
+        }
+
+        /* ICONOS */
+        .icon-btn {
+            width: 28px;
+            height: 28px;
             background: none;
             border: none;
-            color: #ccc;
+            color: var(--blanco);
             cursor: pointer;
-            padding: 0;
-            transition: all 0.3s ease;
+            transition: transform 0.3s ease, color 0.3s ease;
         }
 
-        .search-icon:hover, .user-icon:hover {
-            color: white;
+        .icon-btn:hover {
             transform: scale(1.2);
+            color: var(--verde-neon);
         }
 
-        .search-icon svg, .user-icon svg {
-            width: 100%;
-            height: 100%;
-            fill: currentColor;
-        }
-
+        /* TOP MENU */
         .top-news {
-            background-color: #2a2e33;
-            border-bottom: 2px solid #ffd700;
-            padding: 8px 0;
-            box-shadow: 0 2px 4px rgba(0,0,0,0.2);
+            background-color: rgba(26, 31, 36, 0.9);
+            border-bottom: 2px solid var(--verde-neon);
+            text-align: center;
+            padding: 10px 0;
         }
 
         .nav-menu2 {
-            display: flex;
-            align-items: center;
-            justify-content: center;
             list-style: none;
-            gap: 40px;
-            margin: 0;
-            padding: 0;
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 25px;
         }
 
         .nav-menu2 li a {
             color: #ccc;
             text-decoration: none;
-            font-size: 13px;
-            padding: 6px 12px;
-            border-radius: 4px;
-            transition: all 0.3s ease;
-            display: block;
-            font-weight: 500;
+            font-size: 14px;
+            transition: color 0.3s ease;
         }
 
         .nav-menu2 li a:hover {
-            color: #00ff88;
-            background-color: rgba(255,255,255,0.1);
+            color: var(--verde-neon);
         }
 
+        /* TARJETAS Y CONTENIDO */
         .main-content {
-            padding: 30px 20px;
+            padding: 40px 20px;
         }
 
         .card {
-            background-color: rgba(26, 31, 36, 0.95);
-            border: 1px solid #2a2e33;
-            border-radius: 8px;
-            overflow: hidden;
-            backdrop-filter: blur(10px);
+            background-color: rgba(20, 20, 20, 0.85);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 15px;
+            backdrop-filter: blur(6px);
+            transition: all 0.3s ease;
+        }
+
+        .card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 0 20px rgba(0, 255, 136, 0.2);
         }
 
         .card-header {
-            background: linear-gradient(135deg, #1a1f24 0%, #2a2e33 100%);
-            border-bottom: 2px solid #ffd700;
-            padding: 15px;
-        }
-
-        .card-header h5 {
-            margin: 0;
-            font-weight: 700;
-            letter-spacing: 1px;
-        }
-
-        .card-body {
-            background-color: rgba(26, 31, 36, 0.95);
-            padding: 20px;
-        }
-
-        .accordion-item {
-            background-color: #1a1f24;
-            border: 1px solid #2a2e33;
-            margin-bottom: 8px;
-            border-radius: 6px;
-            overflow: hidden;
+            background: linear-gradient(90deg, #0f0f0f, #1a1f24);
+            border-bottom: 2px solid var(--verde-neon);
+            text-align: center;
+            color: var(--verde-neon);
+            font-weight: bold;
         }
 
         .accordion-button {
-            background-color: #2a2e33;
-            color: white;
-            font-weight: 600;
-            border: none;
-            padding: 12px 16px;
+            background-color: var(--gris-medio);
+            color: var(--blanco);
         }
 
         .accordion-button:not(.collapsed) {
-            background-color: #3a3e43;
-            color: #ffd700;
-        }
-
-        .accordion-button:focus {
-            box-shadow: none;
-            border: none;
-        }
-
-        .accordion-button::after {
-            filter: brightness(0) invert(1);
+            background-color: var(--gris-claro);
+            color: var(--verde-neon);
         }
 
         .accordion-body {
-            background-color: #1a1f24;
-            padding: 15px;
+            background-color: var(--gris-oscuro);
         }
 
         .btn-secondary {
-            background-color: #3a3e43;
+            background-color: var(--gris-claro);
             border: none;
+            color: var(--blanco);
             transition: all 0.3s ease;
         }
 
         .btn-secondary:hover {
-            background-color: #4a4e53;
-            transform: translateX(5px);
-        }
-
-        .list-unstyled li {
-            padding: 6px 0;
+            background-color: var(--verde-neon);
+            color: #000;
         }
 
         .list-unstyled a {
             color: #00ccff;
             text-decoration: none;
-            transition: all 0.3s ease;
+            transition: color 0.3s ease, padding-left 0.3s ease;
         }
 
         .list-unstyled a:hover {
-            color: #00ff88;
-            text-decoration: underline;
+            color: var(--verde-neon);
             padding-left: 5px;
         }
 
-        .list-unstyled em {
-            color: #999;
-            font-size: 0.9em;
+        /* Accesos Rápidos */
+        .quick-card {
+            background-color: rgba(26, 31, 36, 0.9);
+            border: 1px solid rgba(0, 255, 136, 0.3);
+            border-radius: 10px;
+            transition: all 0.3s ease;
+            padding: 20px;
         }
 
-        .quick-access-img {
-            width: 100%;
-            height: 200px;
-            object-fit: cover;
-            border-radius: 8px;
-            transition: transform 0.3s ease;
-            cursor: pointer;
-        }
-
-        .quick-access-img:hover {
+        .quick-card:hover {
             transform: scale(1.05);
-            box-shadow: 0 4px 12px rgba(0, 255, 136, 0.3);
+            box-shadow: 0 0 15px rgba(0, 255, 136, 0.3);
         }
 
-        /* Responsive */
-        @media (max-width: 992px) {
-            .nav-menu {
-                gap: 15px;
-            }
-            
-            .nav-menu li a {
-                font-size: 14px;
-                padding: 6px 12px;
-            }
+        .quick-card h5 {
+            color: var(--blanco);
+            font-weight: bold;
+        }
 
-            .logo {
-                font-size: 14px;
+        .quick-card h3 {
+            color: var(--verde-neon);
+            font-weight: bold;
+            margin-top: 10px;
+        }
+
+        /* RESPONSIVE */
+        @media (max-width: 768px) {
+            .nav-menu {
+                display: none;
             }
 
             .logo img {
                 height: 40px;
             }
-        }
-
-        @media (max-width: 768px) {
-            .nav-menu {
-                display: none;
-            }
-            
-            .navbar-left {
-                gap: 10px;
-            }
-
-            .logo {
-                font-size: 12px;
-            }
-
-            .nav-menu2 {
-                gap: 15px;
-                flex-wrap: wrap;
-            }
-
-            .nav-menu2 li a {
-                font-size: 11px;
-                padding: 4px 8px;
-            }
 
             .main-content {
-                padding: 15px 10px;
+                padding: 20px 10px;
             }
         }
 
-        /* Scrollbar personalizada */
+        /* Scrollbar */
         ::-webkit-scrollbar {
             width: 10px;
         }
 
-        ::-webkit-scrollbar-track {
-            background: #1a1f24;
-        }
-
         ::-webkit-scrollbar-thumb {
-            background: #3a3e43;
-            border-radius: 5px;
+            background: var(--gris-claro);
+            border-radius: 10px;
         }
 
         ::-webkit-scrollbar-thumb:hover {
-            background: #4a4e53;
+            background: var(--verde-neon);
         }
     </style>
 </head>
 
 <body>
-    <nav class="navbar">
+    <nav class="navbar d-flex justify-content-between align-items-center">
         <div class="navbar-left">
             <a href="{{ route('welcome') }}" class="logo">
                 <img src="{{ url('img/logoSinFondo.png') }}" alt="MGR PLAY">
-                MALAGA GARCIA ROVIRA PLAY
+                MALAGA GARCÍA ROVIRA PLAY
             </a>
             <ul class="nav-menu">
-                <li><a href="#">TORNEOS</a></li>
-                <li><a href="{{ route('usuario.listaEquipos') }}">EQUIPOS</a></li>
-                <li><a href="{{ route('usuario.listaJugadores') }}">JUGADORES</a></li>
-                <li><a href="#">PARTIDOS</a></li>
+                <li><a href="#">Torneos</a></li>
+                <li><a href="{{ route('usuario.listaEquipos') }}">Equipos</a></li>
+                <li><a href="{{ route('usuario.listaJugadores') }}">Jugadores</a></li>
+                <li><a href="#">Partidos</a></li>
             </ul>
         </div>
-        
+
         <div class="navbar-right">
-            <button class="search-icon" title="Buscar">
-                <svg viewBox="0 0 24 24">
-                    <path d="M15.5 14h-.79l-.28-.27C15.41 12.59 16 11.11 16 9.5 16 5.91 13.09 3 9.5 3S3 5.91 3 9.5 5.91 16 9.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19l-4.99-5zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14z"/>
+            <button class="icon-btn" title="Buscar">
+                <svg viewBox="0 0 24 24" fill="currentColor">
+                    <path d="M15.5 14h-.79l-.28-.27A6.471 6.471 0 0016 9.5 6.5 6.5 0 109.5 16a6.471 6.471 0 004.23-1.57l.27.28h.79l5 4.99L20.49 19l-4.99-5zM9.5 14A4.5 4.5 0 115 9.5 4.5 4.5 0 019.5 14z"/>
                 </svg>
             </button>
-            
-            <button class="user-icon" title="Usuario">
-                <svg viewBox="0 0 24 24">
-                    <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 3c1.66 0 3 1.34 3 3s-1.34 3-3 3-3-1.34-3-3 1.34-3 3-3zm0 14.2c-2.5 0-4.71-1.28-6-3.22.03-1.99 4-3.08 6-3.08 1.99 0 5.97 1.09 6 3.08-1.29 1.94-3.5 3.22-6 3.22z"/>
+
+            <button class="icon-btn" title="Usuario">
+                <svg viewBox="0 0 24 24" fill="currentColor">
+                    <path d="M12 12c2.67 0 8 1.34 8 4v3H4v-3c0-2.66 5.33-4 8-4zm0-2c-1.1 0-2-.9-2-2s.9-2 2-2 
+                    2 .9 2 2-.9 2-2 2z"/>
                 </svg>
             </button>
             <a href="{{ route('logout') }}">Cerrar sesión</a>
-
         </div>
     </nav>
-    
+
     <div class="top-news">
-        <div class="container">
-            <ul class="nav-menu2">
-                <li><a href="#">⭐ FAVORITOS</a></li>
-                <li><a href="#">⚽ FUTBOL</a></li>
-                <li><a href="#">🥅 FUTBOL-5</a></li>
-                <li><a href="#">🏃 FUTBOL-8</a></li>
-                <li><a href="#">🎯 MICRO-FUTBOL</a></li>
-            </ul>
-        </div>
+        <ul class="nav-menu2">
+            <li><a href="#">⭐ Favoritos</a></li>
+            <li><a href="#">⚽ Fútbol</a></li>
+            <li><a href="#">🥅 Fútbol-5</a></li>
+            <li><a href="#">🏃 Fútbol-8</a></li>
+            <li><a href="#">🎯 Microfútbol</a></li>
+        </ul>
     </div>
 
     <div class="container main-content">
         <div class="row">
-            <!-- Contenedor Ubicaciones -->
+            <!-- Lado izquierdo -->
             <div class="col-lg-3 col-md-4 mb-4">
-                <div class="card shadow-lg">
-                    <div class="card-header text-white text-center">
-                        <h5 class="mb-0">📍 Ubicaciones</h5>
-                    </div>
+                <div class="card">
+                    <div class="card-header">📍 Ubicaciones</div>
                     <div class="card-body">
                         <div class="accordion" id="accordionMunicipios">
                             @foreach ($municipios as $municipio)
                             <div class="accordion-item">
                                 <h2 class="accordion-header" id="heading{{ $municipio->id }}">
-                                    <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapse{{ $municipio->id }}" aria-expanded="false" aria-controls="collapse{{ $municipio->id }}">
-                                        {{ $municipio->nombre }}
+                                    <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapse{{ $municipio->id }}">
+                                        {{ $municipio->nombre}}
                                     </button>
                                 </h2>
-                                <div id="collapse{{ $municipio->id }}" class="accordion-collapse collapse" aria-labelledby="heading{{ $municipio->id }}" data-bs-parent="#accordionMunicipios">
+                                <div id="collapse{{ $municipio->id }}" class="accordion-collapse collapse" data-bs-parent="#accordionMunicipios">
                                     <div class="accordion-body">
-                                        <!-- Canchas -->
                                         <div class="mb-2">
-                                            <button class="btn btn-sm btn-secondary w-100 text-start" type="button" data-bs-toggle="collapse" data-bs-target="#canchas{{ $municipio->id }}" aria-expanded="false" aria-controls="canchas{{ $municipio->id }}">
+                                            <button class="btn btn-sm btn-secondary w-100 text-start" type="button" data-bs-toggle="collapse" data-bs-target="#canchas{{ $municipio->id }}">
                                                 ⚽ Canchas
                                             </button>
                                             <div class="collapse mt-2" id="canchas{{ $municipio->id }}">
@@ -409,15 +343,14 @@
                                                     @forelse ($municipio->canchas as $cancha)
                                                     <li><a href="{{ url('/cancha/' . $cancha->id) }}">{{ $cancha->nombre }}</a></li>
                                                     @empty
-                                                    <li><em>No hay canchas por ahora :/</em></li>
+                                                    <li><em>No hay canchas por ahora.</em></li>
                                                     @endforelse
                                                 </ul>
                                             </div>
                                         </div>
-                                        
-                                        <!-- Equipos -->
+
                                         <div class="mb-2">
-                                            <button class="btn btn-sm btn-secondary w-100 text-start" type="button" data-bs-toggle="collapse" data-bs-target="#equipos{{ $municipio->id }}" aria-expanded="false" aria-controls="equipos{{ $municipio->id }}">
+                                            <button class="btn btn-sm btn-secondary w-100 text-start" type="button" data-bs-toggle="collapse" data-bs-target="#equipos{{ $municipio->id }}">
                                                 👥 Equipos
                                             </button>
                                             <div class="collapse mt-2" id="equipos{{ $municipio->id }}">
@@ -425,15 +358,14 @@
                                                     @forelse ($municipio->equipos as $equipo)
                                                     <li><a href="{{ url('/equipo/' . $equipo->id) }}">{{ $equipo->nombre }}</a></li>
                                                     @empty
-                                                    <li><em>No hay equipos por ahora :(</em></li>
+                                                    <li><em>No hay equipos por ahora.</em></li>
                                                     @endforelse
                                                 </ul>
                                             </div>
                                         </div>
-                                        
-                                        <!-- Torneos -->
-                                        <div class="mb-2">
-                                            <button class="btn btn-sm btn-secondary w-100 text-start" type="button" data-bs-toggle="collapse" data-bs-target="#torneos{{ $municipio->id }}" aria-expanded="false" aria-controls="torneos{{ $municipio->id }}">
+
+                                        <div>
+                                            <button class="btn btn-sm btn-secondary w-100 text-start" type="button" data-bs-toggle="collapse" data-bs-target="#torneos{{ $municipio->id }}">
                                                 📅 Torneos
                                             </button>
                                             <div class="collapse mt-2" id="torneos{{ $municipio->id }}">
@@ -441,7 +373,7 @@
                                                     @forelse ($municipio->torneos as $torneo)
                                                     <li><a href="{{ url('/torneo/' . $torneo->id) }}">{{ $torneo->nombre }}</a></li>
                                                     @empty
-                                                    <li><em>No hay torneos por ahora :)</em></li>
+                                                    <li><em>No hay torneos por ahora.</em></li>
                                                     @endforelse
                                                 </ul>
                                             </div>
@@ -455,37 +387,29 @@
                 </div>
             </div>
 
-            <!-- Contenedor Accesos Rápidos -->
+            <!-- Accesos Rápidos -->
             <div class="col-lg-9 col-md-8 mb-4">
-                <div class="card shadow-lg">
-                    <div class="card-header text-white text-center">
-                        <h5 class="mb-0">🚀 Accesos Rápidos</h5>
-                    </div>
+                <div class="card">
+                    <div class="card-header">🚀 Accesos Rápidos</div>
                     <div class="card-body">
-                        <div class="row g-3">
-                              <div class="card shadow-sm border-left-primary">
-                                  <div class="card-body text-center">
-                                    <div class="background-color text-white p-2 rounded">
-                                      <h5>Jugadores Totales</h5>
-                                    </div>
-                                      <h3 class="text-success">{{ $accesosRapidos['totalJugadores'] }}</h3>
-                                  </div>
-                              </div>
-                            <div class="card shadow-sm border-left-primary">
-                                  <div class="card-body text-center">
-                                    <div class="background-color text-white p-2 rounded">
-                                      <h5>Equipos Totales</h5>
-                                    </div>
-                                      <h3 class="text-success">{{ $accesosRapidos['totalEquipos'] }}</h3>
-                                  </div>
+                        <div class="row g-4">
+                            <div class="col-md-4">
+                                <div class="quick-card text-center">
+                                    <h5>Jugadores Totales</h5>
+                                    <h3>{{ $accesosRapidos['totalJugadores'] }}</h3>
+                                </div>
                             </div>
-                            <div class="card shadow-sm border-left-primary">
-                                  <div class="card-body text-center">
-                                    <div class="background-color text-white p-2 rounded">
-                                      <h5>Canchas Totales</h5>
-                                    </div>
-                                      <h3 class="text-success">{{ $accesosRapidos['totalCanchas'] }}</h3>
-                                  </div>
+                            <div class="col-md-4">
+                                <div class="quick-card text-center">
+                                    <h5>Equipos Totales</h5>
+                                    <h3>{{ $accesosRapidos['totalEquipos'] }}</h3>
+                                </div>
+                            </div>
+                            <div class="col-md-4">
+                                <div class="quick-card text-center">
+                                    <h5>Canchas Totales</h5>
+                                    <h3>{{ $accesosRapidos['totalCanchas'] }}</h3>
+                                </div>
                             </div>
                         </div>
                     </div>
@@ -494,6 +418,6 @@
         </div>
     </div>
 
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js" integrity="sha384-FKyoEForCGlyvwx9Hj09JcYn3nv7wiPVlz7YYwJrWVcXK/BmnVDxM+D2scQbITxI" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js"></script>
 </body>
 </html>
