@@ -2,7 +2,6 @@
 
 namespace App\Http\Controllers;
 
-
 use App\Models\Equipos;
 use App\Models\Grupo;
 use App\Models\Grupo_Equipo;
@@ -30,140 +29,143 @@ class TorneosController extends Controller
     }
 
     public function store(Request $request)
-{
-    $request->validate([
-        'nombre' => 'required|string',
-        'tipo' => 'required|in:Grupos,Liguilla,Eliminacion',
-        'equipos' => 'required|array|min:2',
-        'equipos.*' => 'integer|exists:equipos,id',
-        'cantidad_grupos' => 'nullable|integer|min:1',
-        'partidos_por_enfrentamiento' => 'nullable|in:1,2',
-    ]);
+    {
+        $request->validate([
+            'nombre' => 'required|string',
+            'tipo' => 'required|in:Grupos,Liguilla,Eliminacion',
+            'equipos' => 'required|array|min:2',
+            'equipos.*' => 'integer|exists:equipos,id',
+            'cantidad_grupos' => 'nullable|integer|min:1',
+            'partidos_por_enfrentamiento' => 'nullable|in:1,2',
+        ]);
 
-    $equiposPorGrupo = null;
-        if ($request->tipo === 'Grupos' && $request->cantidad_grupos > 0) {
-            $equiposPorGrupo = floor(count($request->equipos) / $request->cantidad_grupos);
+        $totalEquipos = count($request->equipos);
+        $numGrupos = $request->cantidad_grupos;
+
+        // ✅ Validación para torneos por grupos
+        if ($request->tipo === 'Grupos') {
+            if (!$numGrupos || $numGrupos == 0) {
+                $numGrupos = ceil($totalEquipos / 4);
+                $request->merge(['cantidad_grupos' => $numGrupos]);
+            }
+
+            if ($totalEquipos < $numGrupos) {
+                return back()->withErrors("No puede haber más grupos que equipos")->withInput();
+            }
+
+            $equiposPorGrupo = floor($totalEquipos / $numGrupos);
         }
 
-
-    $torneo = Torneos::create([
-        'idMunicipio' => $request->idMunicipio ?? null,
-        'nombre' => $request->nombre,
-        'descripcion' => $request->descripcion ?? null,
-        'tipo' => $request->tipo,
-        'estado' => 'Pendiente',
-        'fecha_inicio' => $request->fecha_inicio ?? null,
-        'fecha_fin' => $request->fecha_fin ?? null,
-        'num_equipos' => count($request->equipos),
-        'cantidad_grupos' => $request->cantidad_grupos ?? null,
-        'equipos_por_grupo' => $equiposPorGrupo ?? null,
-        'clasificados_por_grupo' => $request->clasificados_por_grupo ?? null,
-        'partidos_por_enfrentamiento' => $request->partidos_por_enfrentamiento ?? 1,
-        'premio' => $request->premio ?? null,
-    ]);
-
-    // Asociar equipos (usa tu modelo Torneo_Equipo)
-    foreach ($request->equipos as $idEquipo) {
-        Torneo_Equipo::create([
-            'idTorneo' => $torneo->id,
-            'idEquipo' => $idEquipo,
+        // ✅ Crear Torneo
+        $torneo = Torneos::create([
+            'idMunicipio' => $request->idMunicipio ?? null,
+            'nombre' => $request->nombre,
+            'descripcion' => $request->descripcion ?? null,
+            'tipo' => $request->tipo,
+            'estado' => 'Pendiente',
+            'fecha_inicio' => $request->fecha_inicio ?? null,
+            'fecha_fin' => $request->fecha_fin ?? null,
+            'num_equipos' => $totalEquipos,
+            'cantidad_grupos' => $numGrupos ?? null,
+            'equipos_por_grupo' => $equiposPorGrupo ?? null,
+            'clasificados_por_grupo' => $request->clasificados_por_grupo ?? null,
+            'partidos_por_enfrentamiento' => $request->partidos_por_enfrentamiento ?? 1,
+            'premio' => $request->premio ?? null,
         ]);
-    }
 
-    // Generar partidos según tipo
-    if ($request->tipo === 'Grupos') {
-        $this->generarGrupos($torneo, $request->equipos, $request->cantidad_grupos ?? 1);
-    } elseif ($request->tipo === 'Liguilla') {
-        $this->generarLiguilla($torneo, $request->equipos, $request->partidos_por_enfrentamiento ?? 1);
-    } elseif ($request->tipo === 'Eliminacion') {
-        $this->generarEliminacion($torneo, $request->equipos);
-    }
+        // ✅ Guardar equipos del torneo
+        foreach ($request->equipos as $idEquipo) {
+            Torneo_Equipo::create([
+                'idTorneo' => $torneo->id,
+                'idEquipo' => $idEquipo,
+            ]);
+        }
 
-    return redirect()->route('torneos.index')->with('success', 'Torneo creado correctamente');
-}
+        // ✅ Generar torneo según tipo
+        if ($request->tipo === 'Grupos') {
+            $this->generarGrupos($torneo, $request->equipos, $numGrupos);
+        } elseif ($request->tipo === 'Liguilla') {
+            $this->generarLiguilla($torneo, $request->equipos, $request->partidos_por_enfrentamiento ?? 1);
+        } elseif ($request->tipo === 'Eliminacion') {
+            $this->generarEliminacion($torneo, $request->equipos);
+        }
+
+        return redirect()->route('torneos.index')->with('success', 'Torneo creado correctamente');
+    }
 
     public function show($id)
-{
-    // Buscar torneo con su municipio y equipos participantes
-    $torneo = Torneos::with(['municipio', 'equipos'])->findOrFail($id);
-
-    return view('torneos.show', compact('torneo'));
-}
-
-public function edit($id)
-{
-    $torneos = Torneos::with('equipos')->findOrFail($id);
-    $equipos = Equipos::where('estado', 'activo')->get();
-    $municipios = municipios::all();
-
-    return view('torneos.edit', compact('torneos', 'equipos', 'municipios'));
-}
-
-public function update(Request $request, $id)
-{
-    $request->validate([
-        'nombre' => 'required|string',
-        'tipo' => 'required|in:Grupos,Liguilla,Eliminacion',
-        'equipos' => 'required|array|min:2',
-        'equipos.*' => 'integer|exists:equipos,id',
-        'cantidad_grupos' => 'nullable|integer|min:1',
-        'partidos_por_enfrentamiento' => 'nullable|in:1,2',
-    ]);
-
-    $torneo = Torneos::findOrFail($id);
-
-    $torneo->update([
-        'idMunicipio' => $request->idMunicipio ?? null,
-        'nombre' => $request->nombre,
-        'descripcion' => $request->descripcion ?? null,
-        'tipo' => $request->tipo,
-        'estado' => $request->estado ?? $torneo->estado,
-        'fecha_inicio' => $request->fecha_inicio ?? null,
-        'fecha_fin' => $request->fecha_fin ?? null,
-        'num_equipos' => count($request->equipos),
-        'cantidad_grupos' => $request->cantidad_grupos ?? null,
-        'equipos_por_grupo' => $request->equipos_por_grupo ?? null,
-        'clasificados_por_grupo' => $request->clasificados_por_grupo ?? null,
-        'partidos_por_enfrentamiento' => $request->partidos_por_enfrentamiento ?? 1,
-        'premio' => $request->premio ?? null,
-    ]);
-
-    // Actualizar equipos asociados
-    Torneo_Equipo::where('idTorneo', $torneo->id)->delete(); // eliminar antiguos
-    foreach ($request->equipos as $idEquipo) {
-        Torneo_Equipo::create([
-            'idTorneo' => $torneo->id,
-            'idEquipo' => $idEquipo,
-        ]);
+    {
+        $torneo = Torneos::with(['municipio', 'equipos'])->findOrFail($id);
+        return view('torneos.show', compact('torneo'));
     }
 
-    return redirect()->route('torneos.index')->with('success', 'Torneo actualizado correctamente');
-}
+    public function edit($id)
+    {
+        $torneos = Torneos::with('equipos')->findOrFail($id);
+        $equipos = Equipos::where('estado', 'activo')->get();
+        $municipios = municipios::all();
 
-public function destroy($id)
-{
-    $torneo = Torneos::findOrFail($id);
+        return view('torneos.edit', compact('torneos', 'equipos', 'municipios'));
+    }
 
-    // Eliminar relaciones con equipos
-    Torneo_Equipo::where('idTorneo', $torneo->id)->delete();
+    public function update(Request $request, $id)
+    {
+        $request->validate([
+            'nombre' => 'required|string',
+            'tipo' => 'required|in:Grupos,Liguilla,Eliminacion',
+            'equipos' => 'required|array|min:2',
+            'equipos.*' => 'integer|exists:equipos,id',
+            'cantidad_grupos' => 'nullable|integer|min:1',
+            'partidos_por_enfrentamiento' => 'nullable|in:1,2',
+        ]);
 
-    // Opcional: eliminar grupos y partidos si existen
-    Grupo::where('idTorneo', $torneo->id)->delete();
-    Partido::where('id_torneo', $torneo->id)->delete();
-    // No olvides eliminar también los registros de Partido_Equipo si quieres limpiar todo
-    Partido_Equipo::whereIn('id_partido', function($query) use ($torneo) {
-        $query->select('id')->from('partidos')->where('id_torneo', $torneo->id);
-    })->delete();
+        $torneo = Torneos::findOrFail($id);
 
-    // Finalmente eliminar el torneo
-    $torneo->delete();
+        $torneo->update([
+            'idMunicipio' => $request->idMunicipio ?? null,
+            'nombre' => $request->nombre,
+            'descripcion' => $request->descripcion ?? null,
+            'tipo' => $request->tipo,
+            'estado' => $request->estado ?? $torneo->estado,
+            'fecha_inicio' => $request->fecha_inicio ?? null,
+            'fecha_fin' => $request->fecha_fin ?? null,
+            'num_equipos' => count($request->equipos),
+            'cantidad_grupos' => $request->cantidad_grupos ?? null,
+            'equipos_por_grupo' => $request->equipos_por_grupo ?? null,
+            'clasificados_por_grupo' => $request->clasificados_por_grupo ?? null,
+            'partidos_por_enfrentamiento' => $request->partidos_por_enfrentamiento ?? 1,
+            'premio' => $request->premio ?? null,
+        ]);
 
-    return redirect()->route('torneos.index')->with('success', 'Torneo eliminado correctamente');
-}
+        Torneo_Equipo::where('idTorneo', $torneo->id)->delete();
 
+        foreach ($request->equipos as $idEquipo) {
+            Torneo_Equipo::create([
+                'idTorneo' => $torneo->id,
+                'idEquipo' => $idEquipo,
+            ]);
+        }
 
+        return redirect()->route('torneos.index')->with('success', 'Torneo actualizado correctamente');
+    }
 
+    public function destroy($id)
+    {
+        $torneo = Torneos::findOrFail($id);
 
+        Torneo_Equipo::where('idTorneo', $torneo->id)->delete();
+        Grupo::where('idTorneo', $torneo->id)->delete();
+
+        Partido_Equipo::whereIn('id_partido', function($query) use ($torneo) {
+            $query->select('id')->from('partidos')->where('id_torneo', $torneo->id);
+        })->delete();
+
+        Partido::where('id_torneo', $torneo->id)->delete();
+
+        $torneo->delete();
+
+        return redirect()->route('torneos.index')->with('success', 'Torneo eliminado correctamente');
+    }
 
     // ==========================
     // GENERAR GRUPOS
@@ -174,7 +176,6 @@ public function destroy($id)
         $equiposMezclados = collect($equipos)->shuffle();
         $grupos = [];
 
-        // Crear grupos A, B, C...
         for ($i = 0; $i < $num_grupos; $i++) {
             $grupo = Grupo::create([
                 'nombre' => 'Grupo ' . chr(65 + $i),
@@ -183,16 +184,17 @@ public function destroy($id)
             $grupos[] = $grupo;
         }
 
-        // Asignar equipos a grupos
         $index = 0;
-    foreach ($equiposMezclados as $equipo) {
-        $grupoIndex = $index % $num_grupos;
-        Grupo_Equipo::create([
-            'idGrupo' => $grupos[$grupoIndex]->id,
-            'idEquipo' => $equipo,
-        ]);
-        $index++;
-    }
+        foreach ($equiposMezclados as $equipo) {
+            $grupoIndex = $index % $num_grupos;
+
+            Grupo_Equipo::create([
+                'idGrupo' => $grupos[$grupoIndex]->id,
+                'idEquipo' => $equipo,
+            ]);
+            $index++;
+        }
+
         $this->generarPartidosGrupos($torneo);
     }
 
@@ -228,56 +230,127 @@ public function destroy($id)
         }
     }
 
+    private function generarCrucesSiguienteRonda($torneo)
+{
+    $grupos = Grupo::where('idTorneo', $torneo->id)->with('equipos')->get();
+
+    // Obtener los primeros y segundos de cada grupo (simulado si no hay resultados aún)
+    $puestosPorGrupo = [];
+    foreach ($grupos as $grupo) {
+        // Ordenar por puntos, goles, etc. Aquí simulamos que el primer equipo es 1er lugar, segundo es 2do
+        $equiposOrdenados = $grupo->equipos->sortByDesc('puntos')->values(); 
+        $puestosPorGrupo[$grupo->nombre] = [
+            '1' => $equiposOrdenados[0] ?? null,
+            '2' => $equiposOrdenados[1] ?? null,
+        ];
+    }
+
+    $cruces = [];
+    $grupoNombres = $grupos->pluck('nombre')->toArray();
+
+    // Cruces tipo A1 vs B2, B1 vs A2, C1 vs D2...
+    for ($i = 0; $i < count($grupoNombres); $i += 2) {
+        $g1 = $grupoNombres[$i];
+        $g2 = $grupoNombres[$i + 1] ?? null;
+
+        if ($g2) {
+            $cruces[] = [
+                'local' => $puestosPorGrupo[$g1]['1']?->nombre ?? 'Pendiente',
+                'visitante' => $puestosPorGrupo[$g2]['2']?->nombre ?? 'Pendiente',
+            ];
+            $cruces[] = [
+                'local' => $puestosPorGrupo[$g2]['1']?->nombre ?? 'Pendiente',
+                'visitante' => $puestosPorGrupo[$g1]['2']?->nombre ?? 'Pendiente',
+            ];
+        }
+    }
+
+    return $cruces;
+}
+
+
 
     // ==========================
     // LIGUILLA
     // ==========================
 
-    private function generarLiguilla($torneo, $equipos, $ida_vuelta)
-    {
-        for ($i = 0; $i < count($equipos); $i++) {
-            for ($j = $i + 1; $j < count($equipos); $j++) {
+private function generarLiguilla($torneo, $equipos, $idaVuelta = 1)
+{
+    // Convertir a enteros por seguridad
+    $equipos = array_map('intval', $equipos);
 
-                // Partido ida
+    // Mezclar los equipos para aleatoriedad
+    shuffle($equipos);
+
+    $numEquipos = count($equipos);
+    $jornada = 1;
+
+    // Iniciamos transacción para mayor seguridad
+    DB::beginTransaction();
+
+    try {
+        for ($i = 0; $i < $numEquipos; $i++) {
+            for ($j = $i + 1; $j < $numEquipos; $j++) {
+
+                // --- PARTIDO IDA ---
                 $partido = Partido::create([
                     'id_torneo' => $torneo->id,
-                    'fase' => 'Liguilla'
+                    'fase' => "Jornada $jornada",
+                    'jugado' => 0,
+                    'fecha' => null,
+                    'hora' => null,
                 ]);
 
-                Partido_Equipo::create([
-                    'id_partido' => $partido->id,
-                    'id_equipo' => $equipos[$i],
-                    'rol' => 'Local'
-                ]);
-
-                Partido_Equipo::create([
-                    'id_partido' => $partido->id,
-                    'id_equipo' => $equipos[$j],
-                    'rol' => 'Visitante'
-                ]);
-
-                // Partido vuelta si aplica
-                if ($ida_vuelta == 1) {
-                    $partido2 = Partido::create([
-                        'id_torneo' => $torneo->id,
-                        'fase' => 'Liguilla'
-                    ]);
-
+                // Crear relaciones con equipos
+                if ($equipos[$i] > 0 && $equipos[$j] > 0) {
                     Partido_Equipo::create([
-                        'id_partido' => $partido2->id,
-                        'id_equipo' => $equipos[$j],
+                        'id_partido' => $partido->id,
+                        'id_equipo' => $equipos[$i],
                         'rol' => 'Local'
                     ]);
 
                     Partido_Equipo::create([
-                        'id_partido' => $partido2->id,
-                        'id_equipo' => $equipos[$i],
+                        'id_partido' => $partido->id,
+                        'id_equipo' => $equipos[$j],
                         'rol' => 'Visitante'
                     ]);
                 }
+
+                // --- PARTIDO VUELTA (si aplica) ---
+                if ($idaVuelta == 2) {
+                    $partidoVuelta = Partido::create([
+                        'id_torneo' => $torneo->id,
+                        'fase' => "Jornada $jornada",
+                        'jugado' => 0,
+                        'fecha' => null,
+                        'hora' => null,
+                    ]);
+
+                    if ($equipos[$i] > 0 && $equipos[$j] > 0) {
+                        Partido_Equipo::create([
+                            'id_partido' => $partidoVuelta->id,
+                            'id_equipo' => $equipos[$j],
+                            'rol' => 'Local'
+                        ]);
+
+                        Partido_Equipo::create([
+                            'id_partido' => $partidoVuelta->id,
+                            'id_equipo' => $equipos[$i],
+                            'rol' => 'Visitante'
+                        ]);
+                    }
+                }
+
+                $jornada++;
             }
         }
+
+        DB::commit(); // Confirmamos la transacción
+    } catch (\Exception $e) {
+        DB::rollBack(); // Revertimos en caso de error
+        dd("Error al generar la liguilla: " . $e->getMessage());
     }
+}
 
 
     // ==========================
@@ -285,28 +358,141 @@ public function destroy($id)
     // ==========================
 
     private function generarEliminacion($torneo, $equipos)
-    {
-        shuffle($equipos);
+{
+    $cantidadEquipos = count($equipos);
 
-        for ($i = 0; $i < count($equipos); $i += 2) {
-            if (!isset($equipos[$i + 1])) break;
+    // Si la cantidad no es potencia de 2, agregar BYEs
+    $potencias = [2, 4, 8, 16, 32, 64];
+    $objetivo = null;
 
-            $partido = Partido::create([
-                'id_torneo' => $torneo->id,
-                'fase' => 'Eliminación Ronda 1'
-            ]);
+    foreach ($potencias as $p) {
+        if ($cantidadEquipos <= $p) {
+            $objetivo = $p;
+            break;
+        }
+    }
 
+    // Rellenar con null (BYEs)
+    while (count($equipos) < $objetivo) {
+        $equipos[] = null;
+    }
+
+    // Ronda 1
+    $ronda = 1;
+    $partidos = [];
+
+    for ($i = 0; $i < count($equipos); $i += 2) {
+
+        if ($equipos[$i] == null && $equipos[$i+1] == null) {
+            continue;
+        }
+
+        $partido = Partido::create([
+            'id_torneo' => $torneo->id,
+            'fase' => "Ronda $ronda",
+        ]);
+
+        // Solo insertar si existe equipo
+        if ($equipos[$i] !== null) {
             Partido_Equipo::create([
                 'id_partido' => $partido->id,
                 'id_equipo' => $equipos[$i],
                 'rol' => 'Local'
             ]);
+        }
 
+        if ($equipos[$i+1] !== null) {
             Partido_Equipo::create([
                 'id_partido' => $partido->id,
-                'id_equipo' => $equipos[$i + 1],
+                'id_equipo' => $equipos[$i+1],
                 'rol' => 'Visitante'
             ]);
         }
+
+        // Guardamos solo elementos que pasan
+        if ($equipos[$i] !== null && $equipos[$i+1] !== null) {
+
+            // Ambos juegan → pasa el partido para la siguiente ronda
+            $partidos[] = $partido;
+
+        } elseif ($equipos[$i] !== null) {
+
+            // Solo existe el primero → pasa automáticamente
+            $partidos[] = $equipos[$i];
+
+        } else {
+
+            // Solo existe el segundo
+            $partidos[] = $equipos[$i+1];
+        }
     }
+
+    $this->generarSiguientesRondas($torneo, $partidos, $ronda + 1);
+}
+
+
+private function generarSiguientesRondas($torneo, $participantes, $ronda)
+{
+    if (count($participantes) == 1) {
+        return;
+    }
+
+    $nuevaRonda = [];
+
+    for ($i = 0; $i < count($participantes); $i += 2) {
+
+        $equipo1 = $participantes[$i];
+        $equipo2 = $participantes[$i+1] ?? null;
+
+        // Si no hay rival, guardamos el equipo para enfrentarlo en la siguiente ronda
+        if (!$equipo2) {
+            $nuevaRonda[] = $equipo1;
+            continue;
+        }
+
+        // Crear partido normal
+        $partido = Partido::create([
+            'id_torneo' => $torneo->id,
+            'fase' => "Ronda $ronda",
+        ]);
+
+        // Equipo 1
+        if ($equipo1 instanceof Partido) {
+            Partido_Equipo::create([
+                'id_partido' => $partido->id,
+                'id_equipo' => null,
+                'rol' => null
+            ]);
+        } else {
+            Partido_Equipo::create([
+                'id_partido' => $partido->id,
+                'id_equipo' => $equipo1,
+                'rol' => 'Local'
+            ]);
+        }
+
+        // Equipo 2
+        if ($equipo2 instanceof Partido) {
+            Partido_Equipo::create([
+                'id_partido' => $partido->id,
+                'id_equipo' => null,
+                'rol' => null
+            ]);
+        } else {
+            Partido_Equipo::create([
+                'id_partido' => $partido->id,
+                'id_equipo' => $equipo2,
+                'rol' => 'Visitante'
+            ]);
+        }
+
+        // El ganador de este partido pasa a la siguiente ronda
+        $nuevaRonda[] = $partido;
+    }
+
+    // Siguiente ronda
+    $this->generarSiguientesRondas($torneo, $nuevaRonda, $ronda + 1);
+}
+
+
 }

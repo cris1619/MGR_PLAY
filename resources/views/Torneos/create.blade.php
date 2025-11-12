@@ -238,6 +238,7 @@ $(document).ready(function() {
                 });
 
                 actualizarGrupos();
+                mostrarConfig();  // <<< ✅ Aquí sí se puede llamar también
             },
             error: function(xhr) {
                 Swal.fire({
@@ -249,6 +250,35 @@ $(document).ready(function() {
         });
     });
 });
+
+
+function actualizarGrupos() {
+    let equiposSeleccionados = $('select[name="equipos[]"]').val()?.length || 0;
+
+    $('#num_equipos_form').val(equiposSeleccionados);
+
+    let grupos = $('#num_grupos').val();
+
+    if (grupos > 0 && equiposSeleccionados > 0) {
+
+        let equiposPorGrupo = Math.floor(equiposSeleccionados / grupos);
+        $('#equipos_por_grupo').val(equiposPorGrupo);
+
+        if (equiposSeleccionados % grupos !== 0) {
+            $('#info_grupos').html(
+                `<span class="text-danger">⚠ Algunos grupos tendrán un equipo más que otros</span>`
+            );
+        } else {
+            $('#info_grupos').html(
+                `<span class="text-success">✔ Reparto equitativo entre grupos</span>`
+            );
+        }
+    } else {
+        $('#equipos_por_grupo').val('');
+        $('#info_grupos').html('');
+    }
+}
+
 
 function mostrarConfig() {
     let tipo = $('#tipo_torneo').val();

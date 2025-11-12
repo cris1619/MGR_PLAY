@@ -23,6 +23,15 @@ class Equipos extends Model
         {
             return $this->hasMany(Jugadores::class, 'idEquipo');
         }
+public function partidos()
+{
+    return $this->belongsToMany(
+        Partido::class,
+        'partido_equipos', // ✅ correcto
+        'id_equipo',       // ✅ de tabla pivote a equipos
+        'id_partido'       // ✅ de tabla pivote a partidos
+    );
+}
 
         public function grupos()
 {
