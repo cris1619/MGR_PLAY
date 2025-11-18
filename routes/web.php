@@ -6,6 +6,7 @@ use App\Http\Controllers\EquiposController;
 use App\Http\Controllers\ArbitrosController;
 use App\Http\Controllers\JugadoresController;
 use App\Http\Controllers\MunicipiosController;
+use App\Http\Controllers\PartidoController;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\TorneosController;
 use Illuminate\Support\Facades\Auth;
@@ -89,3 +90,10 @@ Route::post('/Torneos/update/{id}', [TorneosController::class, 'update'])->name(
 Route::post('/Torneos/delete/{id}', [TorneosController::class, 'destroy'])->name('torneos.destroy');
 Route::get('/Torneos/show/{id}', [TorneosController::class, 'show'])->name('torneos.show');
 
+//Rutas Partidos
+Route::get('/Partidos/index', [PartidoController::class,'index'])->name('partidos.index');
+Route::get('/partidos/create', [PartidoController::class, 'create'])->name('partidos.create');
+Route::post('/partidos/store', [PartidoController::class, 'store'])->name('partidos.store');    
+Route::get('/partidos/{partido}/edit', [PartidoController::class, 'edit'])->name('partidos.edit');
+Route::put('/partidos/{partido}', [PartidoController::class, 'update'])->name('partidos.update');
+Route::delete('/partidos/{partido}', [PartidoController::class, 'destroy'])->name('partidos.destroy');
