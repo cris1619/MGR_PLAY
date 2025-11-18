@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Partido;
+use App\Models\arbitros; // <- modelo de árbitros
 use Illuminate\Http\Request;
 
 class PartidoController extends Controller
@@ -119,12 +120,122 @@ class PartidoController extends Controller
         //
     }
 
+    /**
+     * Show the form for editing the schedule of the specified resource.
+     */
+    public function editSchedule($id)
+    {
+        $partido = Partido::with('partido_equipos.equipo')->findOrFail($id);
+        $arbitros = arbitros::orderBy('nombre')->get();
+        return view('Partidos.edit_schedule', compact('partido', 'arbitros'));
+    }
+
+    /**
+     * Update the schedule of the specified resource in storage.
+     */
+    public function updateSchedule(Request $request, $id)
+    {
+        $p = Partido::findOrFail($id);
+
+        $data = $request->validate([
+            'fecha' => 'nullable|date',
+            'hora' => 'nullable',
+            'fase' => 'nullable|string|max:255',
+            'lugar' => 'nullable|string|max:255',
+            'cancha' => 'nullable|string|max:255',
+            'arbitro_id' => 'nullable|exists:arbitros,id',
+        ]);
+
+        $p->update($data);
+
+        return redirect()->route('torneos.show', $p->id_torneo)->with('success', 'Programación actualizada.');
+    }
+
+    /**
+     * Show the form for editing the result of the specified resource.
+     */
+    public function editResult($id)
+    {
+        $partido = Partido::with('equipos')->findOrFail($id);
+        return view('Partidos.edit_result', compact('partido'));
+    }
+
+    /**
+     * Update the result of the specified resource in storage.
+     */
+    public function updateResult(Request $request, $id)
+    {
+        $request->validate([
+            'goles' => 'required|array',
+            'goles.*' => 'nullable|integer|min:0',
+        ]);
+
+        $partido = Partido::with('equipos')->findOrFail($id);
+
+        // actualizar goles en pivote
+        foreach ($request->goles as $equipo_id => $goles) {
+            $partido->equipos()->updateExistingPivot($equipo_id, ['goles' => (int)$goles]);
+        }
+
+        // marcar jugado
+        $partido->jugado = 1;
+        $partido->save();
+
+        // determinar ganador (si hay dos equipos)
+        $equipos = $partido->equipos;
+        if ($equipos->count() >= 2) {
+            $e1 = $equipos[0];
+            $e2 = $equipos[1];
+            $g1 = (int) ($e1->pivot->goles ?? 0);
+            $g2 = (int) ($e2->pivot->goles ?? 0);
+
+            $ganador_id = null;
+            if ($g1 > $g2) $ganador_id = $e1->id;
+            elseif ($g2 > $g1) $ganador_id = $e2->id;
+
+            if ($ganador_id) {
+                // buscar partidos de siguiente ronda en este torneo
+                $rondaActual = $this->getRonda($partido->fase);
+                $siguienteRonda = 'Ronda ' . ($rondaActual + 1);
+
+                $siguientes = Partido::where('id_torneo', $partido->id_torneo)
+                    ->where('fase', $siguienteRonda)
+                    ->get();
+
+                foreach ($siguientes as $s) {
+                    // Buscar pivote libre (acepta NULL o 0 por si quedó como 0)
+                    $pivot = $s->partido_equipos()
+                        ->where('rol', 'Ganador Ronda Anterior')
+                        ->where(function($q){
+                            $q->whereNull('id_equipo')->orWhere('id_equipo', 0);
+                        })->first();
+
+                    if ($pivot) {
+                        // actualizar de forma segura
+                        $pivot->id_equipo = $ganador_id;
+                        $pivot->save();
+
+                        // opcional: log para depuración
+                        \Log::info('Asignado ganador a siguiente partido', [
+                            'partido_origen' => $partido->id,
+                            'partido_destino' => $s->id,
+                            'ganador_id' => $ganador_id,
+                            'pivot_id' => $pivot->id
+                        ]);
+
+                        break;
+                    }
+                }
+            }
+        }
+
+        return redirect()->route('torneos.show', $partido->id_torneo)->with('success', 'Resultado registrado.');
+    }
+
     // Helper para obtener el número de ronda
     private function getRonda($fase)
     {
-        if (preg_match('/Ronda (\d+)/', $fase, $matches)) {
-            return (int)$matches[1];
-        }
+        if (preg_match('/Ronda\s*(\d+)/i', $fase, $m)) return (int)$m[1];
         return 1;
     }
 }

@@ -97,3 +97,7 @@ Route::post('/partidos/store', [PartidoController::class, 'store'])->name('parti
 Route::get('/partidos/{partido}/edit', [PartidoController::class, 'edit'])->name('partidos.edit');
 Route::put('/partidos/{partido}', [PartidoController::class, 'update'])->name('partidos.update');
 Route::delete('/partidos/{partido}', [PartidoController::class, 'destroy'])->name('partidos.destroy');
+Route::get('/partidos/{partido}/programar', [App\Http\Controllers\PartidoController::class, 'editSchedule'])->name('partidos.schedule.edit');
+Route::put('/partidos/{partido}/programar', [App\Http\Controllers\PartidoController::class, 'updateSchedule'])->name('partidos.schedule.update');
+Route::get('/partidos/{partido}/resultado', [App\Http\Controllers\PartidoController::class, 'editResult'])->name('partidos.result.edit');
+Route::put('/partidos/{partido}/resultado', [App\Http\Controllers\PartidoController::class, 'updateResult'])->name('partidos.result.update');

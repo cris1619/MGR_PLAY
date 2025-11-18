@@ -266,16 +266,20 @@
 
     .partido-equipo {
         display: flex;
+        flex-direction: column;
         align-items: center;
-        gap: 10px;
+        gap: 8px;
         flex: 1;
+        text-align: center;
     }
 
     .vs-separator {
         color: #ffd700;
         font-weight: 800;
-        font-size: 1.2rem;
-        padding: 0 20px;
+        font-size: 1rem;
+        padding: 0 12px;
+        min-width: 48px;
+        text-align: center;
     }
 
     .partido-info {
@@ -290,17 +294,25 @@
 
     .partido-fecha {
         color: #00ccff;
-        font-size: 0.9rem;
+        font-size: 1.15rem;   /* aumentado */
+        font-weight: 700;     /* más contraste */
+        letter-spacing: 0.3px;
     }
 
-    .partido-jugado {
-        display: inline-flex;
-        align-items: center;
-        gap: 5px;
-        padding: 5px 15px;
-        border-radius: 15px;
-        font-size: 0.85rem;
+    /* Opcional: hacer el tiempo un poco más destacado */
+    .partido-fecha .hora {
+        display: inline-block;
+        margin-left: 8px;
+        color: #9be9ff;
         font-weight: 600;
+    }
+
+    /* Ajustes responsive */
+    @media (max-width: 768px) {
+        .partido-fecha { font-size: 1.05rem; }
+    }
+    @media (max-width: 480px) {
+        .partido-fecha { font-size: 0.98rem; }
     }
 
     .jugado-si {
@@ -352,6 +364,60 @@
         color: #fff;
         font-size: 2rem;
         font-weight: 800;
+    }
+
+    /* Nuevo: estilos para marcador grande y nombres centrados/coloreados */
+    .partido-equipo {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 8px;
+        flex: 1;
+        text-align: center;
+    }
+
+    .equipo-escudo {
+        width: 56px;
+        height: 56px;
+        border-radius: 50%;
+        object-fit: cover;
+        border: 3px solid #ffd700;
+    }
+
+    .team-name {
+        font-size: 1.05rem;
+        font-weight: 700;
+        display: block;
+    }
+
+    .score-badge {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        min-width: 56px;
+        height: 56px;
+        font-size: 1.35rem;
+        font-weight: 900;
+        border-radius: 12px;
+        background: rgba(0,0,0,0.6);
+        color: #fff;
+        border: 2px solid rgba(255,255,255,0.06);
+        box-shadow: 0 4px 10px rgba(0,0,0,0.4);
+    }
+
+    /* Colores según resultado */
+    .team-name.winner { color: #00ff88; }
+    .team-name.loser  { color: #ff6b6b; }
+    .team-name.draw   { color: #ffd700; }
+
+    /* Ajuste del separador VS para que no desplace */
+    .vs-separator {
+        color: #ffd700;
+        font-weight: 800;
+        font-size: 1rem;
+        padding: 0 12px;
+        min-width: 48px;
+        text-align: center;
     }
 </style>
 
@@ -485,6 +551,18 @@
                             📅 {{ $partido->fecha }} @if($partido->hora)⏰ {{ $partido->hora }}@endif
                         </div>
                         @endif
+
+                        @if($partido->lugar || $partido->cancha || $partido->arbitro_id)
+                            <div class="mt-1" style="color:#9be9ff; font-weight:600;">
+                                @if($partido->lugar) 📍 {{ $partido->lugar }} @endif
+                                @if($partido->cancha) | 🏟️ {{ $partido->cancha }} @endif
+                                @if($partido->arbitro_id)
+                                    | 👨‍⚖️ {{ $partido->partido_equipos->first()->partido->arbitro->nombre ?? '' }}
+                                    {{-- Si necesitas la relación, añade en el modelo Partido: public function arbitro() { return $this->belongsTo(\App\Models\arbitros::class, 'arbitro_id'); } --}}
+                                @endif
+                            </div>
+                        @endif
+
                         <span class="partido-jugado {{ $partido->jugado ? 'jugado-si' : 'jugado-no' }}">
                             {{ $partido->jugado ? '✓ Jugado' : '⏳ Pendiente' }} <a href="{{ route('partidos.edit', $partido->id) }}" class="btn btn-primary">Editar</a>
                         </span>
@@ -534,6 +612,23 @@
             $visitante = $equipos->where('rol', 'Visitante')->first();
             $ganador1 = $equipos->where('rol', 'Ganador Ronda Anterior')->first();
             $ganador2 = $equipos->where('rol', 'Ganador Ronda Anterior')->skip(1)->first();
+
+            // Determinar equipo A (lado izquierdo) y B (derecho) y sus goles
+            $teamA = null; $golesA = null;
+            if ($local && $local->equipo) { $teamA = $local->equipo; $golesA = $local->goles; }
+            elseif ($ganador1 && $ganador1->equipo) { $teamA = $ganador1->equipo; $golesA = $ganador1->goles; }
+
+            $teamB = null; $golesB = null;
+            if ($visitante && $visitante->equipo) { $teamB = $visitante->equipo; $golesB = $visitante->goles; }
+            elseif ($ganador2 && $ganador2->equipo) { $teamB = $ganador2->equipo; $golesB = $ganador2->goles; }
+
+            // Determinar clases de color según resultado (solo si hay goles definidos)
+            $classA = ''; $classB = '';
+            if (!is_null($golesA) && !is_null($golesB)) {
+                if ($golesA > $golesB) { $classA = 'winner'; $classB = 'loser'; }
+                elseif ($golesB > $golesA) { $classA = 'loser'; $classB = 'winner'; }
+                else { $classA = 'draw'; $classB = 'draw'; }
+            }
         @endphp
 
         <div class="partido-card">
@@ -545,32 +640,26 @@
 
             <div class="partido-equipos">
                 <div class="partido-equipo">
-                    @if($local && $local->equipo)
-                    <img src="{{ asset('storage/public/escudos/' . $local->equipo->escudo) }}" alt="" class="equipo-escudo">
-                    <span class="info-value">{{ $local->equipo->nombre }}</span>
-                    <span class="badge bg-dark ms-2">{{ $local->goles }}</span>
-                    @elseif($ganador1 && $ganador1->equipo)
-                    <img src="{{ asset('storage/public/escudos/' . $ganador1->equipo->escudo) }}" alt="" class="equipo-escudo">
-                    <span class="info-value">{{ $ganador1->equipo->nombre }}</span>
-                    <span class="badge bg-dark ms-2">{{ $ganador1->goles }}</span>
+                    @if($teamA)
+                        <img src="{{ asset('storage/public/escudos/' . ($teamA->escudo ?? 'default.png')) }}" alt="" class="equipo-escudo">
+                        <span class="team-name {{ $classA }}">{{ $teamA->nombre }}</span>
+                        <span class="score-badge">{{ is_null($golesA) ? '-' : $golesA }}</span>
                     @else
-                    <span class="info-value" style="color: #999;">Por definir</span>
+                        <span class="info-value" style="color: #999;">Por definir</span>
+                        <span class="score-badge">-</span>
                     @endif
                 </div>
-                
+
                 <div class="vs-separator">VS</div>
-                
+
                 <div class="partido-equipo">
-                    @if($visitante && $visitante->equipo)
-                    <img src="{{ asset('storage/public/escudos/' . $visitante->equipo->escudo) }}" alt="" class="equipo-escudo">
-                    <span class="info-value">{{ $visitante->equipo->nombre }}</span>
-                    <span class="badge bg-dark ms-2">{{ $visitante->goles }}</span>
-                    @elseif($ganador2 && $ganador2->equipo)
-                    <img src="{{ asset('storage/public/escudos/' . $ganador2->equipo->escudo) }}" alt="" class="equipo-escudo">
-                    <span class="info-value">{{ $ganador2->equipo->nombre }}</span>
-                    <span class="badge bg-dark ms-2">{{ $ganador2->goles }}</span>
+                    @if($teamB)
+                        <img src="{{ asset('storage/public/escudos/' . ($teamB->escudo ?? 'default.png')) }}" alt="" class="equipo-escudo">
+                        <span class="team-name {{ $classB }}">{{ $teamB->nombre }}</span>
+                        <span class="score-badge">{{ is_null($golesB) ? '-' : $golesB }}</span>
                     @else
-                    <span class="info-value" style="color: #999;">Por definir</span>
+                        <span class="info-value" style="color: #999;">Por definir</span>
+                        <span class="score-badge">-</span>
                     @endif
                 </div>
             </div>
@@ -581,34 +670,52 @@
                     📅 {{ $partido->fecha }} @if($partido->hora)⏰ {{ $partido->hora }}@endif
                 </div>
                 @endif
-                <span class="partido-jugado {{ $partido->jugado ? 'jugado-si' : 'jugado-no' }}">
-                    {{ $partido->jugado ? '✓ Jugado' : '⏳ Pendiente' }}
-                </span>
-                @if(!$partido->jugado)
-                    <a href="{{ route('partidos.edit', $partido->id) }}" class="btn btn-primary ms-2">Editar</a>
+
+                @if($partido->lugar || $partido->cancha || $partido->arbitro_id)
+                    <div class="mt-1" style="color:#9be9ff; font-weight:600;">
+                        @if($partido->lugar) 📍 {{ $partido->lugar }} @endif
+                        @if($partido->cancha) | 🏟️ {{ $partido->cancha }} @endif
+                        @if($partido->arbitro_id)
+                            | 👨‍⚖️ {{ $partido->partido_equipos->first()->partido->arbitro->nombre ?? '' }}
+                            {{-- Si necesitas la relación, añade en el modelo Partido: public function arbitro() { return $this->belongsTo(\App\Models\arbitros::class, 'arbitro_id'); } --}}
+                        @endif
+                    </div>
                 @endif
+
+                <div style="display:flex; align-items:center; gap:8px;">
+                    <span class="partido-jugado {{ $partido->jugado ? 'jugado-si' : 'jugado-no' }}">
+                        {{ $partido->jugado ? '✓ Jugado' : '⏳ Pendiente' }}
+                    </span>
+                    @if(!$partido->jugado)
+                        <a href="{{ route('partidos.schedule.edit', $partido->id) }}" class="btn btn-secondary ms-2">Programar</a>
+                        @if($partido->fecha || $partido->hora)
+                            <a href="{{ route('partidos.result.edit', $partido->id) }}" class="btn btn-primary ms-2">Registrar resultado</a>
+                        @endif
+                    @endif
+                </div>
             </div>
+
+            {{-- avance desde ronda anterior (mantener lógica actual) --}}
             @php
-    $avanza = null;
-    $avanzaDesde = null;
-    foreach($equipos->where('rol', 'Ganador Ronda Anterior') as $pe) {
-        if($pe->equipo) {
-            $avanza = $pe->equipo;
-            // Buscar el partido anterior donde este equipo ganó
-            $prevPartido = $torneo->partidos->where('jugado', true)->filter(function($p) use ($pe) {
-                $eqs = $p->partido_equipos;
-                $local = $eqs->where('rol', 'Local')->first();
-                $visitante = $eqs->where('rol', 'Visitante')->first();
-                if($local && $visitante) {
-                    if($local->goles > $visitante->goles && $local->equipo_id == $pe->equipo_id) return true;
-                    if($visitante->goles > $local->goles && $visitante->equipo_id == $pe->equipo_id) return true;
+                $avanza = null;
+                $avanzaDesde = null;
+                foreach($equipos->where('rol', 'Ganador Ronda Anterior') as $pe) {
+                    if($pe->equipo) {
+                        $avanza = $pe->equipo;
+                        $prevPartido = $torneo->partidos->where('jugado', true)->filter(function($p) use ($pe) {
+                            $eqs = $p->partido_equipos;
+                            $local = $eqs->where('rol', 'Local')->first();
+                            $visitante = $eqs->where('rol', 'Visitante')->first();
+                            if($local && $visitante) {
+                                if($local->goles > $visitante->goles && $local->equipo_id == $pe->equipo_id) return true;
+                                if($visitante->goles > $local->goles && $visitante->equipo_id == $pe->equipo_id) return true;
+                            }
+                            return false;
+                        })->first();
+                        if($prevPartido) $avanzaDesde = $prevPartido->fase;
+                    }
                 }
-                return false;
-            })->first();
-            if($prevPartido) $avanzaDesde = $prevPartido->fase;
-        }
-    }
-@endphp
+            @endphp
 
             @if($avanza && $avanzaDesde)
                 <div class="mt-2" style="color:#00ccff;">
