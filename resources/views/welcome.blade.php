@@ -351,7 +351,7 @@ Inicio | MGR PLAY
                         <p class="card-text">
                             Consulta la programación de los partidos y resultados.
                         </p>
-                        <a href="#" class="btn btn-admin">
+                        <a href="{{ route('partidos.index') }}" class="btn btn-admin">
                             Ver Partidos →
                         </a>
                     </div>

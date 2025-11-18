@@ -461,7 +461,7 @@ private function generarSiguientesRondas($torneo, $participantes, $ronda)
             Partido_Equipo::create([
                 'id_partido' => $partido->id,
                 'id_equipo' => null,
-                'rol' => null
+                'rol' => 'Ganador Ronda Anterior'
             ]);
         } else {
             Partido_Equipo::create([
@@ -476,7 +476,7 @@ private function generarSiguientesRondas($torneo, $participantes, $ronda)
             Partido_Equipo::create([
                 'id_partido' => $partido->id,
                 'id_equipo' => null,
-                'rol' => null
+                'rol' => 'Ganador Ronda Anterior'
             ]);
         } else {
             Partido_Equipo::create([

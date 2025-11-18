@@ -486,7 +486,7 @@
                         </div>
                         @endif
                         <span class="partido-jugado {{ $partido->jugado ? 'jugado-si' : 'jugado-no' }}">
-                            {{ $partido->jugado ? '✓ Jugado' : '⏳ Pendiente' }}
+                            {{ $partido->jugado ? '✓ Jugado' : '⏳ Pendiente' }} <a href="{{ route('partidos.edit', $partido->id) }}" class="btn btn-primary">Editar</a>
                         </span>
                     </div>
                 </div>
@@ -497,60 +497,6 @@
         @endforeach
     @endif
 
-    @if($torneo->tipo == 'Eliminacion' && $torneo->partidos->count() > 0)
-    <div class="info-card">
-        <h3 class="card-title">⚔️ Partidos de Eliminación</h3>
-
-        @foreach($torneo->partidos->sortBy('id') as $partido)
-            @php
-                $equipos = $partido->partido_equipos;
-                $local = $equipos->where('rol', 'Local')->first();
-                $visitante = $equipos->where('rol', 'Visitante')->first();
-            @endphp
-
-            <div class="partido-card">
-                @if($partido->fase)
-                <div style="color: #ffd700; font-weight: 600; margin-bottom: 10px;">
-                    🏆 {{ $partido->fase }}
-                </div>
-                @endif
-
-                <div class="partido-equipos">
-                    <div class="partido-equipo">
-                        @if($local && $local->equipo)
-                        <img src="{{ asset('storage/public/escudos/' . $local->equipo->escudo) }}" alt="" class="equipo-escudo">
-                        <span class="info-value">{{ $local->equipo->nombre }}</span>
-                        @else
-                        <span class="info-value" style="color: #999;">Por definir</span>
-                        @endif
-                    </div>
-                    
-                    <div class="vs-separator">VS</div>
-                    
-                    <div class="partido-equipo">
-                        @if($visitante && $visitante->equipo)
-                        <img src="{{ asset('storage/public/escudos/' . $visitante->equipo->escudo) }}" alt="" class="equipo-escudo">
-                        <span class="info-value">{{ $visitante->equipo->nombre }}</span>
-                        @else
-                        <span class="info-value" style="color: #999;">Por definir</span>
-                        @endif
-                    </div>
-                </div>
-                
-                <div class="partido-info">
-                    @if($partido->fecha)
-                    <div class="partido-fecha">
-                        📅 {{ $partido->fecha }} @if($partido->hora)⏰ {{ $partido->hora }}@endif
-                    </div>
-                    @endif
-                    <span class="partido-jugado {{ $partido->jugado ? 'jugado-si' : 'jugado-no' }}">
-                        {{ $partido->jugado ? '✓ Jugado' : '⏳ Pendiente' }}
-                    </span>
-                </div>
-            </div>
-        @endforeach
-    </div>
-    @endif
 
     @if($torneo->tipo == 'Liguilla')
     <div class="info-card">
@@ -580,6 +526,97 @@
         @endif
     </div>
     @endif
+
+    @foreach($torneo->partidos->sortBy('id') as $partido)
+        @php
+            $equipos = $partido->partido_equipos;
+            $local = $equipos->where('rol', 'Local')->first();
+            $visitante = $equipos->where('rol', 'Visitante')->first();
+            $ganador1 = $equipos->where('rol', 'Ganador Ronda Anterior')->first();
+            $ganador2 = $equipos->where('rol', 'Ganador Ronda Anterior')->skip(1)->first();
+        @endphp
+
+        <div class="partido-card">
+            @if($partido->fase)
+            <div style="color: #ffd700; font-weight: 600; margin-bottom: 10px;">
+                🏆 {{ $partido->fase }}
+            </div>
+            @endif
+
+            <div class="partido-equipos">
+                <div class="partido-equipo">
+                    @if($local && $local->equipo)
+                    <img src="{{ asset('storage/public/escudos/' . $local->equipo->escudo) }}" alt="" class="equipo-escudo">
+                    <span class="info-value">{{ $local->equipo->nombre }}</span>
+                    <span class="badge bg-dark ms-2">{{ $local->goles }}</span>
+                    @elseif($ganador1 && $ganador1->equipo)
+                    <img src="{{ asset('storage/public/escudos/' . $ganador1->equipo->escudo) }}" alt="" class="equipo-escudo">
+                    <span class="info-value">{{ $ganador1->equipo->nombre }}</span>
+                    <span class="badge bg-dark ms-2">{{ $ganador1->goles }}</span>
+                    @else
+                    <span class="info-value" style="color: #999;">Por definir</span>
+                    @endif
+                </div>
+                
+                <div class="vs-separator">VS</div>
+                
+                <div class="partido-equipo">
+                    @if($visitante && $visitante->equipo)
+                    <img src="{{ asset('storage/public/escudos/' . $visitante->equipo->escudo) }}" alt="" class="equipo-escudo">
+                    <span class="info-value">{{ $visitante->equipo->nombre }}</span>
+                    <span class="badge bg-dark ms-2">{{ $visitante->goles }}</span>
+                    @elseif($ganador2 && $ganador2->equipo)
+                    <img src="{{ asset('storage/public/escudos/' . $ganador2->equipo->escudo) }}" alt="" class="equipo-escudo">
+                    <span class="info-value">{{ $ganador2->equipo->nombre }}</span>
+                    <span class="badge bg-dark ms-2">{{ $ganador2->goles }}</span>
+                    @else
+                    <span class="info-value" style="color: #999;">Por definir</span>
+                    @endif
+                </div>
+            </div>
+            
+            <div class="partido-info">
+                @if($partido->fecha)
+                <div class="partido-fecha">
+                    📅 {{ $partido->fecha }} @if($partido->hora)⏰ {{ $partido->hora }}@endif
+                </div>
+                @endif
+                <span class="partido-jugado {{ $partido->jugado ? 'jugado-si' : 'jugado-no' }}">
+                    {{ $partido->jugado ? '✓ Jugado' : '⏳ Pendiente' }}
+                </span>
+                @if(!$partido->jugado)
+                    <a href="{{ route('partidos.edit', $partido->id) }}" class="btn btn-primary ms-2">Editar</a>
+                @endif
+            </div>
+            @php
+    $avanza = null;
+    $avanzaDesde = null;
+    foreach($equipos->where('rol', 'Ganador Ronda Anterior') as $pe) {
+        if($pe->equipo) {
+            $avanza = $pe->equipo;
+            // Buscar el partido anterior donde este equipo ganó
+            $prevPartido = $torneo->partidos->where('jugado', true)->filter(function($p) use ($pe) {
+                $eqs = $p->partido_equipos;
+                $local = $eqs->where('rol', 'Local')->first();
+                $visitante = $eqs->where('rol', 'Visitante')->first();
+                if($local && $visitante) {
+                    if($local->goles > $visitante->goles && $local->equipo_id == $pe->equipo_id) return true;
+                    if($visitante->goles > $local->goles && $visitante->equipo_id == $pe->equipo_id) return true;
+                }
+                return false;
+            })->first();
+            if($prevPartido) $avanzaDesde = $prevPartido->fase;
+        }
+    }
+@endphp
+
+            @if($avanza && $avanzaDesde)
+                <div class="mt-2" style="color:#00ccff;">
+                    <strong>{{ $avanza->nombre }}</strong> avanzó desde {{ $avanzaDesde }}
+                </div>
+            @endif
+        </div>
+    @endforeach
 
     <div class="text-center mt-4">
         <a href="{{ route('torneos.index') }}" class="btn btn-outline-light btn-lg">← Volver a Torneos</a>

@@ -29,7 +29,7 @@ public function equipos()
         'partido_equipos',
         'id_partido',
         'id_equipo'
-    );
+    )->withPivot('goles');
 }
 
 }
