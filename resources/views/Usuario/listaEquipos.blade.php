@@ -19,13 +19,13 @@ Equipos | MGR PLAY
 @section('content')
 <style>
     .navbar {
-        background-color: #1B1F23;
+        background-color: #101317;
         padding: 0 20px;
         height: 60px;
         display: flex;
         align-items: center;
         justify-content: space-between;
-        box-shadow: 0 2px 8px rgba(0,0,0,0.3);
+        box-shadow: 0 2px 8px rgba(0,0,0,0.4);
     }
 
     .navbar-left {
@@ -35,14 +35,13 @@ Equipos | MGR PLAY
     }
 
     .filter-card {
-        background: linear-gradient(135deg, rgba(26, 31, 36, 0.98) 0%, rgba(42, 46, 51, 0.98) 100%);
-        border: 2px solid transparent;
-        background-clip: padding-box;
+        background: linear-gradient(135deg, rgba(16, 19, 23, 0.98) 0%, rgba(27, 31, 35, 0.98) 100%);
+        border: 2px solid #22C55E;
         border-radius: 20px;
         padding: 25px;
         margin-bottom: 35px;
         backdrop-filter: blur(15px);
-        box-shadow: 0 8px 32px rgba(0, 0, 0, 0.4);
+        box-shadow: 0 8px 25px rgba(34, 197, 94, 0.15);
         position: relative;
     }
 
@@ -52,16 +51,16 @@ Equipos | MGR PLAY
         inset: 0;
         border-radius: 20px;
         padding: 2px;
-        background: linear-gradient(135deg, #ffd700, #00ff88, #00ccff);
+        background: linear-gradient(135deg, #22C55E, #15803D);
         -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
         -webkit-mask-composite: xor;
         mask-composite: exclude;
-        opacity: 0.5;
+        opacity: 0.3;
     }
 
     .team-card {
-        background: linear-gradient(145deg, #1a1f24 0%, #252a30 50%, #1a1f24 100%);
-        border: 2px solid #2a2e33;
+        background: linear-gradient(145deg, #101317 0%, #1B1F23 50%, #101317 100%);
+        border: 2px solid #1F2428;
         border-radius: 20px;
         overflow: hidden;
         transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
@@ -76,7 +75,7 @@ Equipos | MGR PLAY
         left: 0;
         right: 0;
         height: 4px;
-        background: linear-gradient(90deg, #ffd700, #00ff88, #00ccff, #ffd700);
+        background: linear-gradient(90deg, #22C55E, #15803D, #22C55E);
         background-size: 200% 100%;
         animation: shimmer 3s linear infinite;
         opacity: 0;
@@ -94,17 +93,17 @@ Equipos | MGR PLAY
 
     .team-card:hover {
         transform: translateY(-12px) scale(1.02);
-        box-shadow: 0 15px 40px rgba(0, 255, 136, 0.25), 
-                    0 8px 20px rgba(255, 215, 0, 0.15);
-        border-color: #00ff88;
+        box-shadow: 0 15px 40px rgba(34, 197, 94, 0.25), 
+                    0 8px 20px rgba(34, 197, 94, 0.15);
+        border-color: #22C55E;
     }
 
     .team-card-header {
-        background: linear-gradient(135deg, rgba(42, 46, 51, 0.9) 0%, rgba(58, 62, 67, 0.9) 100%);
+        background: linear-gradient(135deg, rgba(27, 31, 35, 0.9) 0%, rgba(34, 39, 43, 0.9) 100%);
         padding: 30px 20px;
         text-align: center;
         border-bottom: 3px solid transparent;
-        border-image: linear-gradient(90deg, transparent, #ffd700, transparent) 1;
+        border-image: linear-gradient(90deg, transparent, #22C55E, transparent) 1;
         position: relative;
         overflow: hidden;
     }
@@ -116,7 +115,7 @@ Equipos | MGR PLAY
         left: -100%;
         width: 100%;
         height: 100%;
-        background: linear-gradient(90deg, transparent, rgba(255, 215, 0, 0.1), transparent);
+        background: linear-gradient(90deg, transparent, rgba(34, 197, 94, 0.15), transparent);
         transition: left 0.5s ease;
     }
 
@@ -139,7 +138,7 @@ Equipos | MGR PLAY
         position: absolute;
         inset: -5px;
         border-radius: 50%;
-        background: linear-gradient(135deg, #ffd700, #00ff88);
+        background: linear-gradient(135deg, #22C55E, #15803D);
         animation: rotate 4s linear infinite;
         opacity: 0;
         transition: opacity 0.4s ease;
@@ -151,7 +150,7 @@ Equipos | MGR PLAY
     }
 
     .team-card:hover .team-escudo-container::before {
-        opacity: 0.6;
+        opacity: 0.5;
     }
 
     .team-escudo {
@@ -159,16 +158,16 @@ Equipos | MGR PLAY
         height: 130px;
         object-fit: cover;
         border-radius: 50%;
-        border: 5px solid #1a1f24;
+        border: 5px solid #101317;
         position: relative;
         z-index: 1;
         transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-        box-shadow: 0 5px 20px rgba(0, 0, 0, 0.5);
+        box-shadow: 0 5px 20px rgba(0, 0, 0, 0.6);
     }
 
     .team-card:hover .team-escudo {
         transform: scale(1.15) rotate(8deg);
-        box-shadow: 0 8px 30px rgba(255, 215, 0, 0.4);
+        box-shadow: 0 8px 30px rgba(34, 197, 94, 0.4);
     }
 
     .team-card-body {
@@ -178,22 +177,22 @@ Equipos | MGR PLAY
     }
 
     .team-name {
-        color: #fff;
+        color: #ffffff;
         font-size: 1.5rem;
         font-weight: 700;
         margin-bottom: 12px;
         letter-spacing: 1px;
-        text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
+        text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.6);
         transition: all 0.3s ease;
     }
 
     .team-card:hover .team-name {
-        color: #ffd700;
+        color: #22C55E;
         transform: scale(1.05);
     }
 
     .team-municipio {
-        color: #00ccff;
+        color: #9CA3AF;
         font-size: 1.1rem;
         margin-bottom: 25px;
         display: flex;
@@ -205,13 +204,13 @@ Equipos | MGR PLAY
     }
 
     .team-card:hover .team-municipio {
-        color: #00ff88;
+        color: #22C55E;
     }
 
     .btn-ver-mas {
-        background: linear-gradient(135deg, #00ccff 0%, #00ff88 100%);
+        background: linear-gradient(135deg, #15803D 0%, #22C55E 100%);
         border: none;
-        color: #1a1f24;
+        color: #ffffff;
         font-weight: 700;
         padding: 12px 35px;
         border-radius: 30px;
@@ -221,46 +220,58 @@ Equipos | MGR PLAY
         font-size: 0.9rem;
         position: relative;
         overflow: hidden;
-        box-shadow: 0 4px 15px rgba(0, 204, 255, 0.3);
-    }
-
-    .btn-ver-mas::before {
-        content: '';
-        position: absolute;
-        top: 50%;
-        left: 50%;
-        width: 0;
-        height: 0;
-        border-radius: 50%;
-        background: rgba(255, 255, 255, 0.3);
-        transform: translate(-50%, -50%);
-        transition: width 0.5s ease, height 0.5s ease;
-    }
-
-    .btn-ver-mas:hover::before {
-        width: 300px;
-        height: 300px;
+        box-shadow: 0 4px 15px rgba(34, 197, 94, 0.3);
     }
 
     .btn-ver-mas:hover {
         transform: scale(1.08) translateY(-2px);
-        box-shadow: 0 8px 25px rgba(0, 255, 136, 0.5);
-        background: linear-gradient(135deg, #00ff88 0%, #ffd700 100%);
+        box-shadow: 0 8px 25px rgba(34, 197, 94, 0.5);
+        background: linear-gradient(135deg, #22C55E 0%, #166534 100%);
     }
 
     .no-equipos {
-        background-color: rgba(26, 31, 36, 0.95);
-        border: 2px dashed #3a3e43;
+        background-color: rgba(16, 19, 23, 0.95);
+        border: 2px dashed #22C55E;
         border-radius: 15px;
         padding: 60px 20px;
         text-align: center;
-        color: #999;
+        color: #9CA3AF;
     }
 
     .no-equipos-icon {
         font-size: 4rem;
         margin-bottom: 20px;
+        color: #22C55E;
     }
+
+    .pagination .page-link {
+        background-color: #1B1F23;
+        border: none;
+        color: #22C55E;
+        border-radius: 50px;
+    }
+    .pagination .page-item.active .page-link {
+        background-color: #22C55E;
+        color: #101317;
+        font-weight: bold;
+    }
+
+        .form-control::placeholder {
+        color: #fff;
+        opacity: 0.6;
+        transition: opacity 0.3s ease;
+    }
+
+.placeholder {
+    color: white;
+    opacity: 1; /* Para Chrome, Safari */
+}
+.placeholder {
+    color: white;
+    opacity: 1; /* Para Chrome, Safari */
+}
+
+
 </style>
 
 <div class="container mt-5">
@@ -289,7 +300,7 @@ Equipos | MGR PLAY
                 <div class="input-group">
                     <span class="input-group-text bg-secondary text-white">🔍</span>
                     <input type="text" name="search" class="form-control"
-                           placeholder="Escribe un nombre..." value="{{ request('search') }}">
+                           placeholder="Escribe un nombre..." style="color: white; background-color: #2a2e33;;" value="{{ request('search') }}">
                 </div>
             </div>
 
@@ -306,7 +317,7 @@ Equipos | MGR PLAY
 
             <!-- Botones -->
             <div class="col-md-2 d-flex gap-2">
-                <button type="submit" class="btn btn-primary rounded-pill px-4">Buscar</button>
+                <button type="submit" class="btn btn-success rounded-pill px-4">Buscar</button>
                 <a href="{{ route('usuario.listaEquipos') }}" class="btn btn-outline-light rounded-pill px-4">Limpiar</a>
             </div>
         </form>
@@ -328,7 +339,7 @@ Equipos | MGR PLAY
                         <p class="team-municipio">
                             📍 {{ $equipo->municipio->nombre ?? 'Sin asignar' }}
                         </p>
-                        <a href="{{ route('equipos.show', $equipo->id) }}" class="btn btn-ver-mas">
+                        <a href="{{ route('equipos.show', $equipo->id) }}" class="btn-ver-mas">
                             Ver Más
                         </a>
                     </div>

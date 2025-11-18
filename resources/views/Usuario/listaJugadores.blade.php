@@ -18,14 +18,15 @@ Jugadores | MGR PLAY
 
 @section('content')
 <style>
+    /* 🌑 NAVBAR */
     .navbar {
-        background-color: #1B1F23;
-        padding: 0 20px;
-        height: 60px;
+        background-color: #101317;
+        padding: 0 25px;
+        height: 65px;
         display: flex;
         align-items: center;
         justify-content: space-between;
-        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        box-shadow: 0 2px 6px rgba(0, 0, 0, 0.4);
     }
 
     .navbar-left {
@@ -34,43 +35,173 @@ Jugadores | MGR PLAY
         gap: 40px;
     }
 
-    .filter-card {
-        background-color: #1B1F23;
-        border-radius: 15px;
-        padding: 15px 20px;
-        margin-bottom: 25px;
+    .navbar a.logo {
+        font-weight: bold;
+        color: #22C55E;
+        text-decoration: none;
+        font-size: 1.2rem;
+        transition: color 0.3s ease;
     }
 
-    table {
+    .navbar a.logo:hover {
+        color: #6EE7B7;
+    }
+
+    /* 🎨 FILTROS */
+    .filter-card {
         background-color: #1B1F23;
+        border: 1px solid #22C55E33;
+        border-radius: 15px;
+        padding: 20px;
+        margin-bottom: 25px;
+        box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
+    }
+
+    label {
+        color: #d1d5db;
+    }
+
+    .form-control, .form-select {
+        background-color: #101317;
+        color: #ffffff;
+        border: 1px solid #22C55E55;
+        transition: all 0.3s ease;
+    }
+
+    .form-control:focus, .form-select:focus {
+        background-color: #15191d;
+        border-color: #22C55E;
+        box-shadow: 0 0 6px #22C55E55;
         color: white;
     }
 
-    th {
-        color: #ddd;
+    .input-group-text {
+        background-color: #22C55E;
+        color: #101317;
+        font-weight: bold;
+        border: none;
     }
+
+    /* 🟩 BOTONES */
+    .btn-primary {
+        background-color: #22C55E;
+        border: none;
+        font-weight: bold;
+        color: #101317;
+        transition: all 0.3s ease;
+    }
+
+    .btn-primary:hover {
+        background-color: #16A34A;
+        transform: translateY(-2px);
+        box-shadow: 0 0 10px #22C55E55;
+    }
+
+    .btn-outline-light {
+        border: 1px solid #22C55E;
+        color: #22C55E;
+        transition: all 0.3s ease;
+    }
+
+    .btn-outline-light:hover {
+        background-color: #22C55E;
+        color: #101317;
+    }
+
+    /* 🧾 TABLA */
+    table {
+        background-color: #1B1F23;
+        color: white;
+        border-radius: 10px;
+        overflow: hidden;
+    }
+
+    th {
+        background-color: #101317 !important;
+        color: #22C55E;
+        text-transform: uppercase;
+        font-weight: bold;
+        border-bottom: 2px solid #22C55E44;
+    }
+
+    td {
+        vertical-align: middle;
+    }
+
+    tr:hover {
+        background-color: #15191d;
+    }
+
+    /* 🏷️ ESTADO */
+    .badge.bg-success {
+        background-color: #22C55E !important;
+        color: #101317;
+        font-weight: bold;
+    }
+
+    .badge.bg-danger {
+        background-color: #EF4444 !important;
+        font-weight: bold;
+    }
+
+    /* 🧭 PAGINACIÓN */
+    .pagination .page-link {
+        background-color: #1B1F23;
+        border: none;
+        color: #22C55E;
+        border-radius: 50px;
+    }
+    .pagination .page-item.active .page-link {
+        background-color: #22C55E;
+        color: #101317;
+        font-weight: bold;
+    }
+
+    .titulo-jugadores {
+    color: #22C55E; /* Verde MGR PLAY */
+    font-weight: bold;
+    text-shadow: 0 0 8px #22C55E33;
+}
+
+    .form-control::placeholder {
+        color: #fff;
+        opacity: 0.6;
+        transition: opacity 0.3s ease;
+    }
+
+.placeholder {
+    color: white;
+    opacity: 1; /* Para Chrome, Safari */
+}
+.placeholder {
+    color: white;
+    opacity: 1; /* Para Chrome, Safari */
+}
+
+
+ 
 </style>
 
 <div class="container mt-5">
-    <h2 class="text-white mb-4"> ⚽ Jugadores Registrados</h2>
+    <h2 class="titulo-jugadores mb-4">⚽ Jugadores Registrados</h2>
 
-    <!-- 🔍 Barra de filtros -->
+
+    <!-- 🔍 FILTROS -->
     <div class="filter-card shadow-sm p-4 rounded-4 mb-4">
         <form method="GET" action="{{ route('usuario.listaJugadores') }}" class="row g-3 align-items-end">
-
             <!-- Nombre -->
             <div class="col-md-4">
-                <label class="form-label text-light fw-bold">Nombre</label>
+                <label class="form-label fw-bold">Nombre</label>
                 <div class="input-group">
-                    <span class="input-group-text bg-dark text-light rounded-start-pill">🔍</span>
+                    <span class="input-group-text rounded-start-pill">🔍</span>
                     <input type="text" name="search" class="form-control rounded-end-pill"
-                           placeholder="Escribe un nombre..." value="{{ request('search') }}">
+                           placeholder="Escribe un nombre..."style="color: white; background-color: #2a2e33;;" value="{{ request('search') }}">
                 </div>
             </div>
 
             <!-- Posición -->
             <div class="col-md-4">
-                <label class="form-label text-light fw-bold">Posición</label>
+                <label class="form-label fw-bold">Posición</label>
                 <select name="posicion" class="form-select rounded-pill">
                     <option value="">-- Todas --</option>
                     <option value="Portero" {{ request('posicion') == 'Portero' ? 'selected' : '' }}>Portero</option>
@@ -86,7 +217,7 @@ Jugadores | MGR PLAY
 
             <!-- Equipo -->
             <div class="col-md-4">
-                <label class="form-label text-light fw-bold">Equipo</label>
+                <label class="form-label fw-bold">Equipo</label>
                 <select name="idEquipo" class="form-select rounded-pill">
                     <option value="">-- Todos --</option>
                     @foreach($equipos as $equipo)
@@ -105,10 +236,10 @@ Jugadores | MGR PLAY
         </form>
     </div>
 
-    <!-- 📋 Tabla de jugadores -->
+    <!-- 📋 TABLA -->
     <div class="table-responsive">
         <table class="table table-hover table-bordered text-center align-middle">
-            <thead class="table-dark">
+            <thead>
                 <tr>
                     <th>Nombre</th>
                     <th>Apellido</th>
@@ -145,8 +276,8 @@ Jugadores | MGR PLAY
         </table>
 
         <!-- 📌 Paginación -->
-        @if(request('per_page') !== 'all')
-        <div class="d-flex justify-content-center mt-3">
+         @if(request('per_page') !== 'all')
+        <div class="d-flex justify-content-center mt-5">
             {{ $jugadores->links() }}
         </div>
         @endif
