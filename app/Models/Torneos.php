@@ -21,6 +21,7 @@ class Torneos extends Model
         'equipos_por_grupo',
         'clasificados_por_grupo',
         'partidos_por_enfrentamiento',
+        'partidos_por_jornada',
         'premio',
     ];
 

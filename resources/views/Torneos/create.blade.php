@@ -464,6 +464,12 @@
                         Todos los equipos jugarán entre sí
                     </div>
                 </div>
+                <div class="col-5col mb-3 d-flex align-items-end">
+                    <div class="alert-info-custom w-100">
+                        <i class="fas fa-calendar me-2"></i>
+                        <span id="info_partidos_jornada"></span>
+                    </div>
+                </div>
             </div>
         </div>
 
@@ -591,14 +597,15 @@ $(document).ready(function() {
             return false;
         }
 
-        // Validación específica para Eliminación Directa
-        if (tipo === 'Eliminacion') {
+        // Validación específica para Eliminación Directa y Liguilla
+        if (tipo === 'Eliminacion' || tipo === 'Liguilla') {
             if (numEquipos % 2 !== 0) {
                 e.preventDefault();
+                const tipoLabel = (tipo === 'Eliminacion') ? 'Eliminación Directa' : 'Liguilla';
                 Swal.fire({
                     icon: 'error',
                     title: '❌ Equipos Impares No Permitidos',
-                    html: '<p style="font-size: 1.1rem; margin: 15px 0;">El torneo de <strong>Eliminación Directa</strong> solo maneja equipos <strong>PARES</strong>.</p>' +
+                    html: '<p style="font-size: 1.1rem; margin: 15px 0;">El torneo de <strong>' + tipoLabel + '</strong> solo maneja equipos <strong>PARES</strong>.</p>' +
                           '<p style="margin: 15px 0;">Actualmente tienes: <strong style="color: #ff6b6b;">' + numEquipos + ' equipos</strong></p>' +
                           '<p>Selecciona <strong style="color: #00ff88;">' + (numEquipos + 1) + '</strong> o <strong style="color: #00ff88;">' + (numEquipos - 1) + '</strong> equipos.</p>',
                     confirmButtonText: 'Entendido',
@@ -683,7 +690,7 @@ function mostrarConfig() {
     if (tipo === 'Grupos') $('#config_grupos').removeClass('d-none');
     if (tipo === 'Liguilla') $('#config_liguilla').removeClass('d-none');
     
-    if (tipo === 'Eliminacion') {
+    if (tipo === 'Eliminacion' || tipo === 'Liguilla') {
         $('#config_eliminacion').removeClass('d-none');
         
         // Validar equipos pares para eliminación directa
@@ -713,6 +720,14 @@ function mostrarConfig() {
         btnGuardar.prop('disabled', false);
         btnGuardar.css('opacity', '1');
         btnGuardar.css('cursor', 'pointer');
+    }
+
+    // Mostrar partidos por jornada para Liguilla
+    if (tipo === 'Liguilla' && numEquipos > 0 && numEquipos % 2 === 0) {
+        let partidosPorJornada = numEquipos / 2;
+        $('#info_partidos_jornada').html('<strong>' + partidosPorJornada + ' partidos por jornada</strong>');
+    } else {
+        $('#info_partidos_jornada').html('');
     }
     
     actualizarGrupos();

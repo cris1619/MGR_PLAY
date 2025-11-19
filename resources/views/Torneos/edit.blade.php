@@ -144,17 +144,33 @@
                         <option value="1" {{ $torneos->partidos_por_enfrentamiento == 1 ? 'selected' : '' }}>Solo Ida</option>
                         <option value="2" {{ $torneos->partidos_por_enfrentamiento == 2 ? 'selected' : '' }}>Ida y Vuelta</option>
                     </select>
+                    <div class="mt-3">
+                        <div id="edit_info_partidos_jornada" class="alert alert-info text-dark" style="background-color: #d1ecf1; border-color: #bee5eb;"></div>
+                    </div>
                 </div>
 
                 {{-- Eliminación --}}
                 <div id="config_eliminacion" class="mt-4 bg-black bg-opacity-25 p-3 rounded-4 border border-danger d-none">
-                    <h5 class="text-danger"><i class="fas fa-times-circle"></i> Eliminación Directa</h5>
-                    <p class="text-secondary">Las llaves se generarán automáticamente según el número de equipos.</p>
+                    <h5 class="text-danger"><i class="fas fa-times-circle"></i> Eliminación Directa / Liguilla</h5>
+                    <div id="edit_alerta_equipos_impares" class="alert alert-danger d-none" style="display: none;">
+                        <i class="fas fa-exclamation-triangle me-2"></i>
+                        <strong>⚠️ EQUIPOS IMPARES NO PERMITIDOS</strong>
+                        <br>El torneo de <strong id="edit_tipo_label">Eliminación Directa</strong> solo maneja equipos <strong>PARES</strong>.
+                        <br><small>Ajusta la cantidad de equipos seleccionados para continuar.</small>
+                    </div>
+                    <div id="edit_alerta_equipos_pares" class="alert-success-custom d-none">
+                        <i class="fas fa-check-circle me-2"></i>
+                        ✔️ Cantidad de equipos válida. Las llaves se generarán automáticamente.
+                    </div>
+                    <div id="edit_alerta_sin_equipos" class="alert-info-custom d-none">
+                        <i class="fas fa-info-circle me-2"></i>
+                        Selecciona equipos para visualizar la validación.
+                    </div>
                 </div>
 
                 {{-- Botones --}}
                 <div class="mt-5 d-flex flex-column flex-md-row gap-3">
-                    <button class="btn btn-actualizar flex-fill">
+                    <button id="btnActualizarTorneo" class="btn btn-actualizar flex-fill">
                         <i class="fas fa-check me-2"></i> Actualizar Torneo
                     </button>
 
@@ -176,16 +192,54 @@ $(document).ready(function() {
     $('.selectpicker').selectpicker();
     $('#tipo_torneo').on('change', mostrarConfig);
     actualizarGrupos();
-    $('select[name="equipos[]"]').on('changed.bs.select', actualizarGrupos);
+    $('select[name="equipos[]"]').on('changed.bs.select', function() { actualizarGrupos(); mostrarConfig(); });
     $('#num_grupos').on('keyup change', actualizarGrupos);
+    // run once on load
+    mostrarConfig();
 });
-
 function mostrarConfig() {
     let tipo = $('#tipo_torneo').val();
+    let selectedEquipos = $('select[name="equipos[]"]').val() || [];
+    let numEquipos = selectedEquipos.length;
+    let btnActualizar = $('#btnActualizarTorneo');
+
     $('#config_grupos, #config_liguilla, #config_eliminacion').addClass('d-none');
     if (tipo === 'Grupos') $('#config_grupos').removeClass('d-none');
     else if (tipo === 'Liguilla') $('#config_liguilla').removeClass('d-none');
-    else if (tipo === 'Eliminacion') $('#config_eliminacion').removeClass('d-none');
+    if (tipo === 'Eliminacion' || tipo === 'Liguilla') $('#config_eliminacion').removeClass('d-none');
+
+    // handle parity validation for Eliminacion and Liguilla
+    if (tipo === 'Eliminacion' || tipo === 'Liguilla') {
+        $('#edit_tipo_label').text(tipo === 'Eliminacion' ? 'Eliminación Directa' : 'Liguilla');
+        if (numEquipos === 0) {
+            $('#edit_alerta_sin_equipos').removeClass('d-none');
+            $('#edit_alerta_equipos_impares').addClass('d-none');
+            $('#edit_alerta_equipos_pares').addClass('d-none');
+            btnActualizar.prop('disabled', true).css({opacity: 0.5, cursor: 'not-allowed'});
+        } else if (numEquipos % 2 !== 0) {
+            $('#edit_alerta_equipos_impares').removeClass('d-none');
+            $('#edit_alerta_equipos_pares').addClass('d-none');
+            $('#edit_alerta_sin_equipos').addClass('d-none');
+            btnActualizar.prop('disabled', true).css({opacity: 0.5, cursor: 'not-allowed'});
+        } else {
+            $('#edit_alerta_equipos_impares').addClass('d-none');
+            $('#edit_alerta_equipos_pares').removeClass('d-none');
+            $('#edit_alerta_sin_equipos').addClass('d-none');
+            btnActualizar.prop('disabled', false).css({opacity: 1, cursor: 'pointer'});
+        }
+    } else {
+        // other types: enable button
+        btnActualizar.prop('disabled', false).css({opacity: 1, cursor: 'pointer'});
+    }
+
+    // Mostrar partidos por jornada para Liguilla
+    if (tipo === 'Liguilla' && numEquipos > 0 && numEquipos % 2 === 0) {
+        let partidosPorJornada = numEquipos / 2;
+        $('#edit_info_partidos_jornada').html('<i class="fas fa-calendar me-2"></i><strong>' + partidosPorJornada + ' partidos por jornada</strong>');
+    } else {
+        $('#edit_info_partidos_jornada').html('');
+    }
+
     actualizarGrupos();
 }
 

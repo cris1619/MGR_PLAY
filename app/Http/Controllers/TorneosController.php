@@ -42,10 +42,10 @@ class TorneosController extends Controller
         $totalEquipos = count($request->equipos);
         $numGrupos = $request->cantidad_grupos;
 
-        // ✅ Validación para Eliminación Directa - Solo permite equipos PARES
-        if ($request->tipo === 'Eliminacion') {
+        // ✅ Validación para Eliminación Directa y Liguilla - Solo permite equipos PARES
+        if (in_array($request->tipo, ['Eliminacion', 'Liguilla'])) {
             if ($totalEquipos % 2 !== 0) {
-                return back()->withErrors("El torneo de Eliminación Directa solo maneja equipos PARES. Tienes $totalEquipos equipos (impar). Selecciona " . ($totalEquipos + 1) . " o " . ($totalEquipos - 1) . " equipos.")->withInput();
+                return back()->withErrors("El torneo de " . $request->tipo . " solo maneja equipos PARES. Tienes $totalEquipos equipos (impar). Selecciona " . ($totalEquipos + 1) . " o " . ($totalEquipos - 1) . " equipos.")->withInput();
             }
         }
 
@@ -63,6 +63,12 @@ class TorneosController extends Controller
             $equiposPorGrupo = floor($totalEquipos / $numGrupos);
         }
 
+        // ✅ Calcular partidos por jornada para Liguilla
+        $partidosPorJornada = null;
+        if ($request->tipo === 'Liguilla') {
+            $partidosPorJornada = $totalEquipos / 2;
+        }
+
         // ✅ Crear Torneo
         $torneo = Torneos::create([
             'idMunicipio' => $request->idMunicipio ?? null,
@@ -77,6 +83,7 @@ class TorneosController extends Controller
             'equipos_por_grupo' => $equiposPorGrupo ?? null,
             'clasificados_por_grupo' => $request->clasificados_por_grupo ?? null,
             'partidos_por_enfrentamiento' => $request->partidos_por_enfrentamiento ?? 1,
+            'partidos_por_jornada' => $partidosPorJornada,
             'premio' => $request->premio ?? null,
         ]);
 
@@ -126,6 +133,19 @@ class TorneosController extends Controller
             'partidos_por_enfrentamiento' => 'nullable|in:1,2',
         ]);
 
+        $totalEquipos = count($request->equipos);
+
+        // Validación: Liguilla y Eliminacion solo con equipos pares
+        if (in_array($request->tipo, ['Eliminacion', 'Liguilla']) && $totalEquipos % 2 !== 0) {
+            return back()->withErrors("El torneo de " . $request->tipo . " solo maneja equipos PARES. Tienes $totalEquipos equipos (impar). Selecciona " . ($totalEquipos + 1) . " o " . ($totalEquipos - 1) . " equipos.")->withInput();
+        }
+
+        // ✅ Calcular partidos por jornada para Liguilla
+        $partidosPorJornada = null;
+        if ($request->tipo === 'Liguilla') {
+            $partidosPorJornada = $totalEquipos / 2;
+        }
+
         $torneo = Torneos::findOrFail($id);
 
         $torneo->update([
@@ -141,6 +161,7 @@ class TorneosController extends Controller
             'equipos_por_grupo' => $request->equipos_por_grupo ?? null,
             'clasificados_por_grupo' => $request->clasificados_por_grupo ?? null,
             'partidos_por_enfrentamiento' => $request->partidos_por_enfrentamiento ?? 1,
+            'partidos_por_jornada' => $partidosPorJornada,
             'premio' => $request->premio ?? null,
         ]);
 
