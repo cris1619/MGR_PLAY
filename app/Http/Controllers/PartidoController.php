@@ -12,7 +12,7 @@ class PartidoController extends Controller
      */
     public function index()
     {
-        $partidos = Partido::with('equipos')->get();
+        $partidos = Partido::with(['equipos', 'cancha', 'arbitro'])->get();
         return view('Partidos.index', compact('partidos'));
     }
 
@@ -46,7 +46,10 @@ class PartidoController extends Controller
     public function edit($id)
     {
         $partido = Partido::with('equipos')->findOrFail($id);
-        return view('Partidos.edit', compact('partido'));
+        $municipios = \App\Models\municipios::all();
+        $canchas = \App\Models\Canchas::all();
+        $arbitros = \App\Models\arbitros::all();
+        return view('Partidos.edit', compact('partido', 'municipios', 'canchas', 'arbitros'));
     }
 
     /**
@@ -55,11 +58,36 @@ class PartidoController extends Controller
     public function update(Request $request, $id)
     {
         $partido = Partido::findOrFail($id);
-        $partido->update($request->only(['fecha', 'hora', 'fase', 'jugado']));
+        
+        // Determinar si es actualización de información básica o marcador
+        if ($request->has('is_marcador')) {
+            // Actualizar solo marcador y penales
+            $this->actualizarMarcador($request, $partido);
+        } else {
+            // Actualizar información básica (fecha, hora, fase, municipio, cancha, arbitro)
+            $partido->update($request->only(['fecha', 'hora', 'fase', 'id_municipio', 'id_cancha', 'id_arbitro']));
+        }
 
+        return redirect()->route('torneos.show', $partido->id_torneo)->with('success', 'Partido actualizado correctamente');
+    }
+
+    /**
+     * Actualizar marcador y detectar ganador (incluyendo penales)
+     */
+    private function actualizarMarcador(Request $request, $partido)
+    {
         // Actualizar goles en la tabla pivote
-        foreach ($request->goles as $equipo_id => $goles) {
-            $partido->equipos()->updateExistingPivot($equipo_id, ['goles' => $goles]);
+        if ($request->has('goles')) {
+            foreach ($request->goles as $equipo_id => $goles) {
+                $partido->equipos()->updateExistingPivot($equipo_id, ['goles' => $goles]);
+            }
+        }
+
+        // Actualizar penales si existen
+        if ($request->has('penales')) {
+            foreach ($request->penales as $equipo_id => $penales) {
+                $partido->equipos()->updateExistingPivot($equipo_id, ['penales' => $penales]);
+            }
         }
 
         // Marcar como jugado
@@ -67,22 +95,32 @@ class PartidoController extends Controller
         $partido->save();
 
         // Detectar ganador
-        $equipos = $partido->equipos;
+        $equipos = $partido->equipos()->get();
         if ($equipos->count() == 2) {
             $equipo1 = $equipos[0];
             $equipo2 = $equipos[1];
-            $goles1 = $equipo1->pivot->goles;
-            $goles2 = $equipo2->pivot->goles;
+            $goles1 = $equipo1->pivot->goles ?? 0;
+            $goles2 = $equipo2->pivot->goles ?? 0;
+            $penales1 = $equipo1->pivot->penales ?? 0;
+            $penales2 = $equipo2->pivot->penales ?? 0;
 
+            $ganador_id = null;
+
+            // Primero comparar goles
             if ($goles1 > $goles2) {
                 $ganador_id = $equipo1->id;
             } elseif ($goles2 > $goles1) {
                 $ganador_id = $equipo2->id;
             } else {
-                $ganador_id = null; // Empate
+                // Empate en goles, comparar penales
+                if ($penales1 > $penales2) {
+                    $ganador_id = $equipo1->id;
+                } elseif ($penales2 > $penales1) {
+                    $ganador_id = $equipo2->id;
+                }
             }
 
-            // Buscar el siguiente partido en el mismo torneo y ronda siguiente
+            // Asignar el ganador al siguiente partido
             if ($ganador_id) {
                 $rondaActual = $this->getRonda($partido->fase);
                 $siguienteRonda = 'Ronda ' . ($rondaActual + 1);
@@ -107,8 +145,6 @@ class PartidoController extends Controller
                 }
             }
         }
-
-        return redirect()->route('torneos.show', $partido->id_torneo)->with('success', 'Partido actualizado correctamente');
     }
 
     /**
