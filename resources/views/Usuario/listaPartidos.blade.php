@@ -234,20 +234,18 @@
     }
 }
 </style>
+</style>
 
 <div class="container mt-4">
     <div class="hero-section">
-        <h1>⚽ Gestión de Partidos</h1>
-        <p>Administra y visualiza todos los partidos del torneo</p>
+        <h1>⚽ Partidos del Torneo</h1>
+        <p>Consulta la programación, resultados y estado de cada partido</p>
     </div>
 
     <h2 class="section-title">📋 Listado de Partidos</h2>
 
-    <div class="d-flex flex-column flex-md-row justify-content-between align-items-center mb-4 gap-3">
-        <a href="{{ route('partidos.create') }}" class="btn btn-admin">➕ Crear Partido</a>
-    </div>
-
-    {{-- Tabla --}}
+    {{-- SIN BOTÓN DE CREAR PARTIDO, PORQUE ES SOLO PARA USUARIOS --}}
+    
     <div class="table-responsive">
         <table class="table table-hover text-center align-middle">
             <thead>
@@ -258,12 +256,12 @@
                     <th>🏆 Fase</th>
                     <th>⚽ Equipos - Marcador</th>
                     <th>📍 Estado</th>
-                    <th>⚙️ Acciones</th>
+                    <th>⚙️ Ver</th>
                 </tr>
             </thead>
             <tbody>
                 @forelse($partidos as $partido)
-                    <tr class="{{ session('highlighted_partido_id') == $partido->id ? 'highlight' : '' }}">
+                    <tr>
                         <td><strong>{{ $partido->id }}</strong></td>
                         <td>{{ \Carbon\Carbon::parse($partido->fecha)->format('d/m/Y') }}</td>
                         <td>{{ \Carbon\Carbon::parse($partido->hora)->format('H:i') }}</td>
@@ -281,8 +279,8 @@
                             </div>
                         </td>
                         <td>
-                            <span class="badge {{ $partido->jugado == 1 ? 'bg-success' : 'bg-danger' }}">
-                                {{ $partido->jugado == 1 ? '✅ Jugado' : '⏳ Pendiente' }}
+                            <span class="badge {{ $partido->jugado ? 'bg-success' : 'bg-danger' }}">
+                                {{ $partido->jugado ? '✅ Jugado' : '⏳ Pendiente' }}
                             </span>
                         </td>
                         <td>
@@ -294,7 +292,7 @@
                 @empty
                     <tr>
                         <td colspan="7" class="text-center text-muted py-4">
-                            ⚠️ No hay partidos registrados
+                            ⚠️ No hay partidos disponibles
                         </td>
                     </tr>
                 @endforelse
@@ -306,32 +304,4 @@
         <a href="{{ route('welcome') }}" class="btn btn-admin">⬅️ Volver al Menú</a>
     </div>
 </div>
-
-{{-- Mensajes de éxito / error --}}
-@if(session('success'))
-<script>
-document.addEventListener('DOMContentLoaded', function() {
-    Swal.fire({ 
-        icon: 'success', 
-        title: '¡Éxito!', 
-        text: "{{ session('success') }}", 
-        confirmButtonText: 'Aceptar', 
-        timer: 3000 
-    });
-});
-</script>
-@endif
-@if(session('error'))
-<script>
-document.addEventListener('DOMContentLoaded', function() {
-    Swal.fire({ 
-        icon: 'error', 
-        title: '¡Error!', 
-        text: "{{ session('error') }}", 
-        confirmButtonText: 'Aceptar', 
-        timer: 4000 
-    });
-});
-</script>
-@endif
 @endsection

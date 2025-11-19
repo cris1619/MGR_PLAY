@@ -286,7 +286,7 @@
                 <li><a href="#">Torneos</a></li>
                 <li><a href="{{ route('usuario.listaEquipos') }}">Equipos</a></li>
                 <li><a href="{{ route('usuario.listaJugadores') }}">Jugadores</a></li>
-                <li><a href="#">Partidos</a></li>
+                <li><a href="{{ route('usuario.listaPartidos') }}">Partidos</a></li>
             </ul>
         </div>
 
