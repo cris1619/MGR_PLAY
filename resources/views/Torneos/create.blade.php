@@ -1,199 +1,533 @@
 @extends('layouts.app')
 
-@section('title', 'Crear Torneo | MGR PLAY')
+@section('title')
+ Crear Torneo | MGR PLAY
+@endsection
+
+@section('titleContent')
+<nav class="navbar">
+    <div class="navbar-left">
+        <a href="{{ route('torneos.index') }}" class="logo">
+            <img src="{{ url('img/logoSinFondo.png') }}" alt="MGR PLAY" style="height: 50px; margin-right: 30px;">
+            🏆 CREAR TORNEO
+        </a>
+    </div>
+</nav>
+@endsection
 
 @section('content')
-<div class="container mt-4">
-    <div class="card shadow-lg border-0 rounded-4">
-        <div class="card-header d-flex justify-content-between align-items-center bg-dark text-white rounded-top-4">
-            <h4 class="mb-0">
-                <i class="fas fa-trophy me-2 text-warning"></i> Crear Torneo
-            </h4>
-            <a href="{{ route('torneos.index') }}" class="btn btn-outline-light btn-sm">
-                <i class="fas fa-arrow-left"></i> Volver
-            </a>
+<style>
+    /* ==== NAVBAR ==== */
+    .navbar {
+        background-color: #1B1F23;
+        padding: 0 20px;
+        height: 60px;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        box-shadow: 0 4px 8px rgba(0,0,0,0.3);
+    }
+    .navbar-left { display: flex; align-items: center; gap: 40px; }
+    .logo { display: flex; align-items: center; color: white; font-size: 18px; font-weight: bold; text-decoration: none; transition: transform 0.3s ease; }
+    .logo:hover { transform: scale(1.05); color: white; }
+    .logo img { height: 50px; margin-right: 30px; }
+
+    /* ==== ANIMACIONES ==== */
+    @keyframes fadeInUp { from { opacity: 0; transform: translateY(40px); } to { opacity: 1; transform: translateY(0); } }
+    @keyframes glowIn { 0% { box-shadow: 0 0 0 rgba(255,215,0,0); } 100% { box-shadow: 0 0 20px rgba(255,215,0,0.4); } }
+
+    /* ==== TARJETA DEL FORMULARIO ==== */
+    .edit-card {
+        background: linear-gradient(145deg, #1B1F23 0%, #252a2f 100%);
+        border: 2px solid #2a2e33;
+        border-radius: 20px;
+        padding: 36px;
+        max-width: 1400px;
+        margin: 72px auto;
+        color: #fff;
+        opacity: 0;
+        animation: fadeInUp 0.8s ease forwards, glowIn 1.5s ease 0.3s forwards;
+    }
+
+    .edit-card h2 {
+        color: #ffd700;
+        font-weight: 700;
+        margin-bottom: 24px;
+        text-align: center;
+        text-transform: uppercase;
+        letter-spacing: 2px;
+        animation: fadeInUp 0.8s ease 0.2s forwards;
+    }
+
+    /* ==== SECCIONES ==== */
+    .section-title {
+        color: #ffd700;
+        font-weight: 600;
+        font-size: 1.1rem;
+        margin-bottom: 20px;
+        padding-bottom: 10px;
+        border-bottom: 2px solid #444;
+        text-transform: uppercase;
+        letter-spacing: 1px;
+    }
+
+    .section-divider {
+        margin: 30px 0;
+        border-bottom: 1px solid #444;
+    }
+
+    /* ==== CAMPOS ==== */
+    .form-label {
+        color: #ffd700 !important;
+        font-weight: 600;
+        margin-bottom: 8px;
+        font-size: 0.9rem;
+    }
+
+    input.form-control,
+    select.form-select,
+    textarea.form-control {
+        background-color: #2a2e33;
+        border: 1px solid #444;
+        color: white;
+        border-radius: 10px;
+        padding: 12px 14px;
+        font-size: 1rem;
+        transition: all 0.28s ease;
+        width: 100%;
+    }
+
+    textarea.form-control {
+        resize: vertical;
+        min-height: 100px;
+    }
+
+    input.form-control:focus,
+    select.form-select:focus,
+    textarea.form-control:focus {
+        border-color: #ffd700;
+        box-shadow: 0 0 10px rgba(255,215,0,0.35);
+        background-color: #2f3339;
+        transform: translateY(-1px);
+        outline: none;
+    }
+
+    select.form-select option {
+        background-color: #1B1F23;
+        color: #fff;
+    }
+
+    input::placeholder,
+    select.form-select::placeholder,
+    textarea::placeholder {
+        color: #999;
+        opacity: 0.6;
+    }
+
+    /* Selectpicker custom */
+    .bootstrap-select .dropdown-toggle {
+        background-color: #2a2e33 !important;
+        border: 1px solid #444 !important;
+        color: white !important;
+        border-radius: 10px !important;
+        padding: 12px 14px !important;
+    }
+
+    .bootstrap-select .dropdown-toggle:focus {
+        border-color: #ffd700 !important;
+        box-shadow: 0 0 10px rgba(255,215,0,0.35) !important;
+    }
+
+    .bootstrap-select .dropdown-menu {
+        background-color: #2a2e33 !important;
+        border: 1px solid #444 !important;
+    }
+
+    .bootstrap-select .dropdown-menu li a {
+        color: white !important;
+    }
+
+    .bootstrap-select .dropdown-menu li a:hover {
+        background-color: #ffd700 !important;
+        color: #1B1F23 !important;
+    }
+
+    /* ==== ALERT CUSTOM ==== */
+    .alert-info-custom {
+        background: linear-gradient(135deg, #2a2e33 0%, #1B1F23 100%);
+        border: 1px solid #ffd700;
+        border-radius: 10px;
+        padding: 12px;
+        color: #ffd700;
+        font-size: 0.9rem;
+    }
+
+    .alert-success-custom {
+        background: linear-gradient(135deg, #2a2e33 0%, #1B1F23 100%);
+        border: 1px solid #00ff88;
+        border-radius: 10px;
+        padding: 12px;
+        color: #00ff88;
+        font-size: 0.9rem;
+    }
+
+    /* ==== CONFIGURACIONES ESPECÍFICAS ==== */
+    .config-box {
+        background: linear-gradient(145deg, #252a2f 0%, #1B1F23 100%);
+        border: 2px solid #444;
+        border-radius: 15px;
+        padding: 24px;
+        margin-top: 20px;
+    }
+
+    .config-box h5 {
+        color: #ffd700;
+        font-weight: 600;
+        margin-bottom: 20px;
+        text-transform: uppercase;
+        letter-spacing: 1px;
+    }
+
+    /* ==== BOTONES ==== */
+    .form-actions { 
+        display: flex; 
+        gap: 12px; 
+        justify-content: center; 
+        margin-top: 30px; 
+        flex-wrap: wrap; 
+    }
+
+    .btn-guardar,
+    .btn-cancelar,
+    .btn-crear-equipo {
+        border: none;
+        padding: 14px 32px;
+        border-radius: 25px;
+        font-weight: 700;
+        text-decoration: none;
+        display: inline-block;
+        transition: all 0.28s ease;
+        transform-origin: center;
+        color: #1B1F23;
+        cursor: pointer;
+    }
+
+    .btn-guardar {
+        background: linear-gradient(135deg, #ffd700 0%, #ffed4e 100%);
+        box-shadow: 0 4px 8px rgba(255, 215, 0, 0.3);
+    }
+    .btn-guardar:hover {
+        transform: scale(1.06);
+        background: linear-gradient(135deg, #ffed4e 0%, #ffd700 100%);
+        box-shadow: 0 6px 14px rgba(255,215,0,0.55);
+        color: #1B1F23;
+    }
+
+    .btn-cancelar {
+        background: linear-gradient(135deg, #00ff88 0%, #00ccff 100%);
+        box-shadow: 0 4px 8px rgba(0, 255, 136, 0.35);
+    }
+    .btn-cancelar:hover {
+        transform: scale(1.06);
+        background: linear-gradient(135deg, #00ccff 0%, #00ff88 100%);
+        box-shadow: 0 6px 14px rgba(0,255,136,0.55);
+        color: #1B1F23;
+    }
+
+    .btn-crear-equipo {
+        background: linear-gradient(135deg, #00ff88 0%, #00ccff 100%);
+        box-shadow: 0 4px 8px rgba(0, 255, 136, 0.35);
+        padding: 10px 20px;
+        font-size: 0.9rem;
+    }
+    .btn-crear-equipo:hover {
+        transform: scale(1.06);
+        background: linear-gradient(135deg, #00ccff 0%, #00ff88 100%);
+        box-shadow: 0 6px 14px rgba(0,255,136,0.55);
+        color: #1B1F23;
+    }
+
+    /* ==== MODAL CUSTOM ==== */
+    .modal-content {
+        background: linear-gradient(145deg, #1B1F23 0%, #252a2f 100%);
+        border: 2px solid #2a2e33;
+        border-radius: 20px;
+        color: #fff;
+    }
+
+    .modal-header {
+        background-color: #1B1F23;
+        border-bottom: 2px solid #444;
+        border-radius: 20px 20px 0 0;
+    }
+
+    .modal-title {
+        color: #ffd700;
+        font-weight: 700;
+    }
+
+    .modal-footer {
+        border-top: 2px solid #444;
+        background-color: #1B1F23;
+    }
+
+    .btn-close-white {
+        filter: brightness(0) invert(1);
+    }
+
+    /* Responsive */
+    @media (max-width: 1200px) {
+        .col-5col { flex: 0 0 50%; max-width: 50%; }
+    }
+
+    @media (max-width: 768px) {
+        .col-5col { flex: 0 0 100%; max-width: 100%; }
+        .edit-card { padding: 20px; margin: 36px 12px; }
+        .form-actions { flex-direction: column; }
+        .btn-guardar, .btn-cancelar { width: 100%; text-align: center; }
+    }
+
+    /* Custom 5 columns */
+    .col-5col {
+        flex: 0 0 20%;
+        max-width: 20%;
+        padding: 0 12px;
+    }
+
+    .row-5cols {
+        display: flex;
+        flex-wrap: wrap;
+        margin: 0 -12px;
+    }
+</style>
+
+<div class="edit-card">
+    <h2>🏆 Crear Torneo</h2>
+
+    <form action="{{ route('torneos.store') }}" method="POST">
+        @csrf
+
+        {{-- SECCIÓN 1: INFORMACIÓN BÁSICA --}}
+        <div class="section-title">
+            <i class="fas fa-info-circle me-2"></i>Información Básica
         </div>
 
-        <form action="{{ route('torneos.store') }}" method="POST" class="p-3">
-            @csrf
-            <div class="card-body">
+        <div class="row-5cols mb-3">
+            <div class="col-5col mb-3">
+                <label for="nombre" class="form-label">🏆 Nombre del Torneo</label>
+                <input type="text" name="nombre" id="nombre" class="form-control" 
+                       placeholder="Ej: Copa Málaga 2025" value="{{ old('nombre') }}" required>
+            </div>
 
-                {{-- Nombre --}}
-                <div class="mb-3">
-                    <label class="form-label fw-semibold">🏆 Nombre del Torneo</label>
-                    <input type="text" name="nombre" class="form-control border-dark-subtle shadow-sm" value="{{ old('nombre') }}" placeholder="Ej: Copa Málaga 2025" required>
-                </div>
+            <div class="col-5col mb-3">
+                <label for="idMunicipio" class="form-label">🌍 Municipio</label>
+                <select name="idMunicipio" id="idMunicipio" class="form-select">
+                    <option value="">Seleccione un municipio</option>
+                    @foreach ($municipios as $mun)
+                        <option value="{{ $mun->id }}" {{ old('idMunicipio') == $mun->id ? 'selected' : '' }}>
+                            {{ $mun->nombre }}
+                        </option>
+                    @endforeach
+                </select>
+            </div>
 
-                {{-- Municipio --}}
-                <div class="mb-3">
-                    <label class="form-label fw-semibold">🌍 Municipio</label>
-                    <select name="idMunicipio" class="form-select border-dark-subtle shadow-sm">
-                        <option value="">Seleccione un municipio</option>
-                        @foreach ($municipios as $mun)
-                            <option value="{{ $mun->id }}" {{ old('idMunicipio') == $mun->id ? 'selected' : '' }}>
-                                {{ $mun->nombre }}
-                            </option>
-                        @endforeach
-                    </select>
-                </div>
+            <div class="col-5col mb-3">
+                <label for="premio" class="form-label">💰 Premio</label>
+                <input type="text" name="premio" id="premio" class="form-control" 
+                       placeholder="Ej: Trofeo y medallas" value="{{ old('premio') }}">
+            </div>
 
-                {{-- Descripción --}}
-                <div class="mb-3">
-                    <label class="form-label fw-semibold">📝 Descripción</label>
-                    <textarea name="descripcion" class="form-control border-dark-subtle shadow-sm" rows="3" placeholder="Breve descripción del torneo...">{{ old('descripcion') }}</textarea>
-                </div>
+            <div class="col-5col mb-3">
+                <label for="estado" class="form-label">📅 Estado</label>
+                <select name="estado" id="estado" class="form-select" required>
+                    <option value="Pendiente" selected>Pendiente</option>
+                    <option value="En curso" {{ old('estado') == 'En curso' ? 'selected' : '' }}>En curso</option>
+                    <option value="Finalizado" {{ old('estado') == 'Finalizado' ? 'selected' : '' }}>Finalizado</option>
+                </select>
+            </div>
 
-                {{-- Premio --}}
-                <div class="mb-3">
-                    <label class="form-label fw-semibold">💰 Premio</label>
-                    <input type="text" name="premio" class="form-control border-dark-subtle shadow-sm" value="{{ old('premio') }}" placeholder="Ej: Trofeo y medallas">
-                </div>
+            <div class="col-5col mb-3">
+                <label for="tipo_torneo" class="form-label">⚙️ Tipo de Torneo</label>
+                <select name="tipo" id="tipo_torneo" class="form-select" required>
+                    <option value="">Seleccione una opción</option>
+                    <option value="Grupos" {{ old('tipo') == 'Grupos' ? 'selected' : '' }}>Fase de Grupos</option>
+                    <option value="Eliminacion" {{ old('tipo') == 'Eliminacion' ? 'selected' : '' }}>Eliminación Directa</option>
+                    <option value="Liguilla" {{ old('tipo') == 'Liguilla' ? 'selected' : '' }}>Liguilla</option>
+                </select>
+            </div>
+        </div>
 
-                {{-- Estado --}}
-                <div class="mb-3">
-                    <label class="form-label fw-semibold">📅 Estado del Torneo</label>
-                    <select name="estado" class="form-select border-dark-subtle shadow-sm" required>
-                        <option value="Pendiente" selected>Pendiente</option>
-                        <option value="En curso" {{ old('estado') == 'En curso' ? 'selected' : '' }}>En curso</option>
-                        <option value="Finalizado" {{ old('estado') == 'Finalizado' ? 'selected' : '' }}>Finalizado</option>
-                    </select>
-                </div>
+        <div class="row mb-3">
+            <div class="col-12">
+                <label for="descripcion" class="form-label">📝 Descripción</label>
+                <textarea name="descripcion" id="descripcion" class="form-control" rows="3" 
+                          placeholder="Breve descripción del torneo...">{{ old('descripcion') }}</textarea>
+            </div>
+        </div>
 
-                {{-- Tipo --}}
-                <div class="mb-3">
-                    <label class="form-label fw-semibold">⚙️ Tipo de Torneo</label>
-                    <select name="tipo" id="tipo_torneo" class="form-select border-dark-subtle shadow-sm" required>
-                        <option value="">Seleccione una opción</option>
-                        <option value="Grupos" {{ old('tipo') == 'Grupos' ? 'selected' : '' }}>Fase de Grupos</option>
-                        <option value="Eliminacion" {{ old('tipo') == 'Eliminacion' ? 'selected' : '' }}>Eliminación Directa</option>
-                        <option value="Liguilla" {{ old('tipo') == 'Liguilla' ? 'selected' : '' }}>Liguilla (todos contra todos)</option>
-                    </select>
-                </div>
+        <div class="section-divider"></div>
 
-                {{-- Fechas --}}
-                <div class="row">
-                    <div class="col-md-6 mb-3">
-                        <label class="form-label fw-semibold">📆 Fecha Inicio</label>
-                        <input type="date" name="fecha_inicio" class="form-control border-dark-subtle shadow-sm" value="{{ old('fecha_inicio') }}">
-                    </div>
-                    <div class="col-md-6 mb-3">
-                        <label class="form-label fw-semibold">📅 Fecha Fin</label>
-                        <input type="date" name="fecha_fin" class="form-control border-dark-subtle shadow-sm" value="{{ old('fecha_fin') }}">
-                    </div>
-                </div>
+        {{-- SECCIÓN 2: FECHAS Y EQUIPOS --}}
+        <div class="section-title">
+            <i class="fas fa-calendar-alt me-2"></i>Fechas
+        </div>
 
-                {{-- Equipos --}}
-                <div class="mb-3">
-                    <label class="form-label fw-semibold">👥 Equipos Participantes</label>
-                    <select name="equipos[]" class="selectpicker w-100" data-style="btn-dark" multiple data-live-search="true" required>
-                        @foreach ($equipos as $eq)
-                            <option value="{{ $eq->id }}" {{ collect(old('equipos'))->contains($eq->id) ? 'selected' : '' }}>
-                                {{ $eq->nombre }}
-                            </option>
-                        @endforeach
-                    </select>
-                    <small class="text-muted">Seleccione los equipos que participarán.</small>
-                </div>
+        <div class="row-5cols mb-3">
+            <div class="col-5col mb-3">
+                <label for="fecha_inicio" class="form-label">📆 Fecha Inicio</label>
+                <input type="date" name="fecha_inicio" id="fecha_inicio" class="form-control" value="{{ old('fecha_inicio') }}">
+            </div>
 
-                {{-- Número de equipos --}}
-                <div class="mb-3">
-                    <label class="form-label fw-semibold">🔢 Número de Equipos</label>
-                    <input type="number" min="1" name="num_equipos" id="num_equipos_form" class="form-control border-dark-subtle shadow-sm" value="{{ old('num_equipos') }}" readonly>
-                </div>
+            <div class="col-5col mb-3">
+                <label for="fecha_fin" class="form-label">📅 Fecha Fin</label>
+                <input type="date" name="fecha_fin" id="fecha_fin" class="form-control" value="{{ old('fecha_fin') }}">
+            </div>
 
-                {{-- Botón crear equipo --}}
-                <button type="button" class="btn btn-outline-success btn-sm mt-2" data-bs-toggle="modal" data-bs-target="#modalCrearEquipo">
-                    <i class="fas fa-plus"></i> Crear nuevo equipo
+            <div class="col-5col mb-3 d-flex align-items-end">
+                <button type="button" class="btn-crear-equipo w-100" data-bs-toggle="modal" data-bs-target="#modalCrearEquipo">
+                    <i class="fas fa-plus"></i> Crear Nuevo Equipo
                 </button>
+            </div>
+        </div>
 
-                {{-- Config Grupos --}}
-                <div id="config_grupos" class="mt-4 p-3 border rounded-3 bg-light d-none">
-                    <h5 class="text-primary"><i class="fas fa-layer-group me-1"></i> Configuración de Grupos</h5>
-                    <div class="row">
-                        <div class="col-md-4 mb-3">
-                            <label class="form-label fw-semibold">N° de Grupos</label>
-                            <input type="number" min="1" name="cantidad_grupos" id="num_grupos" class="form-control shadow-sm border-dark-subtle">
-                        </div>
-                        <div class="col-md-4 mb-3">
-                            <label class="form-label fw-semibold">Equipos por Grupo</label>
-                            <input type="number" id="equipos_por_grupo" name="equipos_por_grupo" class="form-control shadow-sm border-dark-subtle" readonly>
-                        </div>
-                        <div class="col-md-4 mb-3">
-                            <label class="form-label fw-semibold">Clasifican por Grupo</label>
-                            <input type="number" min="1" name="clasificados_por_grupo" id="clasifican_por_grupo" class="form-control shadow-sm border-dark-subtle">
-                        </div>
-                    </div>
-                    <p class="text-muted" id="info_grupos"></p>
+        <div class="section-divider"></div>
+
+        {{-- SECCIÓN 3: EQUIPOS PARTICIPANTES --}}
+        <div class="section-title">
+            <i class="fas fa-users me-2"></i>Equipos Participantes
+        </div>
+
+        <div class="row mb-3">
+            <div class="col-12">
+                <label for="equipos" class="form-label">👥 Selecciona los Equipos</label>
+                <select name="equipos[]" id="equipos" class="selectpicker w-100" data-style="btn-dark" 
+                        multiple data-live-search="true" required>
+                    @foreach ($equipos as $eq)
+                        <option value="{{ $eq->id }}" {{ collect(old('equipos'))->contains($eq->id) ? 'selected' : '' }}>
+                            {{ $eq->nombre }}
+                        </option>
+                    @endforeach
+                </select>
+                <small class="text-muted">Seleccione los equipos que participarán en el torneo.</small>
+            </div>
+        </div>
+
+        {{-- CONFIGURACIONES ESPECÍFICAS --}}
+        {{-- Config Grupos --}}
+        <div id="config_grupos" class="config-box d-none">
+            <h5><i class="fas fa-layer-group me-2"></i>Configuración de Grupos</h5>
+            <div class="row-5cols">
+                <div class="col-5col mb-3">
+                    <label for="num_grupos" class="form-label">N° de Grupos</label>
+                    <input type="number" min="1" name="cantidad_grupos" id="num_grupos" class="form-control">
                 </div>
+                <div class="col-5col mb-3">
+                    <label for="equipos_por_grupo" class="form-label">Equipos por Grupo</label>
+                    <input type="number" id="equipos_por_grupo" name="equipos_por_grupo" class="form-control" readonly>
+                </div>
+                <div class="col-5col mb-3">
+                    <label for="clasifican_por_grupo" class="form-label">Clasifican por Grupo</label>
+                    <input type="number" min="1" name="clasificados_por_grupo" id="clasifican_por_grupo" class="form-control">
+                </div>
+                <div class="col-5col mb-3 d-flex align-items-end">
+                    <div class="alert-info-custom w-100">
+                        <i class="fas fa-info-circle me-2"></i>
+                        <span id="info_grupos"></span>
+                    </div>
+                </div>
+            </div>
+        </div>
 
-                {{-- Config Liguilla --}}
-                <div id="config_liguilla" class="mt-4 p-3 border rounded-3 bg-light d-none">
-                    <h5 class="text-primary"><i class="fas fa-sync-alt me-1"></i> Configuración Liguilla</h5>
-                    <label class="form-label fw-semibold">¿Ida y Vuelta?</label>
-                    <select name="partidos_por_enfrentamiento" class="form-select shadow-sm border-dark-subtle">
+        {{-- Config Liguilla --}}
+        <div id="config_liguilla" class="config-box d-none">
+            <h5><i class="fas fa-sync-alt me-2"></i>Configuración Liguilla</h5>
+            <div class="row-5cols">
+                <div class="col-5col mb-3">
+                    <label for="partidos_por_enfrentamiento" class="form-label">¿Ida y Vuelta?</label>
+                    <select name="partidos_por_enfrentamiento" id="partidos_por_enfrentamiento" class="form-select">
                         <option value="1">Solo Ida</option>
                         <option value="2">Ida y Vuelta</option>
                     </select>
                 </div>
-
-                {{-- Config Eliminación --}}
-                <div id="config_eliminacion" class="mt-4 p-3 border rounded-3 bg-light d-none">
-                    <h5 class="text-primary"><i class="fas fa-times-circle me-1"></i> Eliminación Directa</h5>
-                    <p class="text-muted">Las llaves se generarán automáticamente según el número de equipos seleccionados.</p>
+                <div class="col-5col mb-3 d-flex align-items-end">
+                    <div class="alert-success-custom w-100">
+                        <i class="fas fa-check-circle me-2"></i>
+                        Todos los equipos jugarán entre sí
+                    </div>
                 </div>
-
-                <button class="btn btn-success w-100 mt-4 shadow-sm">
-                    <i class="fas fa-check-circle"></i> Guardar Torneo
-                </button>
-
             </div>
-        </form>
-    </div>
+        </div>
+
+        {{-- Config Eliminación --}}
+        <div id="config_eliminacion" class="config-box d-none">
+            <h5><i class="fas fa-times-circle me-2"></i>Eliminación Directa</h5>
+            <div class="alert-success-custom">
+                <i class="fas fa-check-circle me-2"></i>
+                Las llaves se generarán automáticamente según el número de equipos seleccionados.
+            </div>
+        </div>
+
+        {{-- BOTONES DE ACCIÓN --}}
+        <div class="form-actions">
+            <button type="submit" class="btn-guardar">
+                <i class="fas fa-check-circle me-2"></i>Guardar Torneo
+            </button>
+            <a href="{{ route('torneos.index') }}" class="btn-cancelar">
+                <i class="fas fa-arrow-left me-2"></i>Volver
+            </a>
+        </div>
+    </form>
 </div>
 
 {{-- Modal Crear Equipo --}}
 <div class="modal fade" id="modalCrearEquipo" tabindex="-1" aria-labelledby="modalCrearEquipoLabel" aria-hidden="true">
-  <div class="modal-dialog modal-dialog-centered">
-    <div class="modal-content border-0 shadow-lg rounded-4">
+  <div class="modal-dialog modal-dialog-centered modal-lg">
+    <div class="modal-content">
       <form id="formCrearEquipo" enctype="multipart/form-data">
           @csrf
-          <div class="modal-header bg-dark text-white rounded-top-4">
-            <h5 class="modal-title"><i class="fas fa-futbol me-2"></i> Crear Nuevo Equipo</h5>
+          <div class="modal-header">
+            <h5 class="modal-title"><i class="fas fa-futbol me-2"></i>Crear Nuevo Equipo</h5>
             <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
           </div>
-          <div class="modal-body">
-            <div class="mb-3">
-                <label class="form-label fw-semibold">Nombre del Equipo</label>
-                <input type="text" name="nombre" class="form-control border-dark-subtle shadow-sm" required>
+          <div class="modal-body p-4">
+            <div class="row">
+                <div class="col-md-6 mb-3">
+                    <label class="form-label">Nombre del Equipo</label>
+                    <input type="text" name="nombre" class="form-control" required>
+                </div>
+                <div class="col-md-6 mb-3">
+                    <label class="form-label">Entrenador</label>
+                    <input type="text" name="entrenador" class="form-control" required>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-6 mb-3">
+                    <label class="form-label">Municipio</label>
+                    <select name="idMunicipio" class="form-select" required>
+                        <option value="">Seleccione un municipio</option>
+                        @foreach($municipios as $municipio)
+                            <option value="{{ $municipio->id }}">{{ $municipio->nombre }}</option>
+                        @endforeach
+                    </select>
+                </div>
+                <div class="col-md-6 mb-3">
+                    <label class="form-label">Estado</label>
+                    <select name="estado" class="form-select" required>
+                        <option value="activo">Activo</option>
+                        <option value="inactivo">Inactivo</option>
+                    </select>
+                </div>
             </div>
             <div class="mb-3">
-                <label class="form-label fw-semibold">Escudo del Equipo</label>
-                <input type="file" name="escudo" class="form-control border-dark-subtle shadow-sm" accept="image/*" required>
-            </div>
-            <div class="mb-3">
-                <label class="form-label fw-semibold">Entrenador</label>
-                <input type="text" name="entrenador" class="form-control border-dark-subtle shadow-sm" required>
-            </div>
-            <div class="mb-3">
-                <label class="form-label fw-semibold">Municipio</label>
-                <select name="idMunicipio" class="form-select border-dark-subtle shadow-sm" required>
-                    <option value="">Seleccione un municipio</option>
-                    @foreach($municipios as $municipio)
-                        <option value="{{ $municipio->id }}">{{ $municipio->nombre }}</option>
-                    @endforeach
-                </select>
-            </div>
-            <div class="mb-3">
-                <label class="form-label fw-semibold">Estado</label>
-                <select name="estado" class="form-select border-dark-subtle shadow-sm" required>
-                    <option value="activo">Activo</option>
-                    <option value="inactivo">Inactivo</option>
-                </select>
+                <label class="form-label">Escudo del Equipo</label>
+                <input type="file" name="escudo" class="form-control" accept="image/*" required>
             </div>
           </div>
           <div class="modal-footer">
-            <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">Cerrar</button>
-            <button type="submit" class="btn btn-success">💾 Guardar Equipo</button>
+            <button type="button" class="btn-cancelar" data-bs-dismiss="modal">Cerrar</button>
+            <button type="submit" class="btn-guardar">
+                <i class="fas fa-save me-2"></i>Guardar Equipo
+            </button>
           </div>
       </form>
     </div>
@@ -238,7 +572,7 @@ $(document).ready(function() {
                 });
 
                 actualizarGrupos();
-                mostrarConfig();  // <<< ✅ Aquí sí se puede llamar también
+                mostrarConfig();
             },
             error: function(xhr) {
                 Swal.fire({
@@ -251,34 +585,27 @@ $(document).ready(function() {
     });
 });
 
-
 function actualizarGrupos() {
-    let equiposSeleccionados = $('select[name="equipos[]"]').val()?.length || 0;
+    let selectedEquipos = $('select[name="equipos[]"]').val() || [];
+    let numEquipos = selectedEquipos.length;
 
-    $('#num_equipos_form').val(equiposSeleccionados);
+    let numGrupos = parseInt($('#num_grupos').val()) || 0;
 
-    let grupos = $('#num_grupos').val();
-
-    if (grupos > 0 && equiposSeleccionados > 0) {
-
-        let equiposPorGrupo = Math.floor(equiposSeleccionados / grupos);
-        $('#equipos_por_grupo').val(equiposPorGrupo);
-
-        if (equiposSeleccionados % grupos !== 0) {
-            $('#info_grupos').html(
-                `<span class="text-danger">⚠ Algunos grupos tendrán un equipo más que otros</span>`
-            );
+    if (numGrupos > 0 && numEquipos > 0) {
+        let porGrupo = Math.floor(numEquipos / numGrupos);
+        let sobrantes = numEquipos % numGrupos;
+        $('#equipos_por_grupo').val(porGrupo);
+        
+        if (sobrantes === 0) {
+            $('#info_grupos').html('✔ Reparto equitativo: ' + numGrupos + ' grupos de ' + porGrupo + ' equipos');
         } else {
-            $('#info_grupos').html(
-                `<span class="text-success">✔ Reparto equitativo entre grupos</span>`
-            );
+            $('#info_grupos').html('⚠ ' + numGrupos + ' grupos de ' + porGrupo + ' equipos y ' + sobrantes + ' con 1 extra');
         }
     } else {
         $('#equipos_por_grupo').val('');
         $('#info_grupos').html('');
     }
 }
-
 
 function mostrarConfig() {
     let tipo = $('#tipo_torneo').val();
@@ -287,25 +614,8 @@ function mostrarConfig() {
     if (tipo === 'Grupos') $('#config_grupos').removeClass('d-none');
     if (tipo === 'Liguilla') $('#config_liguilla').removeClass('d-none');
     if (tipo === 'Eliminacion') $('#config_eliminacion').removeClass('d-none');
+    
     actualizarGrupos();
-}
-
-function actualizarGrupos() {
-    let selectedEquipos = $('select[name="equipos[]"]').val() || [];
-    let numEquipos = selectedEquipos.length;
-    $('#num_equipos_form').val(numEquipos);
-
-    let numGrupos = parseInt($('#num_grupos').val()) || 0;
-
-    if (numGrupos > 0 && numEquipos > 0) {
-        let porGrupo = Math.floor(numEquipos / numGrupos);
-        let sobrantes = numEquipos % numGrupos;
-        $('#equipos_por_grupo').val(porGrupo);
-        $('#info_grupos').text(`Con ${numEquipos} equipos: ${numGrupos} grupos de ${porGrupo}` + (sobrantes ? ` y ${sobrantes} grupo(s) con 1 extra` : ''));
-    } else {
-        $('#equipos_por_grupo').val('');
-        $('#info_grupos').text('');
-    }
 }
 </script>
 @endsection
