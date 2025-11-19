@@ -6,6 +6,7 @@ use App\Models\Canchas;
 use App\Models\Equipos;
 use App\Models\Jugadores;
 use App\Models\municipios;
+use App\Models\Partido;
 use App\Services\userService;
 use Illuminate\Http\Request;
 
@@ -94,6 +95,11 @@ class UserController extends Controller
     return view('usuario.listaJugadores', compact('jugadores', 'equipos'));
 }
 
+    public function listaPartidos()
+{
+    $partidos = Partido::with('equipos')->get();
+    return view('usuario.listaPartidos', compact('partidos'));
+}
 
 
 }

@@ -38,6 +38,7 @@ Route::post('/registro-submit', [AdminController::class, 'registro'])->name('reg
 Route::get('/usuario/index', [UserController::class, 'index'])->name('usuario.vistaUsuario');
 Route::get('/usuario/listaEquipos', [UserController::class, 'listaEquipos'])->name('usuario.listaEquipos');
 Route::get('/usuario/listaJugadores', [UserController::class, 'listaJugadores'])->name('usuario.listaJugadores');
+Route::get('/usuario/listaPartidos', [UserController::class, 'listaPartidos'])->name('usuario.listaPartidos');
 
 //RUTAS MUNICIPIOS
 Route::get('/Municipios/index', [MunicipiosController::class, 'index'])->name('municipios.index');
