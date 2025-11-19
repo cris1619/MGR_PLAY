@@ -42,6 +42,13 @@ class TorneosController extends Controller
         $totalEquipos = count($request->equipos);
         $numGrupos = $request->cantidad_grupos;
 
+        // ✅ Validación para Eliminación Directa - Solo permite equipos PARES
+        if ($request->tipo === 'Eliminacion') {
+            if ($totalEquipos % 2 !== 0) {
+                return back()->withErrors("El torneo de Eliminación Directa solo maneja equipos PARES. Tienes $totalEquipos equipos (impar). Selecciona " . ($totalEquipos + 1) . " o " . ($totalEquipos - 1) . " equipos.")->withInput();
+            }
+        }
+
         // ✅ Validación para torneos por grupos
         if ($request->tipo === 'Grupos') {
             if (!$numGrupos || $numGrupos == 0) {
