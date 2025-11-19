@@ -171,6 +171,15 @@
         font-size: 0.9rem;
     }
 
+    .alert-danger {
+        background: linear-gradient(135deg, #2a2e33 0%, #1B1F23 100%);
+        border: 1px solid #ff6b6b;
+        border-radius: 10px;
+        padding: 12px;
+        color: #ff6b6b;
+        font-size: 0.9rem;
+    }
+
     /* ==== CONFIGURACIONES ESPECÍFICAS ==== */
     .config-box {
         background: linear-gradient(145deg, #252a2f 0%, #1B1F23 100%);
@@ -461,15 +470,25 @@
         {{-- Config Eliminación --}}
         <div id="config_eliminacion" class="config-box d-none">
             <h5><i class="fas fa-times-circle me-2"></i>Eliminación Directa</h5>
-            <div class="alert-success-custom">
+            <div id="alerta_equipos_impares" class="alert alert-danger d-none" style="display: none;">
+                <i class="fas fa-exclamation-triangle me-2"></i>
+                <strong>⚠️ EQUIPOS IMPARES NO PERMITIDOS</strong>
+                <br>El torneo de <strong>Eliminación Directa</strong> solo maneja equipos <strong>PARES</strong>.
+                <br><small>Ajusta la cantidad de equipos seleccionados para continuar.</small>
+            </div>
+            <div id="alerta_equipos_pares" class="alert-success-custom d-none">
                 <i class="fas fa-check-circle me-2"></i>
-                Las llaves se generarán automáticamente según el número de equipos seleccionados.
+                ✔️ Cantidad de equipos válida. Las llaves se generarán automáticamente.
+            </div>
+            <div id="alerta_sin_equipos" class="alert-info-custom d-none">
+                <i class="fas fa-info-circle me-2"></i>
+                Selecciona equipos para visualizar la validación.
             </div>
         </div>
 
         {{-- BOTONES DE ACCIÓN --}}
         <div class="form-actions">
-            <button type="submit" class="btn-guardar">
+            <button type="submit" id="btnGuardarTorneo" class="btn-guardar">
                 <i class="fas fa-check-circle me-2"></i>Guardar Torneo
             </button>
             <a href="{{ route('torneos.index') }}" class="btn-cancelar">
@@ -544,6 +563,52 @@ $(document).ready(function() {
     $('select[name="equipos[]"]').on('changed.bs.select', actualizarGrupos);
     $('#num_grupos').on('keyup change', actualizarGrupos);
 
+    // Validar formulario antes de enviar
+    $('form').on('submit', function(e) {
+        let tipo = $('#tipo_torneo').val();
+        let selectedEquipos = $('select[name="equipos[]"]').val() || [];
+        let numEquipos = selectedEquipos.length;
+
+        // Si no hay tipo de torneo seleccionado
+        if (!tipo) {
+            e.preventDefault();
+            Swal.fire({
+                icon: 'warning',
+                title: 'Tipo de Torneo',
+                text: 'Por favor selecciona un tipo de torneo.'
+            });
+            return false;
+        }
+
+        // Si no hay equipos seleccionados
+        if (numEquipos === 0) {
+            e.preventDefault();
+            Swal.fire({
+                icon: 'warning',
+                title: 'Sin Equipos',
+                text: 'Debes seleccionar al menos 2 equipos para crear un torneo.'
+            });
+            return false;
+        }
+
+        // Validación específica para Eliminación Directa
+        if (tipo === 'Eliminacion') {
+            if (numEquipos % 2 !== 0) {
+                e.preventDefault();
+                Swal.fire({
+                    icon: 'error',
+                    title: '❌ Equipos Impares No Permitidos',
+                    html: '<p style="font-size: 1.1rem; margin: 15px 0;">El torneo de <strong>Eliminación Directa</strong> solo maneja equipos <strong>PARES</strong>.</p>' +
+                          '<p style="margin: 15px 0;">Actualmente tienes: <strong style="color: #ff6b6b;">' + numEquipos + ' equipos</strong></p>' +
+                          '<p>Selecciona <strong style="color: #00ff88;">' + (numEquipos + 1) + '</strong> o <strong style="color: #00ff88;">' + (numEquipos - 1) + '</strong> equipos.</p>',
+                    confirmButtonText: 'Entendido',
+                    confirmButtonColor: '#ffd700'
+                });
+                return false;
+            }
+        }
+    });
+
     // AJAX crear equipo
     $('#formCrearEquipo').submit(function(e) {
         e.preventDefault();
@@ -609,11 +674,46 @@ function actualizarGrupos() {
 
 function mostrarConfig() {
     let tipo = $('#tipo_torneo').val();
+    let selectedEquipos = $('select[name="equipos[]"]').val() || [];
+    let numEquipos = selectedEquipos.length;
+    let btnGuardar = $('#btnGuardarTorneo');
+
     $('#config_grupos, #config_liguilla, #config_eliminacion').addClass('d-none');
 
     if (tipo === 'Grupos') $('#config_grupos').removeClass('d-none');
     if (tipo === 'Liguilla') $('#config_liguilla').removeClass('d-none');
-    if (tipo === 'Eliminacion') $('#config_eliminacion').removeClass('d-none');
+    
+    if (tipo === 'Eliminacion') {
+        $('#config_eliminacion').removeClass('d-none');
+        
+        // Validar equipos pares para eliminación directa
+        if (numEquipos === 0) {
+            $('#alerta_sin_equipos').removeClass('d-none');
+            $('#alerta_equipos_impares').addClass('d-none');
+            $('#alerta_equipos_pares').addClass('d-none');
+            btnGuardar.prop('disabled', true);
+            btnGuardar.css('opacity', '0.5');
+            btnGuardar.css('cursor', 'not-allowed');
+        } else if (numEquipos % 2 !== 0) {
+            $('#alerta_equipos_impares').removeClass('d-none');
+            $('#alerta_equipos_pares').addClass('d-none');
+            $('#alerta_sin_equipos').addClass('d-none');
+            btnGuardar.prop('disabled', true);
+            btnGuardar.css('opacity', '0.5');
+            btnGuardar.css('cursor', 'not-allowed');
+        } else {
+            $('#alerta_equipos_impares').addClass('d-none');
+            $('#alerta_equipos_pares').removeClass('d-none');
+            $('#alerta_sin_equipos').addClass('d-none');
+            btnGuardar.prop('disabled', false);
+            btnGuardar.css('opacity', '1');
+            btnGuardar.css('cursor', 'pointer');
+        }
+    } else {
+        btnGuardar.prop('disabled', false);
+        btnGuardar.css('opacity', '1');
+        btnGuardar.css('cursor', 'pointer');
+    }
     
     actualizarGrupos();
 }
