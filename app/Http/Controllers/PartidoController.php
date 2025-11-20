@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Partido;
 use Illuminate\Http\Request;
 use App\Models\Clasificacion;
+use App\Models\Torneos;
 
 class PartidoController extends Controller
 {
@@ -13,7 +14,7 @@ class PartidoController extends Controller
      */
     public function index()
     {
-        $partidos = Partido::with(['equipos', 'cancha', 'arbitro'])->get();
+        $partidos = Partido::with(['equipos', 'cancha', 'arbitro', 'torneo'])->get();
         return view('Partidos.index', compact('partidos'));
     }
 

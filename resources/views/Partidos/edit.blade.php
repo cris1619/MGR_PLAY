@@ -12,12 +12,12 @@
             <div class="alert alert-info">
                 <strong>Paso 1:</strong> Primero guarda la fecha, hora y ubicación (municipio y cancha). Luego podrás ingresar el marcador.
             </div>
-            
+
             <!-- Botón para abrir Modal de Información Básica -->
             <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#modalInfoPartido">
                 <i class="fas fa-calendar-alt"></i> Editar Información del Partido
             </button>
-            
+
             <button type="button" class="btn btn-warning" data-bs-toggle="modal" data-bs-target="#modalMarcador">
                 <i class="fas fa-futbol"></i> Ingresar Marcador
             </button>
@@ -35,27 +35,27 @@
                 </h5>
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
-            
+
             <form id="formInfoPartido" action="{{ route('partidos.update', $partido->id) }}" method="POST">
                 @csrf
                 @method('PUT')
-                
+
                 <div class="modal-body">
                     <div class="mb-3">
                         <label for="fecha" class="form-label"><strong>Fecha</strong></label>
-                        <input type="date" id="fecha" name="fecha" class="form-control" 
+                        <input type="date" id="fecha" name="fecha" class="form-control"
                                value="{{ $partido->fecha }}" required>
                     </div>
-                    
+
                     <div class="mb-3">
                         <label for="hora" class="form-label"><strong>Hora</strong></label>
-                        <input type="time" id="hora" name="hora" class="form-control" 
+                        <input type="time" id="hora" name="hora" class="form-control"
                                value="{{ $partido->hora }}" required>
                     </div>
-                    
+
                     <div class="mb-3">
                         <label for="fase" class="form-label"><strong>Fase</strong></label>
-                        <input type="text" id="fase" name="fase" class="form-control" 
+                        <input type="text" id="fase" name="fase" class="form-control"
                                value="{{ $partido->fase }}" readonly>
                     </div>
 
@@ -76,7 +76,7 @@
                         <select id="cancha" name="id_cancha" class="form-select">
                             <option value="">Seleccionar cancha...</option>
                             @foreach($canchas as $cancha)
-                                <option value="{{ $cancha->id }}" data-municipio="{{ $cancha->idMunicipio ?? $cancha->id_municipio ?? '' }}" 
+                                <option value="{{ $cancha->id }}" data-municipio="{{ $cancha->idMunicipio ?? $cancha->id_municipio ?? '' }}"
                                     {{ (isset($partido->id_cancha) && $partido->id_cancha == $cancha->id) ? 'selected' : '' }}>
                                     {{ $cancha->nombre }}
                                 </option>
@@ -96,7 +96,7 @@
                         </select>
                     </div>
                 </div>
-                
+
                 <div class="modal-footer">
                     <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
                     <button type="submit" class="btn btn-success">
@@ -118,19 +118,19 @@
                 </h5>
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
-            
-            <form id="formMarcador" action="{{ route('partidos.update', $partido->id) }}" method="POST" onsubmit="return validarMarcador()">
+
+            <form id="formMarcador" action="{{ route('partidos.update', $partido->id) }}" method="POST" onsubmit="return validarMarcador('{{ $partido->torneo->tipo }}')">
                 @csrf
                 @method('PUT')
                 <input type="hidden" name="is_marcador" value="1">
-                
+
                 <div id="alertaValidacion" class="alert alert-danger" style="display: none; margin: 15px;"></div>
-                
+
                 <div class="modal-body">
                     @php
                         $equipos = $partido->equipos->toArray();
                     @endphp
-                    
+
                     @if(count($equipos) === 2)
                         <!-- GOLES -->
                         <div class="row mb-4">
@@ -138,8 +138,8 @@
                                 <div class="card text-center">
                                     <div class="card-body">
                                         <h6 class="card-title">{{ $equipos[0]['nombre'] }}</h6>
-                                        <input type="number" name="goles[{{ $equipos[0]['id'] }}]" 
-                                               class="form-control form-control-lg text-center goles-input" 
+                                        <input type="number" name="goles[{{ $equipos[0]['id'] }}]"
+                                               class="form-control form-control-lg text-center goles-input"
                                                min="0" value="{{ $equipos[0]['pivot']['goles'] ?? 0 }}"
                                                data-equipo-id="{{ $equipos[0]['id'] }}"
                                                data-equipo-nombre="{{ $equipos[0]['nombre'] }}"
@@ -147,17 +147,17 @@
                                     </div>
                                 </div>
                             </div>
-                            
+
                             <div class="col-md-2 d-flex align-items-center justify-content-center">
                                 <h4 class="text-muted">VS</h4>
                             </div>
-                            
+
                             <div class="col-md-5">
                                 <div class="card text-center">
                                     <div class="card-body">
                                         <h6 class="card-title">{{ $equipos[1]['nombre'] }}</h6>
-                                        <input type="number" name="goles[{{ $equipos[1]['id'] }}]" 
-                                               class="form-control form-control-lg text-center goles-input" 
+                                        <input type="number" name="goles[{{ $equipos[1]['id'] }}]"
+                                               class="form-control form-control-lg text-center goles-input"
                                                min="0" value="{{ $equipos[1]['pivot']['goles'] ?? 0 }}"
                                                data-equipo-id="{{ $equipos[1]['id'] }}"
                                                data-equipo-nombre="{{ $equipos[1]['nombre'] }}"
@@ -167,6 +167,7 @@
                             </div>
                         </div>
 
+                         @if($partido->torneo && $partido->torneo->tipo === 'Eliminacion')
                         <!-- PENALES (solo si hay empate) -->
                         <div id="seccionPenales" style="display: none;" class="mt-4 p-3 border border-warning rounded bg-light">
                             <div style="text-align: center; margin-bottom: 15px;">
@@ -175,11 +176,11 @@
                             <div class="alert alert-warning mb-3">
                                 <strong>Empate</strong> — El que más penales anote será el ganador
                             </div>
-                            
+
                             <div class="row">
                                 <div class="col-md-5">
                                     <label class="form-label"><strong>Penales {{ $equipos[0]['nombre'] }}</strong></label>
-                                    <input type="number" name="penales[{{ $equipos[0]['id'] }}]" 
+                                    <input type="number" name="penales[{{ $equipos[0]['id'] }}]"
                                            class="form-control penales-input" min="0" value="0"
                                            style="font-size: 24px; font-weight: bold; text-align: center;">
                                 </div>
@@ -188,19 +189,21 @@
                                 </div>
                                 <div class="col-md-5">
                                     <label class="form-label"><strong>Penales {{ $equipos[1]['nombre'] }}</strong></label>
-                                    <input type="number" name="penales[{{ $equipos[1]['id'] }}]" 
+                                    <input type="number" name="penales[{{ $equipos[1]['id'] }}]"
                                            class="form-control penales-input" min="0" value="0"
                                            style="font-size: 24px; font-weight: bold; text-align: center;">
                                 </div>
                             </div>
                         </div>
+                         @endif
+
                     @else
                         <div class="alert alert-danger">
                             ❌ No hay 2 equipos disponibles para ingresar marcador.
                         </div>
                     @endif
                 </div>
-                
+
                 <div class="modal-footer">
                     <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
                     <button type="submit" class="btn btn-success">
@@ -271,7 +274,7 @@ document.addEventListener('DOMContentLoaded', function() {
     function checkEmpate() {
         const golesInputs = document.querySelectorAll('.goles-input');
         const seccionPenales = document.getElementById('seccionPenales');
-        
+
         if (!seccionPenales || golesInputs.length < 2) return;
 
         const gol1 = parseInt(golesInputs[0].value) || 0;
@@ -293,7 +296,7 @@ document.addEventListener('DOMContentLoaded', function() {
         input.addEventListener('change', checkEmpate);
         input.addEventListener('keyup', checkEmpate);
     });
-    
+
     // También ejecutar al abrir el modal
     const modalMarcador = document.getElementById('modalMarcador');
     if (modalMarcador) {
@@ -303,7 +306,8 @@ document.addEventListener('DOMContentLoaded', function() {
     }
 
     // ===== VALIDAR PENALES AL GUARDAR =====
-    window.validarMarcador = function() {
+    window.validarMarcador = function(tipoTorneo) {
+
         const golesInputs = document.querySelectorAll('.goles-input');
         const gol1 = parseInt(golesInputs[0]?.value) || 0;
         const gol2 = parseInt(golesInputs[1]?.value) || 0;
@@ -318,16 +322,16 @@ document.addEventListener('DOMContentLoaded', function() {
 
             console.log('Penales:', penales1, penales2);
 
-            // Si los penales también son iguales
-            if (penales1 === penales2) {
+            // Si los penales también son iguales y es Eliminacion
+            if (penales1 === penales2 && tipoTorneo === 'Eliminacion') {
                 alertaDiv.innerHTML = '❌ <strong>Penales iguales</strong> — Ingresa marcador de penales diferentes.';
                 alertaDiv.style.display = 'block';
                 alertaDiv.scrollIntoView({ behavior: 'smooth' });
                 return false;
             }
 
-            // Si no hay penales (ambos en 0)
-            if (penales1 === 0 && penales2 === 0) {
+            // Si no hay penales (ambos en 0) y es Eliminacion
+            if (penales1 === 0 && penales2 === 0 && tipoTorneo === 'Eliminacion') {
                 alertaDiv.innerHTML = '❌ <strong>Empate en goles</strong> — Debes ingresar el marcador de penales.';
                 alertaDiv.style.display = 'block';
                 alertaDiv.scrollIntoView({ behavior: 'smooth' });

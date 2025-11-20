@@ -49,5 +49,10 @@ public function municipio()
 {
     return $this->belongsTo(municipios::class, 'id_municipio');
 }
+    public function torneo()
+    {
+        return $this->belongsTo(Torneos::class, 'id_torneo');
+    }
+
 
 }
