@@ -351,7 +351,6 @@
                 <select name="estado" id="estado" class="form-select" required>
                     <option value="Pendiente" selected>Pendiente</option>
                     <option value="En curso" {{ old('estado') == 'En curso' ? 'selected' : '' }}>En curso</option>
-                    <option value="Finalizado" {{ old('estado') == 'Finalizado' ? 'selected' : '' }}>Finalizado</option>
                 </select>
             </div>
 
@@ -359,7 +358,6 @@
                 <label for="tipo_torneo" class="form-label">⚙️ Tipo de Torneo</label>
                 <select name="tipo" id="tipo_torneo" class="form-select" required>
                     <option value="">Seleccione una opción</option>
-                    <option value="Grupos" {{ old('tipo') == 'Grupos' ? 'selected' : '' }}>Fase de Grupos</option>
                     <option value="Eliminacion" {{ old('tipo') == 'Eliminacion' ? 'selected' : '' }}>Eliminación Directa</option>
                     <option value="Liguilla" {{ old('tipo') == 'Liguilla' ? 'selected' : '' }}>Liguilla</option>
                 </select>
