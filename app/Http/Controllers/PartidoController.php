@@ -37,10 +37,14 @@ class PartidoController extends Controller
     /**
      * Display the specified resource.
      */
-    public function show(Partido $partido)
-    {
-        //
-    }
+    public function show($id)
+{
+    $partido = Partido::with(['equipos', 'arbitro', 'cancha', 'municipio', 'torneo'])
+        ->findOrFail($id);
+
+    return view('partidos.show', compact('partido'));
+}
+
 
     /**
      * Show the form for editing the specified resource.
