@@ -32,5 +32,9 @@ class DatabaseSeeder extends Seeder
         $this->call([
             JugadoresSeeder::class,
         ]);
+
+        $this->call([
+            AdminSeeder::class,
+        ]);
     }
 }
