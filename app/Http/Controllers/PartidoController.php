@@ -278,6 +278,63 @@ class PartidoController extends Controller
 
         $clasificacion->save();
     }
+public function registrarResultado(Request $request, $idPartido)
+{
+    $partido = Partido::findOrFail($idPartido);
+
+    // Validación
+    $request->validate([
+        'goles_local' => 'required|integer|min:0',
+        'goles_visita' => 'required|integer|min:0',
+    ]);
+
+    // Guardamos los goles en Partido_Equipo
+    $local = $partido->equipos()->where('rol', 'Local')->first();
+    $visitante = $partido->equipos()->where('rol', 'Visitante')->first();
+
+    $golesLocal = $request->goles_local;
+    $golesVisita = $request->goles_visita;
+
+    $local->pivot->goles = $golesLocal;
+    $local->pivot->save();
+
+    $visitante->pivot->goles = $golesVisita;
+    $visitante->pivot->save();
+
+    // Actualizar bandera
+    $partido->jugado = 1;
+    $partido->save();
+
+    // Lógica para clasificación
+    $empate = $golesLocal == $golesVisita;
+    $ganador = null;
+
+    if (!$empate) {
+        $ganador = $golesLocal > $golesVisita ? $local->id : $visitante->id;
+    }
+
+    $this->actualizarFilaClasificacionEquipo(
+        $partido->id_torneo,
+        null,
+        $local->id,
+        $golesLocal,
+        $golesVisita,
+        $ganador,
+        $empate
+    );
+
+    $this->actualizarFilaClasificacionEquipo(
+        $partido->id_torneo,
+        null,
+        $visitante->id,
+        $golesVisita,
+        $golesLocal,
+        $ganador,
+        $empate
+    );
+
+    return back()->with('success', 'Resultado registrado correctamente.');
+}
 
 
 }

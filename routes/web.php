@@ -98,3 +98,7 @@ Route::post('/partidos/store', [PartidoController::class, 'store'])->name('parti
 Route::get('/partidos/{partido}/edit', [PartidoController::class, 'edit'])->name('partidos.edit');
 Route::put('/partidos/{partido}', [PartidoController::class, 'update'])->name('partidos.update');
 Route::delete('/partidos/{partido}', [PartidoController::class, 'destroy'])->name('partidos.destroy');
+
+//Rutas Clasificacion de Torneos
+Route::get('/torneo/{id}/clasificacion-liguilla', [TorneosController::class, 'clasificacionLiguilla'])
+    ->name('torneo.clasificacion.liguilla');

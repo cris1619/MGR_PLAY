@@ -440,6 +440,15 @@
     </div>
     @endif
 
+    {{-- Botón para ver clasificación (solo si es liguilla) --}}
+@if ($torneo->tipo === 'Liguilla')
+    <a href="{{ route('torneo.clasificacion.liguilla', $torneo->id) }}"
+       class="btn btn-primary mt-3">
+        Ver Clasificación
+    </a>
+@endif
+
+
     @if($torneo->tipo == 'Grupos' && isset($torneo->grupos))
         @foreach($torneo->grupos as $grupo)
         <div class="grupo-container">
@@ -497,35 +506,6 @@
         @endforeach
     @endif
 
-
-    @if($torneo->tipo == 'Liguilla')
-    <div class="info-card">
-        <h3 class="card-title">🔄 Partidos de Liguilla</h3>
-
-        @if($torneo->partidos && $torneo->partidos->count() > 0)
-            @foreach($torneo->partidos as $partido)
-                <div class="partido-card">
-                    @if($partido->fase)
-                    <div style="color: #ffd700; font-weight: 600; margin-bottom: 10px;">
-                        📋 {{ $partido->fase }}
-                    </div>
-                    @endif
-
-                    <ul style="color: #fff; list-style: none; padding: 0;">
-                        @foreach($partido->partido_equipos as $pe)
-                        <li style="padding: 5px 0;">
-                            <span style="color: #00ccff;">{{ $pe->rol }}:</span>
-                            <span>{{ $pe->equipo ? $pe->equipo->nombre : 'BYE' }}</span>
-                        </li>
-                        @endforeach
-                    </ul>
-                </div>
-            @endforeach
-        @else
-            <p style="color: #999; text-align: center; padding: 40px;">No hay partidos generados aún</p>
-        @endif
-    </div>
-    @endif
 
     @foreach($torneo->partidos->sortBy('id') as $partido)
         @php

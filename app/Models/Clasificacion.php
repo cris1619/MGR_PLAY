@@ -22,9 +22,10 @@ class Clasificacion extends Model
     ];
 
     public function equipo()
-    {
-        return $this->belongsTo(Equipos::class, 'idEquipo');
-    }
+{
+    return $this->belongsTo(Equipos::class, 'id_equipo');
+}
+
 
     public function grupo()
     {
