@@ -39,6 +39,9 @@ Route::get('/usuario/index', [UserController::class, 'index'])->name('usuario.vi
 Route::get('/usuario/listaEquipos', [UserController::class, 'listaEquipos'])->name('usuario.listaEquipos');
 Route::get('/usuario/listaJugadores', [UserController::class, 'listaJugadores'])->name('usuario.listaJugadores');
 Route::get('/usuario/listaPartidos', [UserController::class, 'listaPartidos'])->name('usuario.listaPartidos');
+Route::get('/usuario/listaTorneos', [UserController::class, 'listaTorneos'])->name('usuario.listaTorneos');
+
+
 
 //RUTAS MUNICIPIOS
 Route::get('/Municipios/index', [MunicipiosController::class, 'index'])->name('municipios.index');

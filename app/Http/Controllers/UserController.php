@@ -124,4 +124,24 @@ public function listaPartidos(Request $request)
     return view('Usuario.listaPartidos', compact('partidos', 'municipios', 'torneos'));
 }
 
+public function listaTorneos(Request $request)
+    {
+        // Iniciar la consulta del modelo Torneo
+        $query = Torneos::query();
+
+        // Aplicar filtro por nombre (si se ha introducido)
+        if ($request->filled('search')) {
+            $query->where('nombre', 'like', '%' . $request->search . '%');
+        }
+
+        // Obtener los torneos paginados (incluyendo los parámetros de búsqueda)
+        $torneos = $query->with('municipio') // Asegúrate de cargar la relación 'municipio'
+                        ->orderBy('estado', 'asc') // Poner los activos primero
+                        ->orderBy('fecha_inicio', 'desc')
+                        ->paginate(12)
+                        ->withQueryString();
+
+        return view('torneos.index', compact('torneos'));
+    }
+
 }
