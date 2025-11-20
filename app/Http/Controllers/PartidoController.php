@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Partido;
 use Illuminate\Http\Request;
+use App\Models\Clasificacion;
 
 class PartidoController extends Controller
 {
@@ -58,7 +59,7 @@ class PartidoController extends Controller
     public function update(Request $request, $id)
     {
         $partido = Partido::findOrFail($id);
-        
+
         // Determinar si es actualización de información básica o marcador
         if ($request->has('is_marcador')) {
             // Actualizar solo marcador y penales
@@ -105,6 +106,7 @@ class PartidoController extends Controller
             $penales2 = $equipo2->pivot->penales ?? 0;
 
             $ganador_id = null;
+            $empate = false;
 
             // Primero comparar goles
             if ($goles1 > $goles2) {
@@ -117,8 +119,22 @@ class PartidoController extends Controller
                     $ganador_id = $equipo1->id;
                 } elseif ($penales2 > $penales1) {
                     $ganador_id = $equipo2->id;
+                }else {
+                    // También empatan en penales
+                    $empate = true;
                 }
+
             }
+            // Llamar actualización de clasificación
+            $this->actualizarClasificacionPartido(
+                $partido,
+                $equipo1->id,
+                $equipo2->id,
+                $goles1,
+                $goles2,
+                $ganador_id,
+                $empate
+            );
 
             // Asignar el ganador al siguiente partido
             if ($ganador_id) {
@@ -163,4 +179,104 @@ class PartidoController extends Controller
         }
         return 1;
     }
+
+    private function actualizarClasificacionPartido(
+        $partido,
+        int $idEquipo1,
+        int $idEquipo2,
+        int $goles1,
+        int $goles2,
+        ?int $ganador_id,
+        bool $empate
+    ) {
+        // 1. Obtener torneo y grupo desde el partido
+        $idTorneo = $partido->id_torneo;
+
+        // Ajusta esto según tu modelo de Partido:
+        // puede ser $partido->grupo (string),
+        // o $partido->grupo->nombre, etc.
+        $grupo = $partido->grupo ?? null;
+
+        // 2. Actualizar clasificación para ambos equipos
+        $this->actualizarFilaClasificacionEquipo(
+            $idTorneo,
+            $grupo,
+            $idEquipo1,
+            $goles1,
+            $goles2,
+            $ganador_id,
+            $empate
+        );
+
+        $this->actualizarFilaClasificacionEquipo(
+            $idTorneo,
+            $grupo,
+            $idEquipo2,
+            $goles2,
+            $goles1,
+            $ganador_id,
+            $empate
+        );
+    }
+
+    /**
+     * Actualiza o crea la fila de clasificación para UN equipo,
+     * usando exactamente los campos de tu tabla `clasificacion`.
+     */
+    private function actualizarFilaClasificacionEquipo(
+        int $idTorneo,
+        ?string $grupo,
+        int $idEquipo,
+        int $gf,
+        int $gc,
+        ?int $ganador_id,
+        bool $empate
+    ) {
+        // Buscar registro existente de este equipo en este torneo y grupo
+        $clasificacion = Clasificacion::where('id_torneo', $idTorneo)
+            ->where('id_equipo', $idEquipo)
+            ->when($grupo !== null, fn($q) => $q->where('grupo', $grupo))
+            ->first();
+
+        if (!$clasificacion) {
+            // Crear registro inicializado con ceros
+            $clasificacion = new Clasificacion([
+                'id_torneo'        => $idTorneo,
+                'id_equipo'        => $idEquipo,
+                'grupo'            => $grupo,
+                'puntos'           => 0,
+                'partidos_jugados' => 0,
+                'ganados'          => 0,
+                'empatados'        => 0,
+                'perdidos'         => 0,
+                'goles_favor'      => 0,
+                'goles_contra'     => 0,
+            ]);
+        }
+
+        // Partidos jugados
+        $clasificacion->partidos_jugados += 1;
+
+        // Goles
+        $clasificacion->goles_favor  += $gf;
+        $clasificacion->goles_contra += $gc;
+
+        // Resultado
+        if ($empate) {
+            $clasificacion->empatados += 1;
+            $clasificacion->puntos    += 1; // 1 punto por empate
+        } else {
+            if ($ganador_id === $idEquipo) {
+                $clasificacion->ganados += 1;
+                $clasificacion->puntos  += 3; // 3 puntos por victoria
+            } else {
+                $clasificacion->perdidos += 1;
+                // 0 puntos por derrota
+            }
+        }
+
+        $clasificacion->save();
+    }
+
+
 }
