@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Clasificacion;
 use App\Models\Equipos;
 use App\Models\Grupo;
 use App\Models\Grupo_Equipo;
@@ -30,6 +31,14 @@ class TorneosController extends Controller
 
     public function store(Request $request)
     {
+
+        // Validación de equipos pares
+        if (count($request->equipos) % 2 !== 0) {
+            return back()
+                ->with('error', 'No se puede crear el torneo porque el número de equipos es impar. Selecciona un número par de equipos.')
+                ->withInput();
+        }
+
         $request->validate([
             'nombre' => 'required|string',
             'tipo' => 'required|in:Grupos,Liguilla,Eliminacion',
@@ -41,6 +50,13 @@ class TorneosController extends Controller
 
         $totalEquipos = count($request->equipos);
         $numGrupos = $request->cantidad_grupos;
+
+        // ✅ Validación para Eliminación Directa - Solo permite equipos PARES
+        if ($request->tipo === 'Eliminacion') {
+            if ($totalEquipos % 2 !== 0) {
+                return back()->withErrors("El torneo de Eliminación Directa solo maneja equipos PARES. Tienes $totalEquipos equipos (impar). Selecciona " . ($totalEquipos + 1) . " o " . ($totalEquipos - 1) . " equipos.")->withInput();
+            }
+        }
 
         // ✅ Validación para torneos por grupos
         if ($request->tipo === 'Grupos') {
@@ -288,6 +304,27 @@ private function generarLiguilla($torneo, $equipos, $idaVuelta = 1)
     // Iniciamos transacción para mayor seguridad
     DB::beginTransaction();
 
+    // Crear clasificación inicial de la liguilla
+foreach ($equipos as $idEquipo) {
+    Clasificacion::firstOrCreate(
+        [
+            'id_torneo' => $torneo->id,
+            'id_equipo' => $idEquipo,
+        ],
+        [
+            'grupo'            => null,
+            'puntos'           => 0,
+            'partidos_jugados' => 0,
+            'ganados'          => 0,
+            'empatados'        => 0,
+            'perdidos'         => 0,
+            'goles_favor'      => 0,
+            'goles_contra'     => 0,
+        ]
+    );
+}
+
+
     try {
         for ($i = 0; $i < $numEquipos; $i++) {
             for ($j = $i + 1; $j < $numEquipos; $j++) {
@@ -350,6 +387,34 @@ private function generarLiguilla($torneo, $equipos, $idaVuelta = 1)
         DB::rollBack(); // Revertimos en caso de error
         dd("Error al generar la liguilla: " . $e->getMessage());
     }
+}
+
+public function clasificacionLiguilla($idTorneo)
+{
+    $torneo = Torneos::findOrFail($idTorneo);
+
+    // Traer clasificación ordenada
+    $clasificacion = Clasificacion::where('id_torneo', $idTorneo)
+        ->orderBy('puntos', 'desc')
+        ->orderByRaw('(goles_favor - goles_contra) DESC') // diferencia de goles
+        ->orderBy('goles_favor', 'desc')
+        ->get();
+
+    return view('torneos.clasificacion_liguilla', compact('torneo', 'clasificacion'));
+}
+
+public function clasificacion($id)
+{
+    $torneo = Torneos::findOrFail($id);
+
+    $clasificacion = Clasificacion::with('equipo')
+        ->where('id_torneo', $id)
+        ->orderBy('puntos', 'desc')
+        ->orderByRaw('(goles_favor - goles_contra) DESC') // DG
+        ->orderBy('goles_favor', 'desc')
+        ->get();
+
+    return view('torneos.clasificacion', compact('torneo', 'clasificacion'));
 }
 
 

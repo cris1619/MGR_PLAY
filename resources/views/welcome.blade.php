@@ -346,21 +346,6 @@ Inicio | MGR PLAY
             <div class="col-lg-3 col-md-6">
                 <div class="card admin-card shadow-lg fade-in-up">
                     <div class="card-body text-center">
-                        <div class="card-icon">📅</div>
-                        <h5 class="card-title">PARTIDOS</h5>
-                        <p class="card-text">
-                            Consulta la programación de los partidos y resultados.
-                        </p>
-                        <a href="{{ route('partidos.index') }}" class="btn btn-admin">
-                            Ver Partidos →
-                        </a>
-                    </div>
-                </div>
-            </div>
-
-            <div class="col-lg-3 col-md-6">
-                <div class="card admin-card shadow-lg fade-in-up">
-                    <div class="card-body text-center">
                         <div class="card-icon">⚖️</div>
                         <h5 class="card-title">ÁRBITROS</h5>
                         <p class="card-text">
