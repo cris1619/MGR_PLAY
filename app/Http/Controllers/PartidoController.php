@@ -13,10 +13,11 @@ class PartidoController extends Controller
      * Display a listing of the resource.
      */
     public function index()
-    {
-        $partidos = Partido::with(['equipos', 'cancha', 'arbitro', 'torneo'])->get();
-        return view('Partidos.index', compact('partidos'));
-    }
+{
+    // Retorna Illuminate\Pagination\LengthAwarePaginator (que tiene lastPage())
+    $partidos = Partido::paginate(15); // Cambia 15 por la cantidad que desees por página
+    return view('partidos.index', compact('partidos'));
+}
 
     /**
      * Show the form for creating a new resource.
