@@ -215,11 +215,13 @@
     }
 
     .equipo-escudo {
-        width: 50px;
-        height: 50px;
+        width: 60px;
+        height: 60px;
         border-radius: 50%;
         object-fit: cover;
         border: 3px solid #ffd700;
+        box-shadow: 0 3px 10px rgba(0, 0, 0, 0.3);
+        flex-shrink: 0;
     }
 
     .equipo-nombre {
@@ -246,36 +248,73 @@
     .partido-card {
         background: rgba(42, 46, 51, 0.6);
         border: 2px solid #3a3e43;
-        border-radius: 12px;
-        padding: 20px;
-        margin-bottom: 15px;
+        border-radius: 15px;
+        padding: 30px;
+        margin-bottom: 25px;
         transition: all 0.3s ease;
     }
 
     .partido-card:hover {
         border-color: #00ccff;
-        transform: translateY(-2px);
+        transform: translateY(-3px);
+        box-shadow: 0 8px 25px rgba(0, 204, 255, 0.2);
+    }
+
+    .partido-fase {
+        color: #ffd700;
+        font-weight: 700;
+        font-size: 1.2rem;
+        margin-bottom: 20px;
+        padding: 10px 20px;
+        background: rgba(255, 215, 0, 0.1);
+        border-left: 4px solid #ffd700;
+        border-radius: 8px;
     }
 
     .partido-equipos {
         display: flex;
         align-items: center;
         justify-content: space-between;
-        margin-bottom: 15px;
+        margin-bottom: 25px;
+        gap: 20px;
     }
 
     .partido-equipo {
         display: flex;
         align-items: center;
-        gap: 10px;
+        gap: 15px;
         flex: 1;
+        min-width: 0;
+    }
+
+    .partido-equipo .info-value {
+        font-size: 1.4rem;
+        font-weight: 600;
+        flex: 1;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+    }
+
+    .partido-equipo .badge {
+        font-size: 2rem;
+        padding: 12px 24px;
+        background: linear-gradient(135deg, #ffd700 0%, #00ff88 100%) !important;
+        color: #1a1f24;
+        font-weight: 800;
+        border-radius: 12px;
+        min-width: 70px;
+        text-align: center;
+        box-shadow: 0 4px 12px rgba(255, 215, 0, 0.3);
     }
 
     .vs-separator {
         color: #ffd700;
         font-weight: 800;
-        font-size: 1.2rem;
+        font-size: 2rem;
         padding: 0 20px;
+        flex-shrink: 0;
+        text-shadow: 0 0 15px rgba(255, 215, 0, 0.5);
     }
 
     .partido-info {
@@ -283,36 +322,133 @@
         align-items: center;
         justify-content: space-between;
         flex-wrap: wrap;
-        gap: 10px;
-        padding-top: 15px;
-        border-top: 1px solid #3a3e43;
+        gap: 15px;
+        padding-top: 20px;
+        border-top: 2px solid #3a3e43;
     }
 
     .partido-fecha {
         color: #00ccff;
-        font-size: 0.9rem;
+        font-size: 1.2rem;
+        font-weight: 600;
+        display: flex;
+        align-items: center;
+        gap: 8px;
+    }
+
+    .partido-actions {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        flex-wrap: wrap;
     }
 
     .partido-jugado {
         display: inline-flex;
         align-items: center;
-        gap: 5px;
-        padding: 5px 15px;
-        border-radius: 15px;
-        font-size: 0.85rem;
-        font-weight: 600;
+        gap: 8px;
+        padding: 10px 20px;
+        border-radius: 20px;
+        font-size: 1rem;
+        font-weight: 700;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
     }
 
     .jugado-si {
-        background: rgba(0, 255, 136, 0.2);
-        border: 1px solid #00ff88;
+        background: linear-gradient(135deg, rgba(0, 255, 136, 0.2) 0%, rgba(0, 204, 255, 0.2) 100%);
+        border: 2px solid #00ff88;
         color: #00ff88;
     }
 
     .jugado-no {
-        background: rgba(255, 215, 0, 0.2);
-        border: 1px solid #ffd700;
+        background: linear-gradient(135deg, rgba(255, 215, 0, 0.2) 0%, rgba(255, 170, 0, 0.2) 100%);
+        border: 2px solid #ffd700;
         color: #ffd700;
+    }
+
+    .btn-editar-partido {
+        background: linear-gradient(135deg, #00ccff 0%, #0088ff 100%);
+        border: none;
+        color: #fff;
+        padding: 10px 20px;
+        border-radius: 20px;
+        font-weight: 700;
+        font-size: 0.95rem;
+        text-decoration: none;
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        transition: all 0.3s ease;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+    }
+
+    .btn-editar-partido:hover {
+        background: linear-gradient(135deg, #0088ff 0%, #00ccff 100%);
+        transform: translateY(-2px);
+        box-shadow: 0 5px 15px rgba(0, 204, 255, 0.4);
+        color: #fff;
+    }
+
+    .btn-clasificacion {
+        background: linear-gradient(135deg, #ffd700 0%, #ffed4e 100%);
+        border: none;
+        color: #1a1f24;
+        padding: 15px 35px;
+        border-radius: 25px;
+        font-weight: 800;
+        font-size: 1.1rem;
+        text-decoration: none;
+        display: inline-flex;
+        align-items: center;
+        gap: 10px;
+        transition: all 0.3s ease;
+        text-transform: uppercase;
+        letter-spacing: 1px;
+        box-shadow: 0 5px 20px rgba(255, 215, 0, 0.3);
+        margin-bottom: 30px;
+    }
+
+    .btn-clasificacion:hover {
+        background: linear-gradient(135deg, #ffed4e 0%, #ffd700 100%);
+        transform: translateY(-3px);
+        box-shadow: 0 8px 25px rgba(255, 215, 0, 0.5);
+        color: #1a1f24;
+    }
+
+    .avance-info {
+        margin-top: 15px;
+        padding: 12px 20px;
+        background: rgba(0, 204, 255, 0.1);
+        border-left: 4px solid #00ccff;
+        border-radius: 8px;
+        color: #00ccff;
+        font-weight: 600;
+    }
+
+    .avance-info strong {
+        color: #00ff88;
+    }
+
+    .section-title-partidos {
+        color: #ffd700;
+        font-weight: 700;
+        font-size: 1.8rem;
+        margin-top: 40px;
+        margin-bottom: 25px;
+        text-transform: uppercase;
+        letter-spacing: 1px;
+        display: flex;
+        align-items: center;
+        gap: 15px;
+    }
+
+    .section-title-partidos::after {
+        content: '';
+        flex: 1;
+        height: 3px;
+        background: linear-gradient(90deg, #ffd700 0%, transparent 100%);
     }
 
     .stats-grid {
@@ -440,15 +576,6 @@
     </div>
     @endif
 
-    {{-- Botón para ver clasificación (solo si es liguilla) --}}
-@if ($torneo->tipo === 'Liguilla')
-    <a href="{{ route('torneo.clasificacion.liguilla', $torneo->id) }}"
-       class="btn btn-primary mt-3">
-        Ver Clasificación
-    </a>
-@endif
-
-
     @if($torneo->tipo == 'Grupos' && isset($torneo->grupos))
         @foreach($torneo->grupos as $grupo)
         <div class="grupo-container">
@@ -494,9 +621,16 @@
                             📅 {{ $partido->fecha }} @if($partido->hora)⏰ {{ $partido->hora }}@endif
                         </div>
                         @endif
-                        <span class="partido-jugado {{ $partido->jugado ? 'jugado-si' : 'jugado-no' }}">
-                            {{ $partido->jugado ? '✓ Jugado' : '⏳ Pendiente' }} <a href="{{ route('partidos.edit', $partido->id) }}" class="btn btn-primary">Editar</a>
-                        </span>
+                        <div class="partido-actions">
+                            <span class="partido-jugado {{ $partido->jugado ? 'jugado-si' : 'jugado-no' }}">
+                                {{ $partido->jugado ? '✓ Jugado' : '⏳ Pendiente' }}
+                            </span>
+                            @if(!$partido->jugado)
+                                <a href="{{ route('partidos.edit', $partido->id) }}" class="btn-editar-partido">
+                                    <i class="fas fa-edit"></i> Editar
+                                </a>
+                            @endif
+                        </div>
                     </div>
                 </div>
                 @endif
@@ -506,6 +640,15 @@
         @endforeach
     @endif
 
+    <h3 class="section-title-partidos">⚽ Partidos del Torneo</h3>
+
+    @if ($torneo->tipo === 'Liguilla')
+    <div class="text-center mb-4">
+        <a href="{{ route('torneo.clasificacion.liguilla', $torneo->id) }}" class="btn-clasificacion">
+            <i class="fas fa-trophy"></i> Ver Clasificación
+        </a>
+    </div>
+    @endif
 
     @foreach($torneo->partidos->sortBy('id') as $partido)
         @php
@@ -518,7 +661,7 @@
 
         <div class="partido-card">
             @if($partido->fase)
-            <div style="color: #ffd700; font-weight: 600; margin-bottom: 10px;">
+            <div class="partido-fase">
                 🏆 {{ $partido->fase }}
             </div>
             @endif
@@ -528,11 +671,11 @@
                     @if($local && $local->equipo)
                     <img src="{{ asset('storage/public/escudos/' . $local->equipo->escudo) }}" alt="" class="equipo-escudo">
                     <span class="info-value">{{ $local->equipo->nombre }}</span>
-                    <span class="badge bg-dark ms-2">{{ $local->goles }}</span>
+                    <span class="badge">{{ $local->goles }}</span>
                     @elseif($ganador1 && $ganador1->equipo)
                     <img src="{{ asset('storage/public/escudos/' . $ganador1->equipo->escudo) }}" alt="" class="equipo-escudo">
                     <span class="info-value">{{ $ganador1->equipo->nombre }}</span>
-                    <span class="badge bg-dark ms-2">{{ $ganador1->goles }}</span>
+                    <span class="badge">{{ $ganador1->goles }}</span>
                     @else
                     <span class="info-value" style="color: #999;">Por definir</span>
                     @endif
@@ -544,11 +687,11 @@
                     @if($visitante && $visitante->equipo)
                     <img src="{{ asset('storage/public/escudos/' . $visitante->equipo->escudo) }}" alt="" class="equipo-escudo">
                     <span class="info-value">{{ $visitante->equipo->nombre }}</span>
-                    <span class="badge bg-dark ms-2">{{ $visitante->goles }}</span>
+                    <span class="badge">{{ $visitante->goles }}</span>
                     @elseif($ganador2 && $ganador2->equipo)
                     <img src="{{ asset('storage/public/escudos/' . $ganador2->equipo->escudo) }}" alt="" class="equipo-escudo">
                     <span class="info-value">{{ $ganador2->equipo->nombre }}</span>
-                    <span class="badge bg-dark ms-2">{{ $ganador2->goles }}</span>
+                    <span class="badge">{{ $ganador2->goles }}</span>
                     @else
                     <span class="info-value" style="color: #999;">Por definir</span>
                     @endif
@@ -561,37 +704,41 @@
                     📅 {{ $partido->fecha }} @if($partido->hora)⏰ {{ $partido->hora }}@endif
                 </div>
                 @endif
-                <span class="partido-jugado {{ $partido->jugado ? 'jugado-si' : 'jugado-no' }}">
-                    {{ $partido->jugado ? '✓ Jugado' : '⏳ Pendiente' }}
-                </span>
-                @if(!$partido->jugado)
-                    <a href="{{ route('partidos.edit', $partido->id) }}" class="btn btn-primary ms-2">Editar</a>
-                @endif
+                <div class="partido-actions">
+                    <span class="partido-jugado {{ $partido->jugado ? 'jugado-si' : 'jugado-no' }}">
+                        {{ $partido->jugado ? '✓ Jugado' : '⏳ Pendiente' }}
+                    </span>
+                    @if(!$partido->jugado)
+                        <a href="{{ route('partidos.edit', $partido->id) }}" class="btn-editar-partido">
+                            <i class="fas fa-edit"></i> Editar
+                        </a>
+                    @endif
+                </div>
             </div>
+            
             @php
-    $avanza = null;
-    $avanzaDesde = null;
-    foreach($equipos->where('rol', 'Ganador Ronda Anterior') as $pe) {
-        if($pe->equipo) {
-            $avanza = $pe->equipo;
-            // Buscar el partido anterior donde este equipo ganó
-            $prevPartido = $torneo->partidos->where('jugado', true)->filter(function($p) use ($pe) {
-                $eqs = $p->partido_equipos;
-                $local = $eqs->where('rol', 'Local')->first();
-                $visitante = $eqs->where('rol', 'Visitante')->first();
-                if($local && $visitante) {
-                    if($local->goles > $visitante->goles && $local->equipo_id == $pe->equipo_id) return true;
-                    if($visitante->goles > $local->goles && $visitante->equipo_id == $pe->equipo_id) return true;
+                $avanza = null;
+                $avanzaDesde = null;
+                foreach($equipos->where('rol', 'Ganador Ronda Anterior') as $pe) {
+                    if($pe->equipo) {
+                        $avanza = $pe->equipo;
+                        $prevPartido = $torneo->partidos->where('jugado', true)->filter(function($p) use ($pe) {
+                            $eqs = $p->partido_equipos;
+                            $local = $eqs->where('rol', 'Local')->first();
+                            $visitante = $eqs->where('rol', 'Visitante')->first();
+                            if($local && $visitante) {
+                                if($local->goles > $visitante->goles && $local->equipo_id == $pe->equipo_id) return true;
+                                if($visitante->goles > $local->goles && $visitante->equipo_id == $pe->equipo_id) return true;
+                            }
+                            return false;
+                        })->first();
+                        if($prevPartido) $avanzaDesde = $prevPartido->fase;
+                    }
                 }
-                return false;
-            })->first();
-            if($prevPartido) $avanzaDesde = $prevPartido->fase;
-        }
-    }
-@endphp
+            @endphp
 
             @if($avanza && $avanzaDesde)
-                <div class="mt-2" style="color:#00ccff;">
+                <div class="avance-info">
                     <strong>{{ $avanza->nombre }}</strong> avanzó desde {{ $avanzaDesde }}
                 </div>
             @endif
