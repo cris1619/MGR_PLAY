@@ -30,6 +30,14 @@ class TorneosController extends Controller
 
     public function store(Request $request)
     {
+
+        // Validación de equipos pares
+        if (count($request->equipos) % 2 !== 0) {
+            return back()
+                ->with('error', 'No se puede crear el torneo porque el número de equipos es impar. Selecciona un número par de equipos.')
+                ->withInput();
+        }
+
         $request->validate([
             'nombre' => 'required|string',
             'tipo' => 'required|in:Grupos,Liguilla,Eliminacion',

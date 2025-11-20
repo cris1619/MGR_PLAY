@@ -313,6 +313,13 @@
 <div class="edit-card">
     <h2>🏆 Crear Torneo</h2>
 
+    @if(session('error'))
+    <div class="alert alert-danger">
+        {{ session('error') }}
+    </div>
+@endif
+
+
     <form action="{{ route('torneos.store') }}" method="POST">
         @csrf
 
