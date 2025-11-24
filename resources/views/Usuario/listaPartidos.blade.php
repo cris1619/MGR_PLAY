@@ -5,235 +5,260 @@
 @section('titleContent')
 <nav class="navbar">
     <div class="navbar-left">
-        <a href="{{ route('welcome') }}" class="logo">
+        <a href="{{ route('usuario.vistaUsuario') }}" class="logo">
             <img src="{{ url('img/logoSinFondo.png') }}" alt="MGR PLAY">
-            ⚽ PARTIDOS
+            🗓️ LISTADO DE PARTIDOS
         </a>
     </div>
-    <a href="{{ route('welcome') }}" class="btn btn-admin">Volver al Menú</a>
+    <a href="{{ route('usuario.vistaUsuario') }}" class="btn btn-secondary-mgr">🏠 Volver al Menú</a>
 </nav>
 @endsection
 
 @section('content')
 <style>
-/* === NAVBAR === */
+/* =====================
+    ESTILOS GENERALES (BASE OSCURA)
+====================== */
+.container.mt-4 {
+    max-width: 1200px;
+    margin: 30px auto;
+}
+body {
+    background-color: #0f1215;
+}
+
+/* NAVBAR Y LOGO (Re-implementando estilos de navegación mejorados) */
 .navbar {
     background-color: #101317;
-    padding: 10px 20px;
-    height: 65px;
+    padding: 15px 30px;
     display: flex;
     align-items: center;
     justify-content: space-between;
-    box-shadow: 0 4px 10px rgba(0,0,0,0.4);
-    border-bottom: 2px solid #16A34A;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.4);
+    border-bottom: 3px solid #16A34A; /* Borde verde fuerte */
 }
-.navbar-left {
-    display: flex;
-    align-items: center;
-    gap: 30px;
-}
+.navbar-left { display: flex; align-items: center; }
 .logo {
-    display: flex;
-    align-items: center;
-    color: #fff;
-    font-size: 18px;
-    font-weight: bold;
+    display: flex; align-items: center;
+    color: #E5E7EB; font-weight: 700; font-size: 1.2rem;
     text-decoration: none;
     transition: all 0.3s ease;
 }
-.logo img { height: 48px; margin-right: 15px; }
-.logo:hover { transform: scale(1.05); color: #22C55E; }
+.logo img { 
+    height: 40px; margin-right: 12px;
+    transition: all 0.3s ease;
+}
 
-/* === HERO === */
+/* --- ESTILOS DE FILTROS --- */
+.filter-box {
+    background-color: #1E2126;
+    padding: 25px;
+    border-radius: 15px;
+    margin-bottom: 30px;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.4);
+    display: flex;
+    gap: 20px;
+    align-items: flex-end; /* Alinea botones y selects */
+}
+.filter-group {
+    flex-grow: 1;
+}
+.filter-group label {
+    display: block;
+    color: #FACC15;
+    margin-bottom: 8px;
+    font-weight: 600;
+    font-size: 0.95rem;
+}
+.filter-group select {
+    width: 100%;
+    padding: 10px;
+    border-radius: 8px;
+    border: 1px solid #4B5563;
+    background-color: #2a2e33;
+    color: #E5E7EB;
+    appearance: none; /* Elimina estilo nativo del select */
+    transition: border-color 0.2s;
+}
+.filter-group select:focus {
+    border-color: #22C55E;
+    outline: none;
+}
+.btn-filter {
+    background-color: #0EA5E9; /* Azul para el filtro */
+    color: white;
+    padding: 10px 20px;
+    border: none;
+    border-radius: 8px;
+    font-weight: 700;
+    cursor: pointer;
+    transition: background-color 0.2s;
+}
+.btn-filter:hover {
+    background-color: #3B82F6;
+}
+
+@media (max-width: 768px) {
+    .filter-box {
+        flex-direction: column;
+        align-items: stretch;
+    }
+}
+
+/* BOTONES (Re-implementando clases mejoradas) */
+.btn-primary-mgr, .btn-secondary-mgr {
+    padding: 10px 20px;
+    border-radius: 10px;
+    font-weight: 700;
+    text-decoration: none;
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
+    border: none;
+    font-size: 1rem;
+}
+.btn-secondary-mgr {
+    background-color: #374151; /* Gris oscuro */
+    color: #F3F4F6; /* Blanco claro */
+    border: 1px solid #4B5563;
+}
+.btn-secondary-mgr:hover {
+    background-color: #4B5563;
+    transform: translateY(-2px);
+    box-shadow: 0 6px 15px rgba(0, 0, 0, 0.5);
+}
+.btn-info-mgr { /* Estilo específico para el botón de 'Ver' */
+    background-color: #0EA5E9; /* Azul vibrante */
+    color: white;
+    padding: 6px 15px;
+    border-radius: 25px;
+    font-weight: 600;
+    transition: background-color 0.2s, transform 0.2s;
+}
+.btn-info-mgr:hover {
+    background-color: #3B82F6;
+    transform: translateY(-1px);
+}
+
+
+/* HERO Y TÍTULO */
 .hero-section {
-    background: linear-gradient(135deg, #1B1F23 0%, #2E353C 100%);
-    padding: 50px 20px;
+    background: linear-gradient(135deg, #1f2429, #2a3036);
+    padding: 30px 20px; /* Padding ajustado */
     border-radius: 18px;
     text-align: center;
-    margin-bottom: 45px;
-    box-shadow: 0 8px 20px rgba(0,0,0,0.35);
-    animation: fadeIn 1s ease-out;
+    margin-bottom: 40px;
+    box-shadow: 0 8px 20px rgba(0,0,0,0.5);
+    border-top: 5px solid #FACC15; /* Detalle amarillo */
 }
 .hero-section h1 {
     color: #F8FAFC;
-    font-weight: 700;
-    font-size: 2.4rem;
+    font-weight: 800;
+    font-size: 2.5rem; /* Título más grande */
+    margin-bottom: 5px;
 }
-.hero-section p {
-    color: #cbd5e1;
-    font-size: 1.1rem;
+.hero-section p { color: #9CA3AF; font-size: 1.1rem; }
+
+/* TÍTULO DE SECCIÓN SECUNDARIO */
+.section-title {
+    color: #FACC15; /* Amarillo para contraste */
+    text-align: center;
+    margin-bottom: 30px;
+    font-size: 2rem;
+    font-weight: 800;
+    text-transform: none; /* Quitamos uppercase para mejor legibilidad */
 }
 
-/* === BOTONES === */
-.btn-admin {
-    background: linear-gradient(135deg, #16A34A, #22C55E);
-    color: white;
-    border: none;
-    padding: 10px 25px;
-    border-radius: 30px;
-    font-weight: 600;
-    transition: all 0.3s ease;
-    box-shadow: 0 4px 10px rgba(22,163,74,0.3);
+/* --- ESTILOS DE LA TABLA MEJORADOS --- */
+.table-responsive {
+    border-radius: 15px;
+    overflow-x: auto;
+    box-shadow: 0 8px 25px rgba(0, 0, 0, 0.5);
 }
-.btn-admin:hover {
-    background: linear-gradient(135deg, #22C55E, #16A34A);
-    transform: translateY(-2px) scale(1.03);
-    box-shadow: 0 6px 14px rgba(22,163,74,0.5);
-    color: #fff;
-}
-
-/* === TABLA === */
 .table {
     background-color: #1B1F23;
     color: #E5E7EB;
-    border-radius: 15px;
-    overflow: hidden;
-    text-align: center;
+    border-collapse: separate;
+    border-spacing: 0;
+    width: 100%;
+}
+.table th, .table td {
+    padding: 15px 15px; /* Más padding para aire */
+    border-bottom: 1px solid #2f3338;
 }
 .table th {
     background-color: #252A30;
     color: #22C55E;
-    font-weight: 700;
     text-transform: uppercase;
-    border: none;
-}
-.table-hover tbody tr:hover {
-    background-color: rgba(34,197,94,0.08);
-    transition: background 0.3s ease;
-}
-.table td {
-    vertical-align: middle;
-    padding: 12px;
-    border-color: #2a2e33;
-}
-
-/* === BOTONES TABLA === */
-.btn-success, .btn-warning, .btn-info {
-    border-radius: 25px;
-    font-weight: 600;
-    padding: 6px 14px;
     font-size: 0.9rem;
 }
-.btn-success {
-    background: linear-gradient(135deg, #16A34A, #22C55E);
-    border: none;
-    color: #fff;
+.table-hover tbody tr:hover {
+    background-color: #2a2e33;
+    transition: 0.3s;
 }
-.btn-success:hover {
-    transform: scale(1.05);
-    box-shadow: 0 4px 10px rgba(22,163,74,0.3);
-}
-.btn-info {
-    background: linear-gradient(135deg, #0EA5E9, #06B6D4);
-    border: none;
-    color: #fff;
-}
-.btn-info:hover {
-    transform: scale(1.05);
-    box-shadow: 0 4px 10px rgba(14,165,233,0.3);
-}
-.btn-warning {
-    background: linear-gradient(135deg, #F59E0B, #FACC15);
-    color: #1B1F23;
-    border: none;
-}
-.btn-warning:hover {
-    transform: scale(1.05);
-    box-shadow: 0 4px 10px rgba(250,204,21,0.3);
+.table tbody tr:last-child td {
+    border-bottom: none; /* Eliminar el borde de la última fila */
 }
 
-/* === MARCADOR === */
+/* MARCADOR */
 .marcador {
     display: flex;
     flex-direction: column;
-    gap: 5px;
-    align-items: center;
+    gap: 4px; /* Espacio más pequeño */
+    font-size: 0.95rem;
 }
 .marcador-item {
     display: flex;
-    align-items: center;
     justify-content: space-between;
-    width: 100%;
-    padding: 5px 10px;
+    align-items: center;
     background-color: #2a2e33;
-    border-radius: 8px;
-    font-weight: 600;
+    padding: 4px 8px; /* Padding ajustado */
+    border-radius: 6px;
 }
 .goles-badge {
-    background: linear-gradient(135deg, #22C55E, #16A34A);
-    color: white;
-    padding: 4px 12px;
-    border-radius: 20px;
-    font-weight: bold;
+    background: #22C55E; /* Fondo verde sólido */
+    color: #101317; /* Texto oscuro */
+    padding: 4px 10px;
+    border-radius: 15px;
+    font-weight: 800;
     min-width: 35px;
     text-align: center;
 }
 
-/* === EQUIPOS === */
-.equipos-list {
-    display: flex;
-    flex-direction: column;
-    gap: 8px;
-}
-.equipo-item {
-    background-color: #2a2e33;
-    padding: 8px 12px;
-    border-radius: 8px;
-    font-weight: 600;
-    color: #E5E7EB;
-    border-left: 3px solid #22C55E;
-}
-
-/* === FASE BADGE === */
+/* FASE */
 .fase-badge {
     background: linear-gradient(135deg, #8B5CF6, #A78BFA);
     color: white;
-    padding: 6px 14px;
+    padding: 4px 10px;
     border-radius: 20px;
     font-weight: 600;
-    display: inline-block;
+    font-size: 0.85rem;
 }
 
-/* === TITULO SECCION === */
-.section-title {
-    color: #22C55E;
-    font-size: 1.8rem;
+/* ESTADO */
+.badge {
+    padding: 6px 12px;
+    border-radius: 18px;
     font-weight: 700;
-    text-align: center;
-    text-transform: uppercase;
-    margin-bottom: 25px;
-    letter-spacing: 2px;
-    position: relative;
-    padding-bottom: 10px;
+    font-size: 0.9rem;
+    color: #101317; /* Texto oscuro */
 }
-.section-title::after {
-    content: '';
-    position: absolute;
-    bottom: 0;
-    left: 50%;
-    transform: translateX(-50%);
-    width: 100px;
-    height: 3px;
-    background: linear-gradient(90deg, transparent, #22C55E, transparent);
-}
+.bg-success { background-color: #10B981 !important; } /* Jugado */
+.bg-danger { background-color: #F59E0B !important; } /* Pendiente (Usamos Naranja) */
 
-/* === ANIMACIONES === */
-@keyframes fadeIn { from {opacity: 0; transform: translateY(20px);} to {opacity: 1; transform: translateY(0);} }
-.highlight { animation: fadeIn 0.8s ease-out; }
-
-/* === RESPONSIVE === */
+/* RESPONSIVE */
 @media (max-width: 768px) {
-    .navbar-left img { height: 40px; }
-    .hero-section h1 { font-size: 1.8rem; }
-    .btn-admin { width: 100%; margin-bottom: 10px; }
+    .hero-section h1 { font-size: 2rem; }
     .table-responsive { font-size: 0.85rem; }
-    .marcador-item { font-size: 0.85rem; }
-    .btn-success, .btn-warning, .btn-info { 
-        padding: 5px 10px; 
-        font-size: 0.8rem; 
-    }
+    .table th, .table td { padding: 10px 8px; }
 }
-</style>
+@media (max-width: 480px) {
+    .logo img { height: 30px; margin-right: 5px; }
+    .logo { font-size: 1rem; }
+}
 </style>
 
 <div class="container mt-4">
@@ -244,64 +269,111 @@
 
     <h2 class="section-title">📋 Listado de Partidos</h2>
 
-    {{-- SIN BOTÓN DE CREAR PARTIDO, PORQUE ES SOLO PARA USUARIOS --}}
-    
+    <form method="GET" action="{{ route(Route::currentRouteName()) }}">
+        <div class="filter-box">
+            
+            <div class="filter-group">
+                <label for="torneo_id">Filtrar por Torneo:</label>
+                <select name="torneo_id" id="torneo_id">
+                    <option value="">-- Todos los Torneos --</option>
+                    @foreach ($torneos as $torneo)
+                        <option value="{{ $torneo->id }}" 
+                            {{ request('torneo_id') == $torneo->id ? 'selected' : '' }}>
+                            {{ $torneo->nombre }}
+                        </option>
+                    @endforeach
+                </select>
+            </div>
+
+            <div class="filter-group">
+                <label for="municipio_id">Filtrar por Municipio:</label>
+                <select name="municipio_id" id="municipio_id">
+                    <option value="">-- Todos los Municipios --</option>
+                    @foreach ($municipios as $municipio)
+                        <option value="{{ $municipio->id }}" 
+                            {{ request('municipio_id') == $municipio->id ? 'selected' : '' }}>
+                            {{ $municipio->nombre }}
+                        </option>
+                    @endforeach
+                </select>
+            </div>
+
+            <button type="submit" class="btn-filter">
+                🔍 Aplicar Filtros
+            </button>
+        </div>
+    </form>
+
     <div class="table-responsive">
         <table class="table table-hover text-center align-middle">
             <thead>
                 <tr>
                     <th>#</th>
-                    <th>📅 Fecha</th>
-                    <th>🕐 Hora</th>
+                    <th>📅 Fecha/Hora</th>
                     <th>🏆 Fase</th>
                     <th>⚽ Equipos - Marcador</th>
                     <th>📍 Estado</th>
-                    <th>⚙️ Ver</th>
+                    <th>⚙️ Acciones</th>
                 </tr>
             </thead>
             <tbody>
                 @forelse($partidos as $partido)
                     <tr>
                         <td><strong>{{ $partido->id }}</strong></td>
-                        <td>{{ \Carbon\Carbon::parse($partido->fecha)->format('d/m/Y') }}</td>
-                        <td>{{ \Carbon\Carbon::parse($partido->hora)->format('H:i') }}</td>
-                        <td>
-                            <span class="fase-badge">{{ ucfirst($partido->fase) }}</span>
+
+                        <td style="white-space: nowrap;">
+                            <strong>{{ \Carbon\Carbon::parse($partido->fecha)->format('d/m/Y') }}</strong><br>
+                            <small class="text-muted">{{ \Carbon\Carbon::parse($partido->hora)->format('H:i') }} hrs</small>
                         </td>
+
+                        <td><span class="fase-badge">{{ ucfirst($partido->fase) }}</span></td>
+
                         <td>
                             <div class="marcador">
                                 @foreach($partido->equipos as $equipo)
                                     <div class="marcador-item">
                                         <span>{{ $equipo->nombre }}</span>
-                                        <span class="goles-badge">{{ $equipo->pivot->goles ?? 0 }}</span>
+                                        <span class="goles-badge">
+                                            {{ $equipo->pivot->goles ?? 0 }}
+                                        </span>
                                     </div>
                                 @endforeach
                             </div>
                         </td>
+
                         <td>
                             <span class="badge {{ $partido->jugado ? 'bg-success' : 'bg-danger' }}">
                                 {{ $partido->jugado ? '✅ Jugado' : '⏳ Pendiente' }}
                             </span>
                         </td>
+
                         <td>
-                            <a href="" class="btn btn-info btn-sm">
+                            <a href="{{ route('partidos.show', $partido->id) }}" 
+                                class="btn btn-info-mgr">
                                 👁️ Ver Detalles
                             </a>
                         </td>
                     </tr>
+
                 @empty
                     <tr>
-                        <td colspan="7" class="text-center text-muted py-4">
-                            ⚠️ No hay partidos disponibles
+                        <td colspan="6" class="text-center text-muted py-4" style="background-color: #2a2e33; border-radius: 0 0 15px 15px;">
+                            ⚠️ No hay partidos disponibles para mostrar.
                         </td>
                     </tr>
                 @endforelse
             </tbody>
         </table>
     </div>
+    
+    @if ($partidos->lastPage() > 1)
+        <div class="d-flex justify-content-center mt-4">
+            {{ $partidos->links() }} 
+        </div>
+    @endif
 
     <div class="text-center mt-5">
-        <a href="{{ route('welcome') }}" class="btn btn-admin">⬅️ Volver al Menú</a>
+        <a href="{{ route('usuario.vistaUsuario') }}" class="btn btn-secondary-mgr">⬅️ Volver al Menú</a>
     </div>
 </div>
 @endsection

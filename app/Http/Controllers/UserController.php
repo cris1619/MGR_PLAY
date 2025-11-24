@@ -7,6 +7,7 @@ use App\Models\Equipos;
 use App\Models\Jugadores;
 use App\Models\municipios;
 use App\Models\Partido;
+use App\Models\Torneos;
 use App\Services\userService;
 use Illuminate\Http\Request;
 
@@ -95,11 +96,52 @@ class UserController extends Controller
     return view('usuario.listaJugadores', compact('jugadores', 'equipos'));
 }
 
-    public function listaPartidos()
+public function listaPartidos(Request $request)
 {
-    $partidos = Partido::with('equipos')->get();
-    return view('usuario.listaPartidos', compact('partidos'));
+    // 1. Cargar las variables necesarias para los filtros (Selects)
+    $municipios = municipios::orderBy('nombre')->get();
+    $torneos = Torneos::orderBy('nombre')->get(); 
+    
+    // 2. Iniciar la consulta de Partidos con las relaciones necesarias
+    $query = Partido::with('equipos');
+
+    // 3. Aplicar Filtro por Municipio (CORREGIDO: Usando 'id_municipio')
+    if ($request->filled('municipio_id')) {
+        // El valor viene de la vista como 'municipio_id', pero el filtro usa 'id_municipio'
+        $query->where('id_municipio', $request->municipio_id); 
+    }
+    
+    // 4. Aplicar Filtro por Torneo (CORREGIDO: Usando 'id_torneo')
+    if ($request->filled('torneo_id')) {
+        // El valor viene de la vista como 'torneo_id', pero el filtro usa 'id_torneo'
+        $query->where('id_torneo', $request->torneo_id);
+    }
+    
+    // 5. Obtener los resultados paginados con los filtros aplicados
+    $partidos = $query->paginate(15)->withQueryString(); 
+
+    // 6. Enviar todas las variables a la vista
+    return view('Usuario.listaPartidos', compact('partidos', 'municipios', 'torneos'));
 }
 
+public function listaTorneos(Request $request)
+    {
+        // Iniciar la consulta del modelo Torneo
+        $query = Torneos::query();
+
+        // Aplicar filtro por nombre (si se ha introducido)
+        if ($request->filled('search')) {
+            $query->where('nombre', 'like', '%' . $request->search . '%');
+        }
+
+        // Obtener los torneos paginados (incluyendo los parámetros de búsqueda)
+        $torneos = $query->with('municipio') // Asegúrate de cargar la relación 'municipio'
+                        ->orderBy('estado', 'asc') // Poner los activos primero
+                        ->orderBy('fecha_inicio', 'desc')
+                        ->paginate(12)
+                        ->withQueryString();
+
+        return view('torneos.index', compact('torneos'));
+    }
 
 }
