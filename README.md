@@ -69,7 +69,14 @@ MGR PLAY es una aplicación web desarrollada con Laravel y Vite, orientada a la 
    ```powershell
    php artisan migrate --seed
    ```
-6. Inicia el servidor:
+6. Activar public para gestionar imagenes:
+   ```
+   php artisan storage:link
+   -Ir archivo .env
+   -FILESYSTEM_DISK=local -> asi esta
+   -FILESYSTEM_DISK=public -> asi debe quedar
+   ```
+7. Inicia el servidor:
    ```powershell
    npm run dev
    php artisan serve
