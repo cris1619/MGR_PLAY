@@ -35,28 +35,14 @@ Equipos | MGR PLAY
     }
 
     .filter-card {
-        background: linear-gradient(135deg, rgba(16, 19, 23, 0.98) 0%, rgba(27, 31, 35, 0.98) 100%);
-        border: 2px solid #22C55E;
-        border-radius: 20px;
-        padding: 25px;
-        margin-bottom: 35px;
-        backdrop-filter: blur(15px);
-        box-shadow: 0 8px 25px rgba(34, 197, 94, 0.15);
-        position: relative;
-    }
-
-    .filter-card::before {
-        content: '';
-        position: absolute;
-        inset: 0;
-        border-radius: 20px;
-        padding: 2px;
-        background: linear-gradient(135deg, #22C55E, #15803D);
-        -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
-        -webkit-mask-composite: xor;
-        mask-composite: exclude;
-        opacity: 0.3;
-    }
+    background: linear-gradient(145deg, #1C2025 0%, #272C31 100%);
+    border: 1px solid #16A34A50;
+    border-radius: 18px;
+    padding: 25px;
+    margin-bottom: 30px;
+    box-shadow: 0 6px 12px rgba(0,0,0,0.3);
+    transition: all 0.3s ease;
+}
 
     .team-card {
         background: linear-gradient(145deg, #101317 0%, #1B1F23 50%, #101317 100%);
@@ -278,7 +264,7 @@ Equipos | MGR PLAY
     <h2 class="text-white mb-4">👥 Equipos Registrados</h2>
 
     <!-- 🔍 Barra de filtros -->
-    <div class="filter-card shadow-lg">
+    <div class="filter-card mb-4">
         <form method="GET" action="{{ route('usuario.listaEquipos') }}" class="row g-3 align-items-end">
 
             <!-- Municipio -->

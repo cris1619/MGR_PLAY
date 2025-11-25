@@ -37,28 +37,30 @@ class UserController extends Controller
 {
     $query = Equipos::with('municipio');
 
-    // Filtrar por municipio
-    if ($request->filled('IdMunicipio')) {
-        $query->where('idMunicipio', $request->IdMunicipio);
-    }
+        // Buscar por nombre
+        if ($request->filled('search')) {
+            $query->where('nombre', 'like', '%' . $request->search . '%');
+        }
 
-    // Buscar por nombre
-    if ($request->filled('search')) {
-        $query->where('nombre', 'like', '%' . $request->search . '%');
-    }
+        // Buscar por municipio
+        if ($request->filled('IdMunicipio')) {
+            $query->where('IdMunicipio', $request->IdMunicipio);
+        }
 
-    // Paginación o todos
-    if ($request->per_page === 'all') {
-        $equipos = $query->get();
-    } else {
-        $perPage = $request->input('per_page', 10); // default 10
-        $equipos = $query->paginate($perPage)->appends($request->all());
-    }
+        // 🔹 Límite de registros (10, 25, 50 o todos)
+        $perPage = $request->input('per_page', 10); // por defecto 10
 
-    $municipios = Municipios::all();
+        if ($perPage == 'all') {
+            $equipos = $query->get(); // trae todos
+        } else {
+            $equipos = $query->paginate((int)$perPage)->appends($request->query());
+        }
 
-    return view('Usuario.listaEquipos', compact('equipos', 'municipios'));
+        $municipios = Municipios::all();
+
+        return view('Usuario.listaEquipos', compact('equipos', 'municipios', 'perPage'));
 }
+
    public function listaJugadores(Request $request)
 {
     // Filtros
