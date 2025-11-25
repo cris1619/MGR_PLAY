@@ -72,7 +72,7 @@ class JugadoresController extends Controller
     public function store(Request $request)
     {
         Jugadores::create($request->all());
-        return redirect()->route('jugadores.index')->with('success', 'Jugador creado correctamente ✅');
+        return redirect()->route('jugadores.index')->with('success', 'Jugador creado correctamente');
     }
 
 

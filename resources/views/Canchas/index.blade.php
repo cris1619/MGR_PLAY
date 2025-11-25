@@ -329,13 +329,13 @@
                             </a>
 
                             <form action="{{ route('canchas.destroy', $cancha->id) }}" 
-                                  method="POST" 
-                                  onsubmit="return confirm('¿Estás seguro de eliminar esta cancha?')">
-                                @csrf
-                                <button type="submit" class="btn-secondary"">
-                                    🗑️ Eliminar
-                                </button>
-                            </form>
+                                    method="POST" 
+                                    class="delete-cancha-form">
+                                    @csrf
+                                    <button type="button" class="btn-secondary delete-cancha-btn">
+                                        🗑️ Eliminar
+                                    </button>
+                                </form>
                         </div>
                     </div>
                 </div>
@@ -351,4 +351,84 @@
         <a href="{{ route('welcome') }}" class="btn btn-admin">Volver al menú</a>
     </div>
 </div>
+
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
+<script>
+document.querySelectorAll('.delete-cancha-btn').forEach(button => {
+    button.addEventListener('click', function () {
+
+        let form = this.closest('.delete-cancha-form');
+
+        Swal.fire({
+            title: '¿Eliminar cancha?',
+            text: "Esta acción no se puede deshacer.",
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonColor: '#22C55E',
+            cancelButtonColor: '#d33',
+            confirmButtonText: 'Sí, eliminar',
+            cancelButtonText: 'Cancelar'
+        }).then((result) => {
+            if (result.isConfirmed) {
+                form.submit();
+            }
+        });
+
+    });
+});
+</script>
+@if(session('success'))
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        Swal.fire({
+            icon: 'success',
+            title: '¡Éxito!',
+            text: "{{ session('success') }}",
+            confirmButtonText: 'Aceptar',
+            timer: 3000
+        });
+    });
+</script>
+@endif
+@if(session('success'))
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        Swal.fire({
+            icon: 'success',
+            title: '¡Éxito!',
+            text: "{{ session('success') }}",
+            confirmButtonText: 'Aceptar',
+            timer: 3000
+        });
+    });
+</script>
+@endif
+
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
+<script>
+document.querySelectorAll('.delete-cancha-btn').forEach(button => {
+    button.addEventListener('click', function () {
+        let form = this.closest('.delete-cancha-form');
+
+        Swal.fire({
+            title: '¿Eliminar cancha?',
+            text: "Esta acción no se puede deshacer.",
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonColor: '#22C55E',
+            cancelButtonColor: '#d33',
+            confirmButtonText: 'Sí, eliminar',
+            cancelButtonText: 'Cancelar'
+        }).then((result) => {
+            if (result.isConfirmed) {
+                form.submit();
+            }
+        });
+
+    });
+});
+</script>
+
 @endsection

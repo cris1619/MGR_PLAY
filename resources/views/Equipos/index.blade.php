@@ -322,11 +322,10 @@
                         </td>
                         <td>
                             <a href="{{ route('equipos.edit', $equipo->id) }}" class="btn btn-success btn-sm">✏️ Editar</a>
-                            <form action="{{ route('equipos.destroy', $equipo->id) }}" method="POST" class="d-inline" 
-                                  onsubmit="return confirm('¿Estás seguro de eliminar este equipo?')">
-                                @csrf
-                                <button type="submit" class="btn btn-warning btn-sm">🗑️ Eliminar</button>
-                            </form>
+                        <form action="{{ route('equipos.destroy', $equipo->id) }}" method="POST" class="delete-equipo-form d-inline">
+                            @csrf
+                            <button type="button" class="btn btn-warning btn-sm delete-equipo-btn">🗑️ Eliminar</button>
+                        </form>
                         </td>
                     </tr>
                 @empty
@@ -364,4 +363,28 @@ document.addEventListener('DOMContentLoaded', function() {
 });
 </script>
 @endif
+<script>
+document.querySelectorAll('.delete-equipo-btn').forEach(button => {
+    button.addEventListener('click', function () {
+        let form = this.closest('.delete-equipo-form');
+
+        Swal.fire({
+            title: '¿Eliminar equipo?',
+            text: "Esta acción no se puede deshacer.",
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonColor: '#22C55E',
+            cancelButtonColor: '#d33',
+            confirmButtonText: 'Sí, eliminar',
+            cancelButtonText: 'Cancelar'
+        }).then((result) => {
+            if (result.isConfirmed) {
+                form.submit();
+            }
+        });
+
+    });
+});
+</script>
+
 @endsection
