@@ -283,7 +283,7 @@
                 MALAGA GARCÍA ROVIRA PLAY
             </a>
             <ul class="nav-menu">
-                <li><a href="#">Torneos</a></li>
+                <li><a href="{{ route('usuario.listaTorneos') }}">Torneos</a></li>
                 <li><a href="{{ route('usuario.listaEquipos') }}">Equipos</a></li>
                 <li><a href="{{ route('usuario.listaJugadores') }}">Jugadores</a></li>
                 <li><a href="{{ route('usuario.listaPartidos') }}">Partidos</a></li>
@@ -306,16 +306,6 @@
             <a href="{{ route('logout') }}">Cerrar sesión</a>
         </div>
     </nav>
-
-    <div class="top-news">
-        <ul class="nav-menu2">
-            <li><a href="#">⭐ Favoritos</a></li>
-            <li><a href="#">⚽ Fútbol</a></li>
-            <li><a href="#">🥅 Fútbol-5</a></li>
-            <li><a href="#">🏃 Fútbol-8</a></li>
-            <li><a href="#">🎯 Microfútbol</a></li>
-        </ul>
-    </div>
 
     <div class="container main-content">
         <div class="row">

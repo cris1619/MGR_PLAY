@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Canchas;
+use App\Models\Clasificacion;
 use App\Models\Equipos;
 use App\Models\Jugadores;
 use App\Models\municipios;
@@ -141,7 +142,27 @@ public function listaTorneos(Request $request)
                         ->paginate(12)
                         ->withQueryString();
 
-        return view('torneos.index', compact('torneos'));
+        return view('Usuario.listaTorneos', compact('torneos'));
     }
+
+    public function listaTorneosShow($id)
+{
+    $torneo = Torneos::findOrFail($id);
+
+    $partidos = Partido::where('id_torneo', $id)
+        ->with(['partido_equipos.equipo'])
+        ->orderBy('fase') // ordenar por fase: Octavos, Cuartos, Semis, Final
+        ->get();
+
+    $clasificacion = null;
+
+    if ($torneo->tipo === 'liga' || $torneo->tipo === 'grupos') {
+        $clasificacion = Clasificacion::where('id_torneo', $id)
+            ->with('equipo')
+            ->get();
+    }
+
+    return view('Usuario.listaTorneosShow', compact('torneo', 'partidos', 'clasificacion'));
+}
 
 }

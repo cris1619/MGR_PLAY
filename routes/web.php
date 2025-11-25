@@ -40,6 +40,7 @@ Route::get('/usuario/listaEquipos', [UserController::class, 'listaEquipos'])->na
 Route::get('/usuario/listaJugadores', [UserController::class, 'listaJugadores'])->name('usuario.listaJugadores');
 Route::get('/usuario/listaPartidos', [UserController::class, 'listaPartidos'])->name('usuario.listaPartidos');
 Route::get('/usuario/listaTorneos', [UserController::class, 'listaTorneos'])->name('usuario.listaTorneos');
+Route::get('/usuario/listaTorneosShow/{id}', [UserController::class, 'listaTorneosShow'])->name('usuario.listaTorneosShow');
 
 
 
