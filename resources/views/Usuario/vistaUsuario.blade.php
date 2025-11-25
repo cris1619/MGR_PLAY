@@ -35,15 +35,6 @@
             min-height: 100vh;
         }
 
-        body::before {
-            content: "";
-            position: fixed;
-            inset: 0;
-            background: rgba(0, 0, 0, 0.75);
-            backdrop-filter: blur(4px);
-            z-index: -1;
-        }
-
         /* NAVBAR */
         .navbar {
             background: linear-gradient(90deg, #0f0f0f, #1a1f24);
@@ -274,7 +265,6 @@
         }
     </style>
 </head>
-
 <body>
     <nav class="navbar d-flex justify-content-between align-items-center">
         <div class="navbar-left">
@@ -291,18 +281,15 @@
         </div>
 
         <div class="navbar-right">
-            <button class="icon-btn" title="Buscar">
-                <svg viewBox="0 0 24 24" fill="currentColor">
-                    <path d="M15.5 14h-.79l-.28-.27A6.471 6.471 0 0016 9.5 6.5 6.5 0 109.5 16a6.471 6.471 0 004.23-1.57l.27.28h.79l5 4.99L20.49 19l-4.99-5zM9.5 14A4.5 4.5 0 115 9.5 4.5 4.5 0 019.5 14z"/>
-                </svg>
-            </button>
 
-            <button class="icon-btn" title="Usuario">
+            <a href="" class="icon-btn admin-btn" title="Usuario">
                 <svg viewBox="0 0 24 24" fill="currentColor">
                     <path d="M12 12c2.67 0 8 1.34 8 4v3H4v-3c0-2.66 5.33-4 8-4zm0-2c-1.1 0-2-.9-2-2s.9-2 2-2 
                     2 .9 2 2-.9 2-2 2z"/>
                 </svg>
-            </button>
+                <span>{{ $admin->nombre }}</span>
+            </a>
+
             <a href="{{ route('logout') }}">Cerrar sesión</a>
         </div>
     </nav>
@@ -410,4 +397,10 @@
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js"></script>
 </body>
+<footer>
+        <div class=" p-4 text-center text-white">
+            Realizado por - @@Cristian Fernando Solano Villamizar - <br>
+            @@Juan David Carrillo Mojica <br>
+            2025</div>
+    </footer>
 </html>

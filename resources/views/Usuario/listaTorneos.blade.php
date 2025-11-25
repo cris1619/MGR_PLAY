@@ -2,16 +2,34 @@
 
 @section('title', 'Torneos | MGR PLAY')
 
-@section('titleContent')
-<nav class="navbar">
-    <div class="navbar-left">
-        <a href="{{ route('usuario.vistaUsuario') }}" class="logo">
-            <img src="{{ url('img/logoSinFondo.png') }}" alt="MGR PLAY" style="height: 50px; margin-right: 30px;">
-            ⚽ TORNEOS
-        </a>
-    </div>
-    <a href="{{ route('usuario.vistaUsuario') }}" class="btn btn-secondary">Volver al menú</a>
-</nav>
+
+<nav class="navbar d-flex justify-content-between align-items-center">
+        <div class="navbar-left">
+            <a href="{{ route('usuario.vistaUsuario') }}" class="logo">
+                <img src="{{ url('img/logoSinFondo.png') }}" alt="MGR PLAY">
+                MALAGA GARCÍA ROVIRA PLAY
+            </a>
+            <ul class="nav-menu">
+                <li><a href="{{ route('usuario.listaTorneos') }}">Torneos</a></li>
+                <li><a href="{{ route('usuario.listaEquipos') }}">Equipos</a></li>
+                <li><a href="{{ route('usuario.listaJugadores') }}">Jugadores</a></li>
+                <li><a href="{{ route('usuario.listaPartidos') }}">Partidos</a></li>
+            </ul>
+        </div>
+
+        <div class="navbar-right">
+
+            <a href="" class="icon-btn admin-btn" title="Usuario">
+                <svg viewBox="0 0 24 24" fill="currentColor">
+                    <path d="M12 12c2.67 0 8 1.34 8 4v3H4v-3c0-2.66 5.33-4 8-4zm0-2c-1.1 0-2-.9-2-2s.9-2 2-2 
+                    2 .9 2 2-.9 2-2 2z"/>
+                </svg>
+                <span>{{ $admin->nombre }}</span>
+            </a>
+
+            <a href="{{ route('logout') }}">Cerrar sesión</a>
+        </div>
+    </nav>
 
 @section('content')
 
@@ -31,6 +49,75 @@ body {
     background-color: var(--gris-oscuro);
     color: var(--blanco);
 }
+
+/* NAVBAR */
+        .navbar {
+            background: linear-gradient(90deg, #0f0f0f, #1a1f24);
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.6);
+            padding: 10px 30px;
+        }
+
+        .navbar-left {
+            display: flex;
+            align-items: center;
+            gap: 25px;
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            text-decoration: none;
+            color: var(--blanco);
+            font-weight: bold;
+            letter-spacing: 1px;
+            transition: all 0.3s ease;
+        }
+
+        .logo img {
+            height: 50px;
+            margin-right: 15px;
+        }
+
+        .logo:hover {
+            color: var(--verde-neon);
+            transform: scale(1.05);
+        }
+
+        .nav-menu {
+            display: flex;
+            list-style: none;
+            gap: 20px;
+        }
+
+        .nav-menu li a {
+            text-decoration: none;
+            color: #ddd;
+            padding: 8px 14px;
+            border-radius: 6px;
+            transition: all 0.3s ease;
+        }
+
+        .nav-menu li a:hover {
+            color: var(--verde-neon);
+            background-color: rgba(255, 255, 255, 0.08);
+        }
+
+        .navbar-right {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .navbar-right a {
+            color: var(--blanco);
+            text-decoration: none;
+            font-weight: bold;
+            transition: color 0.3s ease;
+        }
+
+        .navbar-right a:hover {
+            color: var(--verde-neon);
+        }
 
 /* === HEADER SECTION === */
 .torneos-header {

@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Equipos;
 use App\Models\municipios;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Storage;
 
 class EquiposController extends Controller
@@ -87,11 +88,12 @@ class EquiposController extends Controller
      */
 public function show($id)
 {
+    $admin = $admin = Auth::user();;
     $equipo = Equipos::with('municipio')
         ->withCount(['partidos', 'jugadores'])
         ->findOrFail($id);
     
-    return view('equipos.show', compact('equipo'));
+    return view('equipos.show', compact('equipo','admin'));
 }
 
 

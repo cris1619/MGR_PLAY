@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Admin;
 use App\Models\Canchas;
 use App\Models\Clasificacion;
 use App\Models\Equipos;
@@ -11,6 +12,7 @@ use App\Models\Partido;
 use App\Models\Torneos;
 use App\Services\userService;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 
 class UserController extends Controller
 {
@@ -24,17 +26,19 @@ class UserController extends Controller
     {
         $municipios = municipios::all();
         $canchas = Canchas::all();
+        $admin = Auth::user();
         $accesosRapidos = [
             'totalJugadores' => $this->userService->totalJugadores(),
             'totalEquipos' => $this->userService->totalEquipos(),
             'totalCanchas' => $this->userService->totalCanchas(),
         ];
 
-        return view('usuario.vistaUsuario', compact('municipios', 'canchas', 'accesosRapidos'));
+        return view('usuario.vistaUsuario', compact('municipios', 'canchas', 'accesosRapidos', 'admin'));
     }
 
     public function listaEquipos(Request $request)
 {
+    $admin = Auth::user();
     $query = Equipos::with('municipio');
 
         // Buscar por nombre
@@ -58,12 +62,13 @@ class UserController extends Controller
 
         $municipios = Municipios::all();
 
-        return view('Usuario.listaEquipos', compact('equipos', 'municipios', 'perPage'));
+        return view('Usuario.listaEquipos', compact('equipos', 'municipios', 'perPage','admin'));
 }
 
    public function listaJugadores(Request $request)
 {
     // Filtros
+    $admin = Auth::user();
     $query = Jugadores::with('equipos'); // Cargamos relación con equipos
 
     // 🔍 Buscar por nombre o apellido
@@ -96,11 +101,12 @@ class UserController extends Controller
     // Pasamos también la lista de equipos al filtro
     $equipos = Equipos::all();
 
-    return view('usuario.listaJugadores', compact('jugadores', 'equipos'));
+    return view('usuario.listaJugadores', compact('jugadores', 'equipos','admin', 'perPage'));
 }
 
 public function listaPartidos(Request $request)
 {
+    $admin = Auth::user();
     // 1. Cargar las variables necesarias para los filtros (Selects)
     $municipios = municipios::orderBy('nombre')->get();
     $torneos = Torneos::orderBy('nombre')->get(); 
@@ -124,11 +130,12 @@ public function listaPartidos(Request $request)
     $partidos = $query->paginate(15)->withQueryString(); 
 
     // 6. Enviar todas las variables a la vista
-    return view('Usuario.listaPartidos', compact('partidos', 'municipios', 'torneos'));
+    return view('Usuario.listaPartidos', compact('partidos', 'municipios', 'torneos', 'admin'));
 }
 
 public function listaTorneos(Request $request)
     {
+        $admin = Auth::user();
         // Iniciar la consulta del modelo Torneo
         $query = Torneos::query();
 
@@ -144,11 +151,11 @@ public function listaTorneos(Request $request)
                         ->paginate(12)
                         ->withQueryString();
 
-        return view('Usuario.listaTorneos', compact('torneos'));
+        return view('Usuario.listaTorneos', compact('torneos','admin'));
     }
 
     public function listaTorneosShow($id)
-{
+{$admin = Auth::user();
     $torneo = Torneos::findOrFail($id);
 
     $partidos = Partido::where('id_torneo', $id)
@@ -164,7 +171,7 @@ public function listaTorneos(Request $request)
             ->get();
     }
 
-    return view('Usuario.listaTorneosShow', compact('torneo', 'partidos', 'clasificacion'));
+    return view('Usuario.listaTorneosShow', compact('torneo', 'partidos', 'clasificacion','admin'));
 }
 
 }
