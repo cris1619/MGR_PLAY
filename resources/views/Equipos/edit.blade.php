@@ -147,7 +147,7 @@
                    accept="image/*">
             @if($equipos->escudo)
                 <div class="mt-3 text-center">
-                    <img src="{{ asset('storage/' . $equipos->escudo) }}" 
+                    <img src="{{ asset('storage/public/escudos/' . $equipos->escudo) }}" 
                          alt="Escudo {{ $equipos->nombre }}" 
                          width="90" height="90" 
                          class="preview-img">
