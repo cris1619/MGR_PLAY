@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Equipos;
 use App\Models\Jugadores;
+use App\Models\municipios;
 use Illuminate\Http\Request;
 
 class JugadoresController extends Controller
@@ -11,40 +12,48 @@ class JugadoresController extends Controller
     /**
      * Display a listing of the resource.
      */
-    public function index(Request $request)
-    {
-        // Obtener equipos para el select
-        $equipos = Equipos::all();
+   public function index(Request $request)
+{
+    // Obtener equipos y municipios para los selects
+    $equipos = Equipos::all();
+    $municipios = Municipios::all();
 
-        // Lista de posiciones (puedes cambiarla si usas tabla de posiciones en BD)
-        $posiciones = ['portero', 'defensa', 'mediocentro', 'delantero', 'lateral izquierdo', 'lateral derecho', 'defensa central', 'extremo izquierdo', 'extremo derecho'];
+    // Lista de posiciones
+    $posiciones = ['portero', 'defensa', 'mediocentro', 'delantero', 'lateral izquierdo', 'lateral derecho', 'defensa central', 'extremo izquierdo', 'extremo derecho'];
 
-        // Query base
-        $query = Jugadores::with('equipos');
+    // Query base
+    $query = Jugadores::with('equipos');
 
-        // 🔍 Filtro por nombre
-        if ($request->filled('search')) {
-            $query->where(function ($q) use ($request) {
-                $q->where('nombre', 'like', '%' . $request->search . '%')
-                    ->orWhere('apellido', 'like', '%' . $request->search . '%');
-            });
-        }
-
-        // 🎯 Filtro por posición
-        if ($request->filled('posicion')) {
-            $query->where('posicion', $request->posicion);
-        }
-
-        // 👥 Filtro por equipo
-        if ($request->filled('idEquipo')) {
-            $query->where('idEquipo', $request->idEquipo);
-        }
-
-        // 📌 Paginación
-        $jugadores = $query->paginate(10)->appends($request->all());
-
-        return view('jugadores.index', compact('equipos', 'jugadores', 'posiciones'));
+    // Filtro por nombre
+    if ($request->filled('search')) {
+        $query->where(function ($q) use ($request) {
+            $q->where('nombre', 'like', '%' . $request->search . '%')
+              ->orWhere('apellido', 'like', '%' . $request->search . '%');
+        });
     }
+
+    // Filtro por posición
+    if ($request->filled('posicion')) {
+        $query->where('posicion', $request->posicion);
+    }
+
+    // Filtro por equipo
+    if ($request->filled('idEquipo')) {
+        $query->where('idEquipo', $request->idEquipo);
+    }
+
+    // Filtro por municipio del equipo
+    if ($request->filled('idMunicipio')) {
+        $query->whereHas('equipos', function($q) use ($request) {
+            $q->where('idMunicipio', $request->idMunicipio);
+        });
+    }
+
+    // Paginación
+    $jugadores = $query->paginate(10)->appends($request->all());
+
+    return view('jugadores.index', compact('equipos', 'municipios', 'jugadores', 'posiciones'));
+}
 
 
     /**
@@ -72,7 +81,7 @@ class JugadoresController extends Controller
     public function store(Request $request)
     {
         Jugadores::create($request->all());
-        return redirect()->route('jugadores.index')->with('success', 'Jugador creado correctamente ✅');
+        return redirect()->route('jugadores.index')->with('success', 'Jugador creado correctamente');
     }
 
 

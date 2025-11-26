@@ -251,6 +251,60 @@ body {
         </div>
     </div>
 </div>
+
+@if(session('success'))
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        Swal.fire({
+            icon: 'success',
+            title: '¡Éxito!',
+            text: "{{ session('success') }}",
+            confirmButtonText: 'Aceptar',
+            timer: 3000
+        });
+    });
+</script>
+@endif
+
+@if(session('error'))
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        Swal.fire({
+            icon: 'error',
+            title: '¡Error!',
+            text: "{{ session('error') }}",
+            confirmButtonText: 'Aceptar',
+            timer: 4000
+        });
+    });
+</script>
+@endif
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
+<script>
+document.querySelectorAll('.delete-arbitro-btn').forEach(button => {
+    button.addEventListener('click', function () {
+
+        let form = this.closest('.delete-arbitro-form');
+
+        Swal.fire({
+            title: '¿Eliminar árbitro?',
+            text: "Esta acción no se puede deshacer.",
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonColor: '#22C55E',
+            cancelButtonColor: '#d33',
+            confirmButtonText: 'Sí, eliminar',
+            cancelButtonText: 'Cancelar'
+        }).then((result) => {
+            if (result.isConfirmed) {
+                form.submit();
+            }
+        });
+
+    });
+});
+</script>
 @endsection
 
 @section('scripts')

@@ -269,6 +269,19 @@ Jugadores | MGR PLAY
                 </select>
             </div>
 
+            <div class="col-md-3">
+                <label>Municipio del equipo</label>
+                <select name="idMunicipio" class="form-select">
+                    <option value="">-- Todos --</option>
+                    @foreach($municipios as $municipio)
+                        <option value="{{ $municipio->id }}" {{ request('idMunicipio') == $municipio->id ? 'selected' : '' }}>
+                            {{ $municipio->nombre }}
+                        </option>
+                    @endforeach
+                </select>
+            </div>
+
+
             <div class="col-md-2 d-flex gap-2 mt-3">
                 <button type="submit" class="btn btn-admin w-100">Buscar</button>
                 <a href="{{ route('jugadores.index') }}" class="btn btn-outline-light w-100 rounded-pill">Limpiar</a>
@@ -311,11 +324,13 @@ Jugadores | MGR PLAY
                             <a href="{{ route('jugadores.edit', $jugador->id) }}"
                                 class="btn btn-success btn-sm rounded-pill px-3">✏️ Editar</a>
 
-                            <form action="{{ route('jugadores.destroy', $jugador->id) }}" method="POST"
-                                  class="d-inline"
-                                  onsubmit="return confirm('¿Estás seguro de eliminar este jugador?')">
+                            <form action="{{ route('jugadores.destroy', $jugador->id) }}" 
+                                method="POST" 
+                                class="delete-jugador-form d-inline">
                                 @csrf
-                                <button type="submit" class="btn btn-warning btn-sm rounded-pill px-3">🗑️ Eliminar</button>
+                                <button type="button" class="btn btn-warning btn-sm rounded-pill px-3 delete-jugador-btn">
+                                    🗑️ Eliminar
+                                </button>
                             </form>
                         </td>
                     </tr>
@@ -336,4 +351,44 @@ Jugadores | MGR PLAY
         <a href="{{ route('welcome') }}" class="btn btn-admin">Volver al menú</a>
     </div>
 </div>
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
+<script>
+document.querySelectorAll('.delete-jugador-btn').forEach(button => {
+    button.addEventListener('click', function () {
+
+        let form = this.closest('.delete-jugador-form');
+
+        Swal.fire({
+            title: '¿Eliminar jugador?',
+            text: "Esta acción no se puede deshacer.",
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonColor: '#22C55E',
+            cancelButtonColor: '#d33',
+            confirmButtonText: 'Sí, eliminar',
+            cancelButtonText: 'Cancelar'
+        }).then((result) => {
+            if (result.isConfirmed) {
+                form.submit();
+            }
+        });
+
+    });
+});
+</script>
+@if(session('success'))
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        Swal.fire({
+            icon: 'success',
+            title: '¡Éxito!',
+            text: "{{ session('success') }}",
+            confirmButtonText: 'Aceptar',
+            timer: 3000
+        });
+    });
+</script>
+@endif
+
 @endsection

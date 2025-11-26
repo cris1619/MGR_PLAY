@@ -218,10 +218,9 @@
                         <div class="d-flex justify-content-center gap-2 mt-3">
                             <a href="{{ route('municipios.edit', $municipio->id) }}" class="btn-admin">✏️ Editar</a>
 
-                            <form action="{{ route('municipios.destroy', $municipio->id) }}" method="POST"
-                                  onsubmit="return confirm('¿Estás seguro de eliminar este municipio?')">
+                            <form action="{{ route('municipios.destroy', $municipio->id) }}" method="POST" class="delete-form">
                                 @csrf
-                                <button type="submit" class="btn-secondary">🗑️ Eliminar</button>
+                                <button type="button" class="btn-secondary delete-btn">🗑️ Eliminar</button>
                             </form>
                         </div>
                     </div>
@@ -267,4 +266,31 @@
         });
     </script>
 @endif
+
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
+<script>
+document.querySelectorAll('.delete-btn').forEach(button => {
+    button.addEventListener('click', function () {
+        let form = this.closest('.delete-form');
+
+        Swal.fire({
+            title: '¿Estás seguro?',
+            text: "No podrás revertir esta acción.",
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonColor: '#22C55E',
+            cancelButtonColor: '#d33',
+            confirmButtonText: 'Sí, eliminar',
+            cancelButtonText: 'Cancelar'
+        }).then((result) => {
+            if (result.isConfirmed) {
+                form.submit();
+            }
+        });
+
+    });
+});
+</script>
+
 @endsection

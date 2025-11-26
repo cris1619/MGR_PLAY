@@ -4,59 +4,182 @@
 Equipos | MGR PLAY
 @endsection
 
-@section('titleContent')
-<nav class="navbar">
-    <div class="navbar-left">
-        <a href="{{ route('usuario.vistaUsuario') }}" class="logo">
-            <img src="{{ url('img/logoSinFondo.png') }}" alt="MGR PLAY" style="height: 50px; margin-right: 30px;">
-            👥 EQUIPOS
-        </a>
-    </div>
-    <a href="{{ route('usuario.vistaUsuario') }}" class="btn btn-secondary">Volver al menú</a>
-</nav>
-@endsection
+<nav class="navbar d-flex justify-content-between align-items-center">
+        <div class="navbar-left">
+            <a href="{{ route('usuario.vistaUsuario') }}" class="logo">
+                <img src="{{ url('img/logoSinFondo.png') }}" alt="MGR PLAY">
+                MALAGA GARCÍA ROVIRA PLAY
+            </a>
+            <ul class="nav-menu">
+                <li><a href="{{ route('usuario.listaTorneos') }}">Torneos</a></li>
+                <li><a href="{{ route('usuario.listaEquipos') }}">Equipos</a></li>
+                <li><a href="{{ route('usuario.listaJugadores') }}">Jugadores</a></li>
+                <li><a href="{{ route('usuario.listaPartidos') }}">Partidos</a></li>
+            </ul>
+        </div>
+
+        <div class="navbar-right">
+
+            <a href="" class="icon-btn admin-btn" title="Usuario">
+                <svg viewBox="0 0 24 24" fill="currentColor">
+                    <path d="M12 12c2.67 0 8 1.34 8 4v3H4v-3c0-2.66 5.33-4 8-4zm0-2c-1.1 0-2-.9-2-2s.9-2 2-2 
+                    2 .9 2 2-.9 2-2 2z"/>
+                </svg>
+                <span>{{ $admin->nombre }}</span>
+            </a>
+
+            <a href="{{ route('logout') }}">Cerrar sesión</a>
+        </div>
+    </nav>
 
 @section('content')
 <style>
-    .navbar {
-        background-color: #101317;
-        padding: 0 20px;
-        height: 60px;
-        display: flex;
-        align-items: center;
-        justify-content: space-between;
-        box-shadow: 0 2px 8px rgba(0,0,0,0.4);
-    }
+           :root {
+            --verde-neon: #00ff88;
+            --gris-oscuro: #1a1f24;
+            --gris-medio: #2a2e33;
+            --gris-claro: #3a3e43;
+            --blanco: #f2f2f2;
+        }
 
-    .navbar-left {
-        display: flex;
-        align-items: center;
-        gap: 40px;
-    }
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
 
+        body {
+            font-family: "Play", sans-serif;
+            background-image: url("{{ asset('img/2713.jpg') }}");
+            background-size: cover;
+            background-position: center;
+            background-repeat: no-repeat;
+            background-attachment: fixed;
+            position: relative;
+            color: var(--blanco);
+            min-height: 100vh;
+        }
+
+        /* NAVBAR */
+        .navbar {
+            background: linear-gradient(90deg, #0f0f0f, #1a1f24);
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.6);
+            padding: 10px 30px;
+        }
+
+        .navbar-left {
+            display: flex;
+            align-items: center;
+            gap: 25px;
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            text-decoration: none;
+            color: var(--blanco);
+            font-weight: bold;
+            letter-spacing: 1px;
+            transition: all 0.3s ease;
+        }
+
+        .logo img {
+            height: 50px;
+            margin-right: 15px;
+        }
+
+        .logo:hover {
+            color: var(--verde-neon);
+            transform: scale(1.05);
+        }
+
+        .nav-menu {
+            display: flex;
+            list-style: none;
+            gap: 20px;
+        }
+
+        .nav-menu li a {
+            text-decoration: none;
+            color: #ddd;
+            padding: 8px 14px;
+            border-radius: 6px;
+            transition: all 0.3s ease;
+        }
+
+        .nav-menu li a:hover {
+            color: var(--verde-neon);
+            background-color: rgba(255, 255, 255, 0.08);
+        }
+
+        .navbar-right {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .navbar-right a {
+            color: var(--blanco);
+            text-decoration: none;
+            font-weight: bold;
+            transition: color 0.3s ease;
+        }
+
+        .navbar-right a:hover {
+            color: var(--verde-neon);
+        }
+
+        /* ICONOS */
+        .icon-btn {
+            width: 28px;
+            height: 28px;
+            background: none;
+            border: none;
+            color: var(--blanco);
+            cursor: pointer;
+            transition: transform 0.3s ease, color 0.3s ease;
+        }
+
+        .icon-btn:hover {
+            transform: scale(1.2);
+            color: var(--verde-neon);
+        }
+
+        /* TOP MENU */
+        .top-news {
+            background-color: rgba(26, 31, 36, 0.9);
+            border-bottom: 2px solid var(--verde-neon);
+            text-align: center;
+            padding: 10px 0;
+        }
+
+        .nav-menu2 {
+            list-style: none;
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 25px;
+        }
+
+        .nav-menu2 li a {
+            color: #ccc;
+            text-decoration: none;
+            font-size: 14px;
+            transition: color 0.3s ease;
+        }
+
+        .nav-menu2 li a:hover {
+            color: var(--verde-neon);
+        }
     .filter-card {
-        background: linear-gradient(135deg, rgba(16, 19, 23, 0.98) 0%, rgba(27, 31, 35, 0.98) 100%);
-        border: 2px solid #22C55E;
-        border-radius: 20px;
-        padding: 25px;
-        margin-bottom: 35px;
-        backdrop-filter: blur(15px);
-        box-shadow: 0 8px 25px rgba(34, 197, 94, 0.15);
-        position: relative;
-    }
-
-    .filter-card::before {
-        content: '';
-        position: absolute;
-        inset: 0;
-        border-radius: 20px;
-        padding: 2px;
-        background: linear-gradient(135deg, #22C55E, #15803D);
-        -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
-        -webkit-mask-composite: xor;
-        mask-composite: exclude;
-        opacity: 0.3;
-    }
+    background: linear-gradient(145deg, #1C2025 0%, #272C31 100%);
+    border: 1px solid #16A34A50;
+    border-radius: 18px;
+    padding: 25px;
+    margin-bottom: 30px;
+    box-shadow: 0 6px 12px rgba(0,0,0,0.3);
+    transition: all 0.3s ease;
+}
 
     .team-card {
         background: linear-gradient(145deg, #101317 0%, #1B1F23 50%, #101317 100%);
@@ -278,7 +401,7 @@ Equipos | MGR PLAY
     <h2 class="text-white mb-4">👥 Equipos Registrados</h2>
 
     <!-- 🔍 Barra de filtros -->
-    <div class="filter-card shadow-lg">
+    <div class="filter-card mb-4">
         <form method="GET" action="{{ route('usuario.listaEquipos') }}" class="row g-3 align-items-end">
 
             <!-- Municipio -->

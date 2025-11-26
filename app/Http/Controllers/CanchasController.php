@@ -50,7 +50,9 @@ class CanchasController extends Controller
         $canchas->nombre = $request->input('nombre');
         $canchas->idMunicipio = $request->input('idMunicipio');
         $canchas->save();
-        return redirect()->route('canchas.index');
+        
+        return redirect()->route('canchas.index')
+        ->with('success', 'Cancha creada correctamente');
     }
 
     /**

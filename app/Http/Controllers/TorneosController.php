@@ -11,6 +11,7 @@ use App\Models\Partido;
 use App\Models\Partido_Equipo;
 use App\Models\Torneo_Equipo;
 use App\Models\Torneos;
+use Illuminate\Database\QueryException;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 
@@ -26,6 +27,7 @@ class TorneosController extends Controller
     {
         $equipos = Equipos::where('estado', 'activo')->get();
         $municipios = municipios::all();
+        
         return view('torneos.create', compact('equipos', 'municipios'));
     }
 
@@ -165,10 +167,11 @@ class TorneosController extends Controller
         return redirect()->route('torneos.index')->with('success', 'Torneo actualizado correctamente');
     }
 
-    public function destroy($id)
-    {
-        $torneo = Torneos::findOrFail($id);
+public function destroy($id)
+{
+    $torneo = Torneos::findOrFail($id);
 
+    try {
         Torneo_Equipo::where('idTorneo', $torneo->id)->delete();
         Grupo::where('idTorneo', $torneo->id)->delete();
 
@@ -181,7 +184,19 @@ class TorneosController extends Controller
         $torneo->delete();
 
         return redirect()->route('torneos.index')->with('success', 'Torneo eliminado correctamente');
+
+    } catch (QueryException $e) {
+        // Detectar error de integridad (foreign key)
+        if ($e->getCode() == 23000) {
+            return redirect()->route('torneos.index')
+                ->with('error', 'No se puede eliminar el torneo porque tiene registros relacionados.');
+        }
+
+        // Si es otro error
+        return redirect()->route('torneos.index')
+            ->with('error', 'Ocurrió un error al eliminar el torneo.');
     }
+}
 
     // ==========================
     // GENERAR GRUPOS

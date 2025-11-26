@@ -485,7 +485,7 @@ Clasificación {{ $torneo->nombre }} | MGR PLAY
                                 {{ $dg > 0 ? '+' : '' }}{{ $dg }}
                             </span>
                         </td>
-                        <td class="puntos-cell">{{ $fila->puntos }}</td>
+                        <td>{{ $fila->puntos }}</td>
                     </tr>
                 @endforeach
             </tbody>

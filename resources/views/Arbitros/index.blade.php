@@ -209,11 +209,13 @@
                             <td>
                                 <a href="{{ route('Arbitros.edit', $arbitro->id) }}" class="btn-admin btn-sm rounded-pill px-3">✏️ Editar</a>
 
-                                <form action="{{ route('Arbitros.destroy', $arbitro->id) }}" method="POST"
-                                    class="d-inline" onsubmit="return confirm('¿Estás seguro de eliminar este árbitro?')">
+                                <form action="{{ route('Arbitros.destroy', $arbitro->id) }}" 
+                                    method="POST" 
+                                    class="delete-arbitro-form d-inline">
                                     @csrf
-                                    @method('DELETE')
-                                    <button type="submit" class="btn-secondary btn-sm rounded-pill px-3">🗑️ Eliminar</button>
+                                    <button type="button" class="btn-secondary btn-sm rounded-pill px-3 delete-arbitro-btn">
+                                        🗑️ Eliminar
+                                    </button>
                                 </form>
                             </td>
                         </tr>
@@ -260,4 +262,31 @@
     });
 </script>
 @endif
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
+<script>
+document.querySelectorAll('.delete-arbitro-btn').forEach(button => {
+    button.addEventListener('click', function () {
+
+        let form = this.closest('.delete-arbitro-form');
+
+        Swal.fire({
+            title: '¿Eliminar árbitro?',
+            text: "Esta acción no se puede deshacer.",
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonColor: '#22C55E',
+            cancelButtonColor: '#d33',
+            confirmButtonText: 'Sí, eliminar',
+            cancelButtonText: 'Cancelar'
+        }).then((result) => {
+            if (result.isConfirmed) {
+                form.submit();
+            }
+        });
+
+    });
+});
+</script>
+
 @endsection
