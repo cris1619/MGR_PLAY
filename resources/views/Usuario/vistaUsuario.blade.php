@@ -15,6 +15,8 @@
             --gris-medio: #2a2e33;
             --gris-claro: #3a3e43;
             --blanco: #f2f2f2;
+            --verde-mgr: #268340;
+            --amarillo-mgr: #f5c02b;
         }
 
         * {
@@ -106,45 +108,33 @@
 
         /* ICONOS */
         .icon-btn {
-            width: 28px;
-            height: 28px;
             background: none;
             border: none;
             color: var(--blanco);
             cursor: pointer;
             transition: transform 0.3s ease, color 0.3s ease;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding: 8px 15px;
+            border-radius: 8px;
+            background-color: rgba(255, 255, 255, 0.05);
+        }
+
+        .icon-btn svg {
+            width: 24px;
+            height: 24px;
+            flex-shrink: 0;
+        }
+
+        .icon-btn span {
+            white-space: nowrap;
         }
 
         .icon-btn:hover {
-            transform: scale(1.2);
+            transform: translateY(-2px);
             color: var(--verde-neon);
-        }
-
-        /* TOP MENU */
-        .top-news {
-            background-color: rgba(26, 31, 36, 0.9);
-            border-bottom: 2px solid var(--verde-neon);
-            text-align: center;
-            padding: 10px 0;
-        }
-
-        .nav-menu2 {
-            list-style: none;
-            display: flex;
-            flex-wrap: wrap;
-            justify-content: center;
-            gap: 25px;
-        }
-
-        .nav-menu2 li a {
-            color: #ccc;
-            text-decoration: none;
-            font-size: 14px;
-            transition: color 0.3s ease;
-        }
-
-        .nav-menu2 li a:hover {
-            color: var(--verde-neon);
+            background-color: rgba(0, 255, 136, 0.1);
         }
 
         /* TARJETAS Y CONTENIDO */
@@ -171,6 +161,8 @@
             text-align: center;
             color: var(--verde-neon);
             font-weight: bold;
+            font-size: 1.2rem;
+            padding: 15px;
         }
 
         .accordion-button {
@@ -212,27 +204,190 @@
 
         /* Accesos Rápidos */
         .quick-card {
-            background-color: rgba(26, 31, 36, 0.9);
-            border: 1px solid rgba(0, 255, 136, 0.3);
-            border-radius: 10px;
-            transition: all 0.3s ease;
-            padding: 20px;
+            background: linear-gradient(145deg, #1b1f1d 0%, #252b27 100%);
+            border: 2px solid rgba(0, 255, 136, 0.3);
+            border-radius: 15px;
+            transition: all 0.4s ease;
+            padding: 25px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .quick-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 4px;
+            background: linear-gradient(90deg, #268340, #f5c02b);
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+
+        .quick-card:hover::before {
+            opacity: 1;
         }
 
         .quick-card:hover {
-            transform: scale(1.05);
-            box-shadow: 0 0 15px rgba(0, 255, 136, 0.3);
+            transform: translateY(-8px);
+            box-shadow: 0 12px 24px rgba(0, 255, 136, 0.3);
+            border-color: var(--verde-neon);
         }
 
         .quick-card h5 {
-            color: var(--blanco);
-            font-weight: bold;
+            color: #e5e5e5;
+            font-weight: 600;
+            font-size: 1rem;
+            margin-bottom: 10px;
         }
 
         .quick-card h3 {
-            color: var(--verde-neon);
+            color: var(--amarillo-mgr);
             font-weight: bold;
-            margin-top: 10px;
+            font-size: 2.5rem;
+            margin: 0;
+            text-shadow: 0 0 10px rgba(245, 192, 43, 0.3);
+        }
+
+        /* SECCIÓN DE TÍTULOS */
+        .section-title {
+            color: var(--amarillo-mgr);
+            font-size: 1.8rem;
+            font-weight: 700;
+            margin: 30px 0 25px 0;
+            text-align: center;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            position: relative;
+            padding-bottom: 15px;
+        }
+
+        .section-title::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 100px;
+            height: 3px;
+            background: linear-gradient(90deg, transparent, #268340, transparent);
+        }
+
+        /* TARJETAS DE PARTIDOS Y TORNEOS */
+        .admin-card {
+            background: linear-gradient(145deg, #1b1f1d 0%, #252b27 100%);
+            border: 2px solid #2a2e2a;
+            border-radius: 20px;
+            transition: all 0.4s ease;
+            height: 100%;
+            overflow: hidden;
+            position: relative;
+        }
+
+        .admin-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 4px;
+            background: linear-gradient(90deg, #268340, #f5c02b);
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+
+        .admin-card:hover::before {
+            opacity: 1;
+        }
+
+        .admin-card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 12px 24px rgba(245, 192, 43, 0.2);
+            border-color: #268340;
+        }
+
+        .admin-card .card-body {
+            padding: 25px;
+        }
+
+        .admin-card .card-title {
+            color: #faf8f5;
+            font-size: 1.3rem;
+            font-weight: 700;
+            margin-bottom: 15px;
+            letter-spacing: 0.5px;
+        }
+
+        .admin-card .card-text {
+            color: #e5e5e5;
+            font-size: 0.95rem;
+            line-height: 1.8;
+            margin-bottom: 20px;
+        }
+
+        .card-icon {
+            font-size: 3rem;
+            margin-bottom: 15px;
+            display: inline-block;
+            animation: float 3s ease-in-out infinite;
+            color: var(--amarillo-mgr);
+        }
+
+        @keyframes float {
+            0%, 100% { transform: translateY(0px); }
+            50% { transform: translateY(-10px); }
+        }
+
+        /* BOTONES */
+        .btn-admin {
+            background: linear-gradient(135deg, #268340 0%, #34a853 100%);
+            color: #faf8f5;
+            border: none;
+            padding: 12px 30px;
+            border-radius: 25px;
+            font-weight: 700;
+            font-size: 0.95rem;
+            transition: all 0.3s ease;
+            text-decoration: none;
+            display: inline-block;
+            box-shadow: 0 4px 8px rgba(38, 131, 64, 0.3);
+        }
+
+        .btn-admin:hover {
+            background: linear-gradient(135deg, #f5c02b 0%, #ffdc66 100%);
+            color: #268340;
+            transform: scale(1.05);
+            box-shadow: 0 6px 12px rgba(245, 192, 43, 0.4);
+        }
+
+        /* ANIMACIONES */
+        .fade-in-up {
+            animation: fadeInUp 0.6s ease forwards;
+            opacity: 0;
+        }
+
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        /* FOOTER */
+        footer {
+            background: linear-gradient(90deg, #0f0f0f, #1a1f24);
+            border-top: 2px solid var(--verde-neon);
+            margin-top: 50px;
+        }
+
+        footer div {
+            color: #ccc;
+            font-size: 0.9rem;
         }
 
         /* RESPONSIVE */
@@ -247,6 +402,14 @@
 
             .main-content {
                 padding: 20px 10px;
+            }
+
+            .section-title {
+                font-size: 1.4rem;
+            }
+
+            .quick-card h3 {
+                font-size: 2rem;
             }
         }
 
@@ -281,7 +444,6 @@
         </div>
 
         <div class="navbar-right">
-
             <a href="" class="icon-btn admin-btn" title="Usuario">
                 <svg viewBox="0 0 24 24" fill="currentColor">
                     <path d="M12 12c2.67 0 8 1.34 8 4v3H4v-3c0-2.66 5.33-4 8-4zm0-2c-1.1 0-2-.9-2-2s.9-2 2-2 
@@ -367,27 +529,93 @@
             <!-- Accesos Rápidos -->
             <div class="col-lg-9 col-md-8 mb-4">
                 <div class="card">
-                    <div class="card-header">🚀 Accesos Rápidos</div>
+                    <div class="card-header">🚀 Estadísticas Generales</div>
                     <div class="card-body">
-                        <div class="row g-4">
+                        <div class="row g-4 mb-4">
                             <div class="col-md-4">
-                                <div class="quick-card text-center">
+                                <div class="quick-card text-center fade-in-up">
                                     <h5>Jugadores Totales</h5>
                                     <h3>{{ $accesosRapidos['totalJugadores'] }}</h3>
                                 </div>
                             </div>
                             <div class="col-md-4">
-                                <div class="quick-card text-center">
+                                <div class="quick-card text-center fade-in-up">
                                     <h5>Equipos Totales</h5>
                                     <h3>{{ $accesosRapidos['totalEquipos'] }}</h3>
                                 </div>
                             </div>
                             <div class="col-md-4">
-                                <div class="quick-card text-center">
+                                <div class="quick-card text-center fade-in-up">
                                     <h5>Canchas Totales</h5>
                                     <h3>{{ $accesosRapidos['totalCanchas'] }}</h3>
                                 </div>
                             </div>
+                        </div>
+
+                        <h2 class="section-title">📅 Próximos Partidos</h2>
+                        <div class="row justify-content-center g-4 mb-4">
+                            @forelse( $partidosProximos ?? [] as $partido )
+                                <div class="col-lg-4 col-md-6">
+                                    <div class="card admin-card shadow-lg fade-in-up">
+                                        <div class="card-body">
+                                            <h5 class="card-title">{{ $partido->equipoLocal->nombre ?? 'Desconocido' }} vs {{ $partido->equipoVisitante->nombre ?? 'Desconocido' }}</h5>
+                                            <p class="card-text">
+                                                <strong>Fecha:</strong> {{ \Carbon\Carbon::parse($partido->fecha)->format('d M Y') ?? 'Desconocida' }}<br>
+                                                <strong>Hora:</strong> {{ \Carbon\Carbon::parse($partido->hora)->format('h:i A') ?? 'Desconocida' }}<br>
+                                                <strong>Ubicación:</strong> {{ $partido->cancha->municipio->nombre ?? 'Desconocida' }}
+                                            </p>
+                                            <a href="{{ route('partidos.show', $partido->id) }}" class="btn btn-admin">
+                                                Ver más →
+                                            </a>
+                                        </div>
+                                    </div>
+                                </div>
+                            @empty
+                                <div class="col-12">
+                                    <div class="card admin-card shadow-lg fade-in-up">
+                                        <div class="card-body text-center">
+                                            <div class="card-icon">⚠️</div>
+                                            <h5 class="card-title">No hay partidos próximos</h5>
+                                            <p class="card-text">
+                                                Por ahora no hay partidos programados. Revisa más tarde.
+                                            </p>
+                                        </div>
+                                    </div>
+                                </div>
+                            @endforelse
+                        </div>
+
+                        <h2 class="section-title">🏆 Torneos Disponibles</h2>
+                        <div class="row justify-content-center g-4">
+                            @forelse( $torneos ?? [] as $torneo )
+                                <div class="col-lg-4 col-md-6">
+                                    <div class="card admin-card shadow-lg fade-in-up">
+                                        <div class="card-body">
+                                            <h5 class="card-title">{{ $torneo->nombre }}</h5>
+                                            <p class="card-text">
+                                                <strong>Ubicación:</strong> {{ $torneo->municipio->nombre ?? 'Desconocida' }}<br>
+                                                <strong>Fecha de Inicio:</strong> {{ \Carbon\Carbon::parse($torneo->fecha_inicio)->format('d M Y') ?? 'Desconocida' }}<br>
+                                                <strong>Fecha de Fin:</strong> {{ \Carbon\Carbon::parse($torneo->fecha_fin)->format('d M Y') ?? 'Desconocida' }}
+                                            </p>
+                                            <a href="{{ route('usuario.listaTorneosShow', $torneo->id) }}" class="btn btn-admin">
+                                                Ver más →
+                                            </a>
+                                        </div>
+                                    </div>
+                                </div>
+                            @empty
+                                <div class="col-12">
+                                    <div class="card admin-card shadow-lg fade-in-up">
+                                        <div class="card-body text-center">
+                                            <div class="card-icon">⚠️</div>
+                                            <h5 class="card-title">No hay torneos disponibles</h5>
+                                            <p class="card-text">
+                                                Por ahora no hay torneos programados. Revisa más tarde o crea uno desde el panel de administración.
+                                            </p>
+                                        </div>
+                                    </div>
+                                </div>
+                            @endforelse
                         </div>
                     </div>
                 </div>
@@ -398,9 +626,10 @@
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js"></script>
 </body>
 <footer>
-        <div class=" p-4 text-center text-white">
-            Realizado por - @@Cristian Fernando Solano Villamizar - <br>
-            @@Juan David Carrillo Mojica <br>
-            2025</div>
-    </footer>
+    <div class="p-4 text-center text-white">
+        Realizado por - @Cristian Fernando Solano Villamizar - <br>
+        @Juan David Carrillo Mojica <br>
+        2025
+    </div>
+</footer>
 </html>

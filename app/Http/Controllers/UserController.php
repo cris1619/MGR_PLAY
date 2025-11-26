@@ -11,6 +11,7 @@ use App\Models\municipios;
 use App\Models\Partido;
 use App\Models\Torneos;
 use App\Services\userService;
+use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
@@ -33,7 +34,50 @@ class UserController extends Controller
             'totalCanchas' => $this->userService->totalCanchas(),
         ];
 
-        return view('usuario.vistaUsuario', compact('municipios', 'canchas', 'accesosRapidos', 'admin'));
+        // Obtener los próximos 5 partidos a partir de hoy
+    // Fecha de hoy (inicio del día)
+    $hoy = Carbon::now()->startOfDay();
+
+    // Traer próximos 5 partidos con relaciones relevantes
+    $partidos = Partido::with(['equipos', 'cancha.municipio', 'torneo', 'arbitro'])
+        ->where('fecha', '>=', $hoy)
+        ->orderBy('fecha', 'asc')
+        ->take(5)
+        ->get();
+
+    // Normalizar para la vista: crear propiedades equipoLocal y equipoVisitante
+    $partidosProximos = $partidos->map(function ($p) {
+        // buscar por el valor del pivot 'rol'. Ajusta 'Local'/'Visitante' si en tu BD están en minúscula
+        $local = $p->equipos->firstWhere('pivot.rol', 'Local')
+               ?? $p->equipos->firstWhere('pivot.rol', 'local')
+               ?? null;
+        $visitante = $p->equipos->firstWhere('pivot.rol', 'Visitante')
+               ?? $p->equipos->firstWhere('pivot.rol', 'visitante')
+               ?? null;
+
+        // asignar para usar en la vista como $partido->equipoLocal / equipoVisitante
+        $p->equipoLocal = $local;
+        $p->equipoVisitante = $visitante;
+
+        return $p;
+    });
+
+    // Otras colecciones que usas en la vista
+    $municipios = municipios::all();
+    $canchas = Canchas::all();
+    $torneos = Torneos::all();
+    $equipos = Equipos::all();
+
+
+    return view('usuario.vistaUsuario', compact(
+        'municipios',
+        'canchas',
+        'accesosRapidos',
+        'admin',
+        'partidosProximos',
+        'torneos',
+        'equipos'
+    ));
     }
 
     public function listaEquipos(Request $request)
