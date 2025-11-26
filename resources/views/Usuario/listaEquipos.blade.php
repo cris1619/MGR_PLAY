@@ -129,6 +129,51 @@ Equipos | MGR PLAY
             color: var(--verde-neon);
         }
 
+         /* === HERO HEADER === */
+        .hero-section {
+            background: linear-gradient(135deg, rgba(0, 255, 136, 0.15) 0%, rgba(0, 204, 106, 0.05) 100%);
+            border-radius: 25px;
+            padding: 50px 30px;
+            margin-bottom: 40px;
+            border: 2px solid rgba(0, 255, 136, 0.3);
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .hero-section::before {
+            content: "";
+            position: absolute;
+            top: -50%;
+            left: -10%;
+            width: 400px;
+            height: 400px;
+            background: radial-gradient(circle, rgba(0, 255, 136, 0.1) 0%, transparent 70%);
+            animation: float 6s ease-in-out infinite;
+        }
+
+        @keyframes float {
+            0%, 100% { transform: translateY(0) translateX(0); }
+            50% { transform: translateY(-20px) translateX(20px); }
+        }
+
+        .hero-section h1 {
+            font-size: 3rem;
+            font-weight: 900;
+            color: var(--verde-neon);
+            text-shadow: 0 0 30px rgba(0, 255, 136, 0.5);
+            margin-bottom: 10px;
+            position: relative;
+            z-index: 1;
+        }
+
+        .hero-section p {
+            color: #dce0e6ff;
+            font-size: 1.2rem;
+            position: relative;
+            z-index: 1;
+        }
+
         /* ICONOS */
         .icon-btn {
             width: 28px;
@@ -397,8 +442,12 @@ Equipos | MGR PLAY
 
 </style>
 
-<div class="container mt-5">
-    <h2 class="text-white mb-4">👥 Equipos Registrados</h2>
+    <div class="container fade-in">
+        {{-- HERO HEADER --}}
+        <div class="hero-section slide-up">
+            <h1>Equipos Registrados</h1>
+            <p>Consulta la información de los equipos registrados en el torneo</p>
+    </div>
 
     <!-- 🔍 Barra de filtros -->
     <div class="filter-card mb-4">

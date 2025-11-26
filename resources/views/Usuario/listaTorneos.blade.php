@@ -159,7 +159,7 @@ body {
 
 .section-subtitle {
     text-align: center;
-    color: #9ca3af;
+    color: #dce0e6ff;
     font-size: 1.1rem;
     margin-bottom: 0;
 }
@@ -489,7 +489,7 @@ body {
 <div class="container mt-5 fade-in">
     <!-- Header Section -->
     <div class="torneos-header slide-up">
-        <h1 class="section-title">🏆 Torneos Disponibles</h1>
+        <h1 class="section-title">Torneos Disponibles</h1>
         <p class="section-subtitle">Explora todos los torneos activos y encuentra tu próxima competición</p>
     </div>
 
