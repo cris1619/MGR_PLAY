@@ -353,6 +353,19 @@ Jugadores | MGR PLAY
                 </select>
             </div>
 
+            <div class="col-md-3">
+                <label>Municipio del equipo</label>
+                <select name="idMunicipio" class="form-select">
+                    <option value="">-- Todos --</option>
+                    @foreach($municipios as $municipio)
+                        <option value="{{ $municipio->id }}" {{ request('idMunicipio') == $municipio->id ? 'selected' : '' }}>
+                            {{ $municipio->nombre }}
+                        </option>
+                    @endforeach
+                </select>
+            </div>
+
+
             <!-- Botones -->
             <div class="col-12 d-flex justify-content-end gap-2 mt-3">
                 <button type="submit" class="btn btn-primary rounded-pill px-4">Buscar</button>

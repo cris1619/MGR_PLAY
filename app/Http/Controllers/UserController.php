@@ -69,39 +69,45 @@ class UserController extends Controller
 {
     // Filtros
     $admin = Auth::user();
-    $query = Jugadores::with('equipos'); // Cargamos relación con equipos
+    // Obtener equipos y municipios para los selects
+    $equipos = Equipos::all();
+    $municipios = Municipios::all();
 
-    // 🔍 Buscar por nombre o apellido
+    // Lista de posiciones
+    $posiciones = ['portero', 'defensa', 'mediocentro', 'delantero', 'lateral izquierdo', 'lateral derecho', 'defensa central', 'extremo izquierdo', 'extremo derecho'];
+
+    // Query base
+    $query = Jugadores::with('equipos');
+
+    // Filtro por nombre
     if ($request->filled('search')) {
-        $search = $request->search;
-        $query->where(function ($q) use ($search) {
-            $q->where('nombre', 'like', "%$search%")
-              ->orWhere('apellido', 'like', "%$search%");
+        $query->where(function ($q) use ($request) {
+            $q->where('nombre', 'like', '%' . $request->search . '%')
+              ->orWhere('apellido', 'like', '%' . $request->search . '%');
         });
     }
 
-    // 📌 Filtrar por posición
+    // Filtro por posición
     if ($request->filled('posicion')) {
         $query->where('posicion', $request->posicion);
     }
 
-    // 📌 Filtrar por equipo
+    // Filtro por equipo
     if ($request->filled('idEquipo')) {
         $query->where('idEquipo', $request->idEquipo);
     }
 
-    // 📌 Paginación (con opción "todos")
-    $perPage = $request->get('per_page', 10);
-    if ($perPage === 'all') {
-        $jugadores = $query->get();
-    } else {
-        $jugadores = $query->paginate($perPage)->appends($request->query());
+    // Filtro por municipio del equipo
+    if ($request->filled('idMunicipio')) {
+        $query->whereHas('equipos', function($q) use ($request) {
+            $q->where('idMunicipio', $request->idMunicipio);
+        });
     }
 
-    // Pasamos también la lista de equipos al filtro
-    $equipos = Equipos::all();
+    // Paginación
+    $jugadores = $query->paginate(10)->appends($request->all());
 
-    return view('usuario.listaJugadores', compact('jugadores', 'equipos','admin', 'perPage'));
+    return view('Usuario.listaJugadores', compact('equipos', 'municipios', 'jugadores', 'posiciones','admin'));
 }
 
 public function listaPartidos(Request $request)
