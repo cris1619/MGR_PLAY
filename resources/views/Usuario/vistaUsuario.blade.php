@@ -558,7 +558,11 @@
                                 <div class="col-lg-4 col-md-6">
                                     <div class="card admin-card shadow-lg fade-in-up">
                                         <div class="card-body">
-                                            <h5 class="card-title">{{ $partido->equipoLocal->nombre ?? 'Desconocido' }} vs {{ $partido->equipoVisitante->nombre ?? 'Desconocido' }}</h5>
+                                            <h5 class="card-title">
+    {{ $partido->equipoLocal->nombre ?? 'Equipo Local' }}
+    vs
+    {{ $partido->equipoVisitante->nombre ?? 'Equipo Visitante' }}
+</h5>
                                             <p class="card-text">
                                                 <strong>Fecha:</strong> {{ \Carbon\Carbon::parse($partido->fecha)->format('d M Y') ?? 'Desconocida' }}<br>
                                                 <strong>Hora:</strong> {{ \Carbon\Carbon::parse($partido->hora)->format('h:i A') ?? 'Desconocida' }}<br>

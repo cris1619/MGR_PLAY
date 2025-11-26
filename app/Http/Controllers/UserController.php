@@ -46,21 +46,17 @@ class UserController extends Controller
         ->get();
 
     // Normalizar para la vista: crear propiedades equipoLocal y equipoVisitante
-    $partidosProximos = $partidos->map(function ($p) {
-        // buscar por el valor del pivot 'rol'. Ajusta 'Local'/'Visitante' si en tu BD están en minúscula
-        $local = $p->equipos->firstWhere('pivot.rol', 'Local')
-               ?? $p->equipos->firstWhere('pivot.rol', 'local')
-               ?? null;
-        $visitante = $p->equipos->firstWhere('pivot.rol', 'Visitante')
-               ?? $p->equipos->firstWhere('pivot.rol', 'visitante')
-               ?? null;
+   $partidosProximos = $partidos->map(function ($p) {
 
-        // asignar para usar en la vista como $partido->equipoLocal / equipoVisitante
-        $p->equipoLocal = $local;
-        $p->equipoVisitante = $visitante;
+    $local = $p->equipos->firstWhere('pivot.rol', 'Local');
+    $visitante = $p->equipos->firstWhere('pivot.rol', 'Visitante');
 
-        return $p;
-    });
+    $p->equipoLocal = $local;
+    $p->equipoVisitante = $visitante;
+
+    return $p;
+});
+
 
     // Otras colecciones que usas en la vista
     $municipios = municipios::all();

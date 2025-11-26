@@ -1,171 +1,35 @@
 @extends('layouts.app')
 
-@section('title')
-{{ $torneo->nombre }} | MGR PLAY
-@endsection
+@section('title', $torneo->nombre . ' | MGR PLAY')
 
 <nav class="navbar d-flex justify-content-between align-items-center">
-        <div class="navbar-left">
-            <a href="{{ route('usuario.vistaUsuario') }}" class="logo">
-                <img src="{{ url('img/logoSinFondo.png') }}" alt="MGR PLAY">
-                MALAGA GARCÍA ROVIRA PLAY
-            </a>
-            <ul class="nav-menu">
-                <li><a href="{{ route('usuario.listaTorneos') }}">Torneos</a></li>
-                <li><a href="{{ route('usuario.listaEquipos') }}">Equipos</a></li>
-                <li><a href="{{ route('usuario.listaJugadores') }}">Jugadores</a></li>
-                <li><a href="{{ route('usuario.listaPartidos') }}">Partidos</a></li>
-            </ul>
-        </div>
+    <div class="navbar-left">
+        <a href="{{ route('usuario.vistaUsuario') }}" class="logo">
+            <img src="{{ url('img/logoSinFondo.png') }}" alt="MGR PLAY">
+            MALAGA GARCÍA ROVIRA PLAY
+        </a>
+        <ul class="nav-menu">
+            <li><a href="{{ route('usuario.listaTorneos') }}">Torneos</a></li>
+            <li><a href="{{ route('usuario.listaEquipos') }}">Equipos</a></li>
+            <li><a href="{{ route('usuario.listaJugadores') }}">Jugadores</a></li>
+            <li><a href="{{ route('usuario.listaPartidos') }}">Partidos</a></li>
+        </ul>
+    </div>
 
-        <div class="navbar-right">
-
-            <a href="" class="icon-btn admin-btn" title="Usuario">
-                <svg viewBox="0 0 24 24" fill="currentColor">
-                    <path d="M12 12c2.67 0 8 1.34 8 4v3H4v-3c0-2.66 5.33-4 8-4zm0-2c-1.1 0-2-.9-2-2s.9-2 2-2 
-                    2 .9 2 2-.9 2-2 2z"/>
-                </svg>
-                <span>{{ $admin->nombre }}</span>
-            </a>
-
-            <a href="{{ route('logout') }}">Cerrar sesión</a>
-        </div>
-    </nav>
+    <div class="navbar-right">
+        <a href="" class="icon-btn admin-btn" title="Usuario">
+            <svg viewBox="0 0 24 24" fill="currentColor">
+                <path d="M12 12c2.67 0 8 1.34 8 4v3H4v-3c0-2.66 5.33-4 8-4zm0-2c-1.1 0-2-.9-2-2s.9-2 2-2 
+                2 .9 2 2-.9 2-2 2z"/>
+            </svg>
+            <span>{{ $admin->nombre }}</span>
+        </a>
+        <a href="{{ route('logout') }}">Cerrar sesión</a>
+    </div>
+</nav>
 
 @section('content')
-
 <style>
-
-
-        * {
-            box-sizing: border-box;
-            margin: 0;
-            padding: 0;
-        }
-
-        body {
-            font-family: "Play", sans-serif;
-            background-image: url("{{ asset('img/2713.jpg') }}");
-            background-size: cover;
-            background-position: center;
-            background-repeat: no-repeat;
-            background-attachment: fixed;
-            position: relative;
-            color: var(--blanco);
-            min-height: 100vh;
-        }
-
-        /* NAVBAR */
-        .navbar {
-            background: linear-gradient(90deg, #0f0f0f, #1a1f24);
-            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.6);
-            padding: 10px 30px;
-        }
-
-        .navbar-left {
-            display: flex;
-            align-items: center;
-            gap: 25px;
-        }
-
-        .logo {
-            display: flex;
-            align-items: center;
-            text-decoration: none;
-            color: var(--blanco);
-            font-weight: bold;
-            letter-spacing: 1px;
-            transition: all 0.3s ease;
-        }
-
-        .logo img {
-            height: 50px;
-            margin-right: 15px;
-        }
-
-        .logo:hover {
-            color: var(--verde-neon);
-            transform: scale(1.05);
-        }
-
-        .nav-menu {
-            display: flex;
-            list-style: none;
-            gap: 20px;
-        }
-
-        .nav-menu li a {
-            text-decoration: none;
-            color: #ddd;
-            padding: 8px 14px;
-            border-radius: 6px;
-            transition: all 0.3s ease;
-        }
-
-        .nav-menu li a:hover {
-            color: var(--verde-neon);
-            background-color: rgba(255, 255, 255, 0.08);
-        }
-
-        .navbar-right {
-            display: flex;
-            align-items: center;
-            gap: 15px;
-        }
-
-        .navbar-right a {
-            color: var(--blanco);
-            text-decoration: none;
-            font-weight: bold;
-            transition: color 0.3s ease;
-        }
-
-        .navbar-right a:hover {
-            color: var(--verde-neon);
-        }
-
-        /* ICONOS */
-        .icon-btn {
-            width: 28px;
-            height: 28px;
-            background: none;
-            border: none;
-            color: var(--blanco);
-            cursor: pointer;
-            transition: transform 0.3s ease, color 0.3s ease;
-        }
-
-        .icon-btn:hover {
-            transform: scale(1.2);
-            color: var(--verde-neon);
-        }
-
-        /* TOP MENU */
-        .top-news {
-            background-color: rgba(26, 31, 36, 0.9);
-            border-bottom: 2px solid var(--verde-neon);
-            text-align: center;
-            padding: 10px 0;
-        }
-
-        .nav-menu2 {
-            list-style: none;
-            display: flex;
-            flex-wrap: wrap;
-            justify-content: center;
-            gap: 25px;
-        }
-
-        .nav-menu2 li a {
-            color: #ccc;
-            text-decoration: none;
-            font-size: 14px;
-            transition: color 0.3s ease;
-        }
-
-        .nav-menu2 li a:hover {
-            color: var(--verde-neon);
-        }
 :root {
     --verde-neon: #00ff88;
     --verde-oscuro: #00cc6a;
@@ -178,9 +42,108 @@
     --amarillo-warning: #ffd93d;
 }
 
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+
 body {
-    background-color: var(--gris-oscuro);
+    font-family: "Play", sans-serif;
+    background-image: url("{{ asset('img/2713.jpg') }}");
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+    background-attachment: fixed;
     color: var(--blanco);
+    min-height: 100vh;
+}
+
+/* === NAVBAR === */
+.navbar {
+    background: linear-gradient(90deg, #0f0f0f, #1a1f24);
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.6);
+    padding: 10px 30px;
+}
+
+.navbar-left {
+    display: flex;
+    align-items: center;
+    gap: 25px;
+}
+
+.logo {
+    display: flex;
+    align-items: center;
+    text-decoration: none;
+    color: var(--blanco);
+    font-weight: bold;
+    letter-spacing: 1px;
+    transition: all 0.3s ease;
+}
+
+.logo img {
+    height: 50px;
+    margin-right: 15px;
+}
+
+.logo:hover {
+    color: var(--verde-neon);
+    transform: scale(1.05);
+}
+
+.nav-menu {
+    display: flex;
+    list-style: none;
+    gap: 20px;
+}
+
+.nav-menu li a {
+    text-decoration: none;
+    color: #ddd;
+    padding: 8px 14px;
+    border-radius: 6px;
+    transition: all 0.3s ease;
+}
+
+.nav-menu li a:hover {
+    color: var(--verde-neon);
+    background-color: rgba(255, 255, 255, 0.08);
+}
+
+.navbar-right {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+}
+
+.navbar-right a {
+    color: var(--blanco);
+    text-decoration: none;
+    font-weight: bold;
+    transition: color 0.3s ease;
+}
+
+.navbar-right a:hover {
+    color: var(--verde-neon);
+}
+
+.icon-btn {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.icon-btn svg {
+    width: 24px;
+    height: 24px;
+}
+
+/* === CONTAINER === */
+.container {
+    max-width: 1400px;
+    margin: 30px auto;
+    padding: 0 20px;
 }
 
 /* === HERO HEADER === */
@@ -306,123 +269,19 @@ body {
     margin-top: 15px;
 }
 
-.estado-pendiente {
+.estado-Pendiente {
     background: linear-gradient(135deg, #ffd93d 0%, #ff9f1c 100%);
     color: #000;
 }
 
-.estado-en-curso {
+.estado-en-curso, .estado-En.curso {
     background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
     color: #000;
 }
 
-.estado-finalizado {
+.estado-Finalizado {
     background: linear-gradient(135deg, #a8a8a8 0%, #6c757d 100%);
     color: #fff;
-}
-
-/* === BOTÓN VER CLASIFICACIÓN === */
-.btn-clasificacion {
-    background: linear-gradient(135deg, #ffd93d 0%, #ff9f1c 100%);
-    color: #000;
-    border: none;
-    border-radius: 30px;
-    padding: 18px 40px;
-    font-size: 1.2rem;
-    font-weight: 700;
-    text-transform: uppercase;
-    letter-spacing: 1px;
-    transition: all 0.3s ease;
-    box-shadow: 0 5px 20px rgba(255, 217, 61, 0.3);
-    display: inline-block;
-    text-decoration: none;
-}
-
-.btn-clasificacion:hover {
-    transform: translateY(-3px) scale(1.05);
-    box-shadow: 0 10px 30px rgba(255, 217, 61, 0.5);
-    color: #000;
-}
-
-/* === TABLA DE CLASIFICACIÓN === */
-.clasificacion-card {
-    background: linear-gradient(145deg, #141719 0%, #1a1f24 100%);
-    border: 2px solid rgba(0, 255, 136, 0.3);
-    border-radius: 20px;
-    overflow: hidden;
-    margin-bottom: 40px;
-    box-shadow: 0 10px 40px rgba(0, 0, 0, 0.5);
-}
-
-.clasificacion-header {
-    background: linear-gradient(90deg, var(--verde-neon) 0%, var(--verde-oscuro) 100%);
-    color: #000;
-    padding: 20px;
-    font-weight: 800;
-    font-size: 1.3rem;
-    text-align: center;
-    text-transform: uppercase;
-    letter-spacing: 1.5px;
-}
-
-.tabla-clasificacion {
-    width: 100%;
-    margin: 0;
-}
-
-.tabla-clasificacion thead {
-    background: var(--gris-claro);
-}
-
-.tabla-clasificacion thead th {
-    color: var(--verde-neon);
-    font-weight: 700;
-    text-transform: uppercase;
-    font-size: 0.9rem;
-    padding: 18px 15px;
-    border: none;
-}
-
-.tabla-clasificacion tbody tr {
-    border-bottom: 1px solid rgba(255, 255, 255, 0.05);
-    transition: all 0.3s ease;
-}
-
-.tabla-clasificacion tbody tr:hover {
-    background: rgba(0, 255, 136, 0.05);
-    transform: scale(1.01);
-}
-
-.tabla-clasificacion tbody td {
-    padding: 18px 15px;
-    vertical-align: middle;
-    border: none;
-}
-
-.posicion-destacada {
-    background: linear-gradient(90deg, rgba(255, 215, 0, 0.2) 0%, transparent 100%);
-    border-left: 4px solid #ffd700;
-}
-
-.equipo-nombre {
-    font-weight: 700;
-    color: var(--blanco);
-    font-size: 1.05rem;
-}
-
-.dg-positiva {
-    color: #4ade80;
-    font-weight: 700;
-}
-
-.dg-negativa {
-    color: #f87171;
-    font-weight: 700;
-}
-
-.dg-neutral {
-    color: #9ca3af;
-    font-weight: 700;
 }
 
 /* === SECCIÓN PARTIDOS === */
@@ -439,15 +298,11 @@ body {
     text-shadow: 0 0 20px rgba(0, 255, 136, 0.3);
 }
 
-.fase-title {
-    color: var(--amarillo-warning);
-    font-size: 1.8rem;
-    font-weight: 700;
-    margin-bottom: 25px;
-    padding-bottom: 15px;
-    border-bottom: 3px solid var(--amarillo-warning);
-    text-transform: uppercase;
-    letter-spacing: 1px;
+.partidos-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
+    gap: 25px;
+    margin-bottom: 40px;
 }
 
 /* === TARJETAS DE PARTIDO === */
@@ -524,25 +379,40 @@ body {
     color: var(--verde-neon);
     margin-bottom: 10px;
     text-shadow: 0 0 10px rgba(0, 255, 136, 0.5);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+}
+
+.goles-badge {
+    background: var(--verde-neon);
+    color: #000;
+    padding: 8px 16px;
+    border-radius: 15px;
+    font-weight: 800;
+    font-size: 1.3rem;
+    min-width: 50px;
+    display: inline-block;
 }
 
 .vs-text {
     color: var(--azul-info);
     font-size: 1.2rem;
     font-weight: 700;
-    margin: 0 7px;
 }
 
 /* === BADGES DE ESTADO === */
 .badge-jugado {
     background: linear-gradient(135deg, #4ade80 0%, #22c55e 100%);
     color: #000;
-    padding: 4px 8px;
+    padding: 8px 16px;
     border-radius: 20px;
     font-weight: 700;
     font-size: 0.85rem;
     text-transform: uppercase;
     letter-spacing: 0.5px;
+    display: inline-block;
 }
 
 .badge-pendiente {
@@ -554,6 +424,7 @@ body {
     font-size: 0.85rem;
     text-transform: uppercase;
     letter-spacing: 0.5px;
+    display: inline-block;
 }
 
 /* === INFO ADICIONAL === */
@@ -561,6 +432,7 @@ body {
     margin-top: 20px;
     padding-top: 20px;
     border-top: 1px solid rgba(255, 255, 255, 0.1);
+    text-align: center;
 }
 
 .info-item {
@@ -573,17 +445,54 @@ body {
     margin-bottom: 8px;
 }
 
-.info-item:last-child {
-    margin-bottom: 0;
-}
-
 .info-icon {
     font-size: 1.2rem;
 }
 
-/* === ELIMINACIÓN DIRECTA === */
-.eliminacion-container {
-    margin-bottom: 50px;
+/* === ESTADO VACÍO === */
+.empty-state {
+    text-align: center;
+    padding: 60px 20px;
+    color: #9ca3af;
+    background: linear-gradient(145deg, var(--gris-medio) 0%, var(--gris-claro) 100%);
+    border-radius: 20px;
+    border: 2px solid rgba(255, 255, 255, 0.1);
+}
+
+.empty-icon {
+    font-size: 4rem;
+    margin-bottom: 20px;
+    opacity: 0.5;
+}
+
+.empty-message {
+    font-size: 1.2rem;
+    font-weight: 600;
+    margin-bottom: 10px;
+    color: var(--blanco);
+}
+
+/* === BOTÓN VOLVER === */
+.btn-volver {
+    background: linear-gradient(135deg, var(--gris-claro) 0%, var(--gris-medio) 100%);
+    color: var(--blanco);
+    padding: 12px 30px;
+    border-radius: 10px;
+    font-weight: 700;
+    text-decoration: none;
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    transition: all 0.3s ease;
+    border: 2px solid rgba(255, 255, 255, 0.1);
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+}
+
+.btn-volver:hover {
+    transform: translateY(-2px);
+    border-color: var(--verde-neon);
+    box-shadow: 0 8px 25px rgba(0, 255, 136, 0.2);
+    color: var(--blanco);
 }
 
 /* === ANIMACIONES === */
@@ -635,6 +544,10 @@ body {
         font-size: 1.8rem;
     }
     
+    .partidos-grid {
+        grid-template-columns: 1fr;
+    }
+    
     .equipos-container {
         flex-direction: column;
         gap: 20px;
@@ -644,46 +557,33 @@ body {
         order: -1;
     }
     
-    .escudo-equipo {
-        width: 60px;
-        height: 60px;
-    }
-    
     .marcador {
         font-size: 2rem;
     }
 }
 
-/* === ESTADO VACÍO === */
-.empty-state {
-    text-align: center;
-    padding: 60px 20px;
-    color: #9ca3af;
-}
-
-.empty-icon {
-    font-size: 4rem;
-    margin-bottom: 20px;
-    opacity: 0.5;
-}
-
-.empty-message {
-    font-size: 1.2rem;
-    font-weight: 600;
-    margin-bottom: 10px;
+@media (max-width: 480px) {
+    .logo img {
+        height: 35px;
+        margin-right: 8px;
+    }
+    
+    .logo {
+        font-size: 0.9rem;
+    }
+    
+    .nav-menu {
+        display: none;
+    }
 }
 </style>
 
-<div class="container py-4 fade-in">
-
+<div class="container fade-in">
     {{-- HERO HEADER --}}
     <div class="torneo-hero slide-up">
         <div class="torneo-trofeo">🏆</div>
         <h1 class="torneo-titulo">{{ $torneo->nombre }}</h1>
-        <div class="estado-badge 
-            @if($torneo->estado == 'Pendiente') estado-pendiente
-            @elseif($torneo->estado == 'En curso') estado-en-curso
-            @else estado-finalizado @endif">
+        <div class="estado-badge estado-{{ $torneo->estado }}">
             {{ ucfirst($torneo->estado) }}
         </div>
     </div>
@@ -729,207 +629,97 @@ body {
         </div>
     </div>
 
-    {{-- BOTÓN VER CLASIFICACIÓN --}}
-    @if($torneo->tipo === 'Liguilla' || $torneo->tipo === 'Grupos')
-        <div class="text-center my-5 slide-up" style="animation-delay: 0.3s;">
-            <a href="{{ route('torneo.clasificacion.liguilla', $torneo->id) }}" class="btn-clasificacion">
-                🏆 Ver Clasificación Completa
-            </a>
-        </div>
-    @endif
-
-    {{-- TABLA DE CLASIFICACIÓN --}}
-    @if(isset($clasificacion) && $clasificacion->count() > 0)
-        <div class="clasificacion-card slide-up" style="animation-delay: 0.4s;">
-            <div class="clasificacion-header">
-                📊 Tabla de Clasificación
-            </div>
-            <div class="table-responsive">
-                <table class="tabla-clasificacion">
-                    <thead>
-                        <tr>
-                            <th style="width: 80px;">Pos</th>
-                            <th>Equipo</th>
-                            <th style="width: 100px;">PJ</th>
-                            <th style="width: 100px;">PTS</th>
-                            <th style="width: 100px;">GF</th>
-                            <th style="width: 100px;">GC</th>
-                            <th style="width: 100px;">DIF</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        @foreach($clasificacion as $index => $fila)
-                            <tr class="{{ $index < 4 ? 'posicion-destacada' : '' }}">
-                                <td class="text-center">
-                                    <strong style="font-size: 1.2rem; color: var(--verde-neon);">{{ $index + 1 }}</strong>
-                                </td>
-                                <td>
-                                    <div class="equipo-nombre">{{ $fila->equipo->nombre }}</div>
-                                </td>
-                                <td class="text-center">{{ $fila->partidos_jugados ?? 0 }}</td>
-                                <td class="text-center">
-                                    <strong style="color: var(--verde-neon); font-size: 1.1rem;">{{ $fila->puntos }}</strong>
-                                </td>
-                                <td class="text-center">{{ $fila->goles_favor }}</td>
-                                <td class="text-center">{{ $fila->goles_contra }}</td>
-                                <td class="text-center">
-                                    @php
-                                        $dg = $fila->goles_favor - $fila->goles_contra;
-                                    @endphp
-                                    <span class="{{ $dg > 0 ? 'dg-positiva' : ($dg < 0 ? 'dg-negativa' : 'dg-neutral') }}">
-                                        {{ $dg > 0 ? '+' : '' }}{{ $dg }}
-                                    </span>
-                                </td>
-                            </tr>
-                        @endforeach
-                    </tbody>
-                </table>
-            </div>
-        </div>
-    @endif
-
     {{-- PARTIDOS --}}
-    <div class="partidos-section slide-up" style="animation-delay: 0.5s;">
+    <div class="partidos-section slide-up" style="animation-delay: 0.4s;">
         <h2 class="section-title">⚽ Partidos del Torneo</h2>
 
-        @if($torneo->tipo == 'eliminacion')
-            {{-- ELIMINACIÓN DIRECTA --}}
-            @php
-                $partidosPorFase = $partidos->groupBy('fase');
-            @endphp
-
-            @foreach($partidosPorFase as $fase => $partidosFase)
-                <div class="eliminacion-container">
-                    <h3 class="fase-title">{{ $fase }}</h3>
-                    <div class="row g-4">
-                        @foreach($partidosFase as $partido)
-                            @php
-                                $equipos = $partido->partido_equipos;
-                                $local = $equipos->where('rol', 'Local')->first();
-                                $visitante = $equipos->where('rol', 'Visitante')->first();
-                            @endphp
-                            <div class="col-12 col-md-6 col-lg-4">
-                                <div class="partido-card">
-                                    <div class="partido-header">
-                                        📅 {{ \Carbon\Carbon::parse($partido->fecha)->format('d M Y') }}
-                                        @if($partido->hora) • ⏰ {{ \Carbon\Carbon::parse($partido->hora)->format('H:i') }}@endif
-                                    </div>
-                                    <div class="partido-body">
-                                        <div class="equipos-container">
-                                            {{-- Local --}}
-                                            <div class="equipo-info">
-                                                <img src="{{ asset('storage/public/escudos/' . $local->equipo->escudo) }}" 
-                                                     class="escudo-equipo" 
-                                                     alt="{{ $local->equipo->nombre }}">
-                                                <p class="nombre-equipo">{{ $local->equipo->nombre }}</p>
-                                            </div>
-
-                                            {{-- Marcador --}}
-                                            <div class="marcador-container">
-                                                <div class="marcador">
-                                                    {{ $local->goles ?? '-' }}
-                                                    <span class="vs-text">vs</span>
-                                                    {{ $visitante->goles ?? '-' }}
-                                                </div>
-                                                @if(!is_null($local->goles) && !is_null($visitante->goles))
-                                                    <span class="badge-jugado">✓ Jugado</span>
-                                                @else
-                                                    <span class="badge-pendiente">⏳ Pendiente</span>
-                                                @endif
-                                            </div>
-
-                                            {{-- Visitante --}}
-                                            <div class="equipo-info">
-                                                <img src="{{ asset('storage/public/escudos/' . $visitante->equipo->escudo) }}" 
-                                                     class="escudo-equipo" 
-                                                     alt="{{ $visitante->equipo->nombre }}">
-                                                <p class="nombre-equipo">{{ $visitante->equipo->nombre }}</p>
-                                            </div>
-                                        </div>
-
-                                        <div class="partido-info">
-                                            <div class="info-item">
-                                                <span class="info-icon">📍</span>
-                                                <span>{{ $partido->municipio->nombre ?? 'Sin municipio' }}</span>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        @endforeach
-                    </div>
-                </div>
-            @endforeach
-        @else
-            {{-- LIGUILLA O GRUPOS --}}
-            @if($partidos->count() > 0)
-                <div class="row g-4">
-                    @foreach($partidos as $partido)
-                        @php
-                            $equiposPartido = $partido->partido_equipos;
-                        @endphp
-                        <div class="col-12 col-md-6 col-lg-4">
-                            <div class="partido-card">
-                                <div class="partido-header">
-                                    📅 {{ \Carbon\Carbon::parse($partido->fecha)->format('d M Y') }} 
+        @if($torneo->partidos && $torneo->partidos->count() > 0)
+            <div class="partidos-grid">
+                @foreach($torneo->partidos as $partido)
+                    @php
+                        $equiposPartido = $partido->partido_equipos;
+                    @endphp
+                    
+                    @if($equiposPartido && $equiposPartido->count() >= 2)
+                        <div class="partido-card">
+                            <div class="partido-header">
+                                📅 {{ \Carbon\Carbon::parse($partido->fecha)->format('d/m/Y') }} 
+                                @if($partido->hora)
                                     • ⏰ {{ \Carbon\Carbon::parse($partido->hora)->format('H:i') }}
-                                </div>
-                                <div class="partido-body">
-                                    @if(count($equiposPartido) === 2)
-                                        <div class="equipos-container">
-                                            {{-- Equipo 1 --}}
-                                            <div class="equipo-info">
-                                                <img src="{{ asset('storage/public/escudos/' . $equiposPartido[0]->equipo->escudo) }}"
-                                                     class="escudo-equipo"
-                                                     alt="{{ $equiposPartido[0]->equipo->nombre }}">
-                                                <p class="nombre-equipo">{{ $equiposPartido[0]->equipo->nombre }}</p>
-                                            </div>
+                                @endif
+                            </div>
+                            <div class="partido-body">
+                                <div class="equipos-container">
+                                    {{-- Equipo 1 --}}
+                                    <div class="equipo-info">
+                                        @if($equiposPartido[0]->equipo && $equiposPartido[0]->equipo->escudo)
+                                            <img src="{{ asset('storage/public/escudos/' . $equiposPartido[0]->equipo->escudo) }}"
+                                                 class="escudo-equipo"
+                                                 alt="{{ $equiposPartido[0]->equipo->nombre }}">
+                                        @endif
+                                        <p class="nombre-equipo">{{ $equiposPartido[0]->equipo->nombre ?? 'Por definir' }}</p>
+                                    </div>
 
-                                            {{-- Marcador --}}
-                                            <div class="marcador-container">
-                                                <div class="marcador">
-                                                    {{ $equiposPartido[0]->goles ?? '-' }}
-                                                    <span class="vs-text">vs</span>
-                                                    {{ $equiposPartido[1]->goles ?? '-' }}
-                                                </div>
-                                                @if(!is_null($equiposPartido[0]->goles) && !is_null($equiposPartido[1]->goles))
-                                                    <span class="badge-jugado">✓ Jugado</span>
-                                                @else
-                                                    <span class="badge-pendiente">⏳ Pendiente</span>
-                                                @endif
-                                            </div>
-
-                                            {{-- Equipo 2 --}}
-                                            <div class="equipo-info">
-                                                <img src="{{ asset('storage/public/escudos/' . $equiposPartido[1]->equipo->escudo) }}"
-                                                     class="escudo-equipo"
-                                                     alt="{{ $equiposPartido[1]->equipo->nombre }}">
-                                                <p class="nombre-equipo">{{ $equiposPartido[1]->equipo->nombre }}</p>
-                                            </div>
+                                    {{-- Marcador --}}
+                                    <div class="marcador-container">
+                                        <div class="marcador">
+                                            <span class="goles-badge">{{ $equiposPartido[0]->goles ?? '-' }}</span>
+                                            <span class="vs-text">vs</span>
+                                            <span class="goles-badge">{{ $equiposPartido[1]->goles ?? '-' }}</span>
                                         </div>
+                                        @if($partido->jugado)
+                                            <span class="badge-jugado">✓ Jugado</span>
+                                        @else
+                                            <span class="badge-pendiente">⏳ Pendiente</span>
+                                        @endif
+                                    </div>
 
-                                        <div class="partido-info">
-                                            <div class="info-item">
-                                                <span class="info-icon">📍</span>
-                                                <span>{{ $partido->municipio->nombre ?? 'Sin municipio' }}</span>
-                                            </div>
+                                    {{-- Equipo 2 --}}
+                                    <div class="equipo-info">
+                                        @if($equiposPartido[1]->equipo && $equiposPartido[1]->equipo->escudo)
+                                            <img src="{{ asset('storage/public/escudos/' . $equiposPartido[1]->equipo->escudo) }}"
+                                                 class="escudo-equipo"
+                                                 alt="{{ $equiposPartido[1]->equipo->nombre }}">
+                                        @endif
+                                        <p class="nombre-equipo">{{ $equiposPartido[1]->equipo->nombre ?? 'Por definir' }}</p>
+                                    </div>
+                                </div>
+
+                                <div class="partido-info">
+                                    @if($partido->municipio)
+                                        <div class="info-item">
+                                            <span class="info-icon">📍</span>
+                                            <span>{{ $partido->municipio->nombre }}</span>
+                                        </div>
+                                    @endif
+                                    
+                                    @if($partido->fase)
+                                        <div class="info-item">
+                                            <span class="info-icon">🏆</span>
+                                            <span>{{ $partido->fase }}</span>
                                         </div>
                                     @endif
                                 </div>
                             </div>
                         </div>
-                    @endforeach
-                </div>
-            @else
-                <div class="empty-state">
-                    <div class="empty-icon">⚽</div>
-                    <div class="empty-message">No hay partidos programados aún</div>
-                    <p>Los partidos aparecerán aquí una vez sean programados</p>
-                </div>
-            @endif
+                    @endif
+                @endforeach
+            </div>
+        @else
+            <div class="empty-state">
+                <div class="empty-icon">⚽</div>
+                <div class="empty-message">No hay partidos programados aún</div>
+                <p>Los partidos aparecerán aquí una vez sean programados</p>
+            </div>
         @endif
     </div>
 
+    {{-- BOTÓN VOLVER --}}
+    <div class="text-center mt-5">
+        <a href="{{ route('usuario.listaTorneos') }}" class="btn-volver">
+            ⬅️ Volver a Torneos
+        </a>
+    </div>
 </div>
 
 @endsection
