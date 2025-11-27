@@ -7,6 +7,8 @@
     <link rel="icon" href="{{ asset('img/balonPestaña.png') }}">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css2?family=Play:wght@400;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css">
+
 
     <style>
         :root {
@@ -461,7 +463,7 @@
             <!-- Lado izquierdo -->
             <div class="col-lg-3 col-md-4 mb-4">
                 <div class="card">
-                    <div class="card-header">📍 Ubicaciones</div>
+                    <div class="card-header"><i class="bi bi-geo"></i> Ubicaciones</div>
                     <div class="card-body">
                         <div class="accordion" id="accordionMunicipios">
                             @foreach ($municipios as $municipio)
@@ -529,7 +531,7 @@
             <!-- Accesos Rápidos -->
             <div class="col-lg-9 col-md-8 mb-4">
                 <div class="card">
-                    <div class="card-header">🚀 Estadísticas Generales</div>
+                    <div class="card-header"><i class="bi bi-graph-up"></i> Estadísticas Generales</div>
                     <div class="card-body">
                         <div class="row g-4 mb-4">
                             <div class="col-md-4">
@@ -552,7 +554,7 @@
                             </div>
                         </div>
 
-                        <h2 class="section-title">📅 Próximos Partidos</h2>
+                        <h2 class="section-title"><i class="bi bi-calendar"></i> Próximos Partidos</h2>
                         <div class="row justify-content-center g-4 mb-4">
                             @forelse( $partidosProximos ?? [] as $partido )
                                 <div class="col-lg-4 col-md-6">
@@ -578,7 +580,7 @@
                                 <div class="col-12">
                                     <div class="card admin-card shadow-lg fade-in-up">
                                         <div class="card-body text-center">
-                                            <div class="card-icon">⚠️</div>
+                                            <div class="card-icon"><i class="bi bi-exclamation-triangle"></i></div>
                                             <h5 class="card-title">No hay partidos próximos</h5>
                                             <p class="card-text">
                                                 Por ahora no hay partidos programados. Revisa más tarde.
@@ -589,7 +591,7 @@
                             @endforelse
                         </div>
 
-                        <h2 class="section-title">🏆 Torneos Disponibles</h2>
+                        <h2 class="section-title"><i class="bi bi-trophy"></i> Torneos Disponibles</h2>
                         <div class="row justify-content-center g-4">
                             @forelse( $torneos ?? [] as $torneo )
                                 <div class="col-lg-4 col-md-6">
@@ -611,7 +613,7 @@
                                 <div class="col-12">
                                     <div class="card admin-card shadow-lg fade-in-up">
                                         <div class="card-body text-center">
-                                            <div class="card-icon">⚠️</div>
+                                            <div class="card-icon"><i class="bi bi-exclamation-triangle"></div>
                                             <h5 class="card-title">No hay torneos disponibles</h5>
                                             <p class="card-text">
                                                 Por ahora no hay torneos programados. Revisa más tarde o crea uno desde el panel de administración.

@@ -185,7 +185,7 @@ body {
 }
 
 .hero-section p {
-    color: #9ca3af;
+    color: #dce0e6ff;
     font-size: 1.2rem;
     position: relative;
     z-index: 1;
@@ -241,7 +241,7 @@ body {
 }
 
 .btn-filter {
-    background: linear-gradient(135deg, var(--azul-info) 0%, #3b82f6 100%);
+    background: #00cc6a; /* Color sólido solicitado */
     color: white;
     padding: 12px 30px;
     border: none;
@@ -250,14 +250,14 @@ body {
     font-size: 1rem;
     cursor: pointer;
     transition: all 0.3s ease;
-    box-shadow: 0 5px 15px rgba(79, 172, 254, 0.3);
+    box-shadow: 0 5px 15px rgba(0, 255, 136, 0.3); /* sombra adaptada */
     text-transform: uppercase;
     letter-spacing: 0.5px;
 }
 
 .btn-filter:hover {
-    transform: translateY(-2px);
-    box-shadow: 0 8px 25px rgba(79, 172, 254, 0.5);
+    background: #00e67a; /* Un tono más oscuro */
+    transform: scale(1.03);
 }
 
 /* === GRID DE PARTIDOS (DISEÑO DE TARJETAS) === */
@@ -309,7 +309,7 @@ body {
 }
 
 .fase-badge {
-    background: linear-gradient(135deg, #8B5CF6, #A78BFA);
+    background: #00ff88a6;
     color: white;
     padding: 6px 14px;
     border-radius: 20px;
@@ -369,7 +369,7 @@ body {
 }
 
 .vs-text {
-    color: var(--azul-info);
+    color: #dce0e6ff;
     font-size: 1rem;
     font-weight: 700;
     margin: 0 8px;
@@ -426,7 +426,7 @@ body {
 }
 
 .btn-ver-detalles {
-    background: linear-gradient(135deg, var(--azul-info) 0%, #3b82f6 100%);
+    background:#00cc6a;
     color: white;
     padding: 10px 25px;
     border-radius: 25px;
@@ -437,12 +437,12 @@ body {
     display: inline-flex;
     align-items: center;
     gap: 8px;
-    box-shadow: 0 4px 15px rgba(79, 172, 254, 0.3);
+    box-shadow: 0 4px 15px rgba(99, 254, 79, 0.3);
 }
 
 .btn-ver-detalles:hover {
     transform: translateY(-2px);
-    box-shadow: 0 6px 20px rgba(79, 172, 254, 0.5);
+    box-shadow: 0 6px 20px rgba(79, 254, 123, 0.5);
     color: white;
 }
 
@@ -496,6 +496,7 @@ body {
     color: var(--blanco);
 }
 
+
 /* === PAGINACIÓN === */
 .pagination {
     display: flex;
@@ -503,6 +504,7 @@ body {
     gap: 10px;
     margin-top: 30px;
 }
+
 
 /* === ANIMACIONES === */
 .fade-in {
@@ -545,7 +547,10 @@ body {
         align-items: stretch;
     }
     
-    .btn-filter {
+    .btn-primary{
+        width: 100%;
+    }
+    .btn-outline-light{
         width: 100%;
     }
     
@@ -582,44 +587,48 @@ body {
 <div class="container fade-in">
     {{-- HERO HEADER --}}
     <div class="hero-section slide-up">
-        <h1>⚽ Partidos del Torneo</h1>
+        <h1>Partidos del Torneo</h1>
         <p>Consulta la programación, resultados y estado de cada partido</p>
     </div>
 
     {{-- FILTROS --}}
-    <form method="GET" action="{{ route(Route::currentRouteName()) }}" class="slide-up" style="animation-delay: 0.1s;">
-        <div class="filter-box">
-            <div class="filter-group">
-                <label for="torneo_id">🏆 Filtrar por Torneo:</label>
-                <select name="torneo_id" id="torneo_id">
-                    <option value="">-- Todos los Torneos --</option>
-                    @foreach ($torneos as $torneo)
-                        <option value="{{ $torneo->id }}" 
-                            {{ request('torneo_id') == $torneo->id ? 'selected' : '' }}>
-                            {{ $torneo->nombre }}
-                        </option>
-                    @endforeach
-                </select>
-            </div>
+   <form method="GET" action="{{ route(Route::currentRouteName()) }}" class="slide-up" style="animation-delay: 0.1s;">
+    <div class="filter-box">
 
-            <div class="filter-group">
-                <label for="municipio_id">📍 Filtrar por Municipio:</label>
-                <select name="municipio_id" id="municipio_id">
-                    <option value="">-- Todos los Municipios --</option>
-                    @foreach ($municipios as $municipio)
-                        <option value="{{ $municipio->id }}" 
-                            {{ request('municipio_id') == $municipio->id ? 'selected' : '' }}>
-                            {{ $municipio->nombre }}
-                        </option>
-                    @endforeach
-                </select>
-            </div>
-
-            <button type="submit" class="btn-filter">
-                🔍 Aplicar Filtros
-            </button>
+        <!-- Grupo 1: Torneos -->
+        <div class="filter-group">
+            <label for="torneo_id">Filtrar por Torneo:</label>
+            <select name="torneo_id" id="torneo_id">
+                <option value="">-- Todos los Torneos --</option>
+                @foreach ($torneos as $torneo)
+                    <option value="{{ $torneo->id }}" 
+                        {{ request('torneo_id') == $torneo->id ? 'selected' : '' }}>
+                        {{ $torneo->nombre }}
+                    </option>
+                @endforeach
+            </select>
         </div>
-    </form>
+
+        <!-- Grupo 2: Municipios -->
+        <div class="filter-group">
+            <label for="municipio_id">Filtrar por Municipio:</label>
+            <select name="municipio_id" id="municipio_id">
+                <option value="">-- Todos los Municipios --</option>
+                @foreach ($municipios as $municipio)
+                    <option value="{{ $municipio->id }}" 
+                        {{ request('municipio_id') == $municipio->id ? 'selected' : '' }}>
+                        {{ $municipio->nombre }}
+                    </option>
+                @endforeach
+            </select>
+        </div>
+
+        <button type="submit" class="btn-filter"> 
+            <i class="bi bi-search"></i> 
+            Buscar </button>
+    </div>
+</form>
+
 
     {{-- GRID DE PARTIDOS --}}
     @if($partidos->count() > 0)
@@ -629,8 +638,8 @@ body {
                     {{-- HEADER --}}
                     <div class="partido-header">
                         <div class="partido-fecha">
-                            <strong>📅 {{ \Carbon\Carbon::parse($partido->fecha)->format('d/m/Y') }}</strong>
-                            <small>⏰ {{ \Carbon\Carbon::parse($partido->hora)->format('H:i') }} hrs</small>
+                            <strong><i class="bi bi-calendar"></i> {{ \Carbon\Carbon::parse($partido->fecha)->format('d/m/Y') }}</strong>
+                            <small><i class="bi bi-clock"></i>{{ \Carbon\Carbon::parse($partido->hora)->format('H:i') }} hrs</small>
                         </div>
                         <span class="fase-badge">{{ ucfirst($partido->fase) }}</span>
                     </div>
@@ -678,16 +687,18 @@ body {
                         {{-- ESTADO --}}
                         <div class="estado-container">
                             @if($partido->jugado)
-                                <span class="badge-jugado">✅ Jugado</span>
+                                <span class="badge-jugado"><i class="bi bi-check-circle-fill"></i> Jugado</span>
                             @else
-                                <span class="badge-pendiente">⏳ Pendiente</span>
+                                <span class="badge-pendiente"><i class="bi bi-hourglass"></i> Pendiente</span>
                             @endif
                         </div>
 
                         {{-- ACCIONES --}}
                         <div class="partido-info">
                             <a href="{{ route('partidos.show', $partido->id) }}" class="btn-ver-detalles">
-                                👁️ Ver Detalles
+                                <i class="bi bi-eye"></i>
+                                
+                                 Ver Detalles
                             </a>
                         </div>
                     </div>
@@ -713,7 +724,8 @@ body {
     {{-- BOTÓN VOLVER --}}
     <div class="text-center mt-5">
         <a href="{{ route('usuario.vistaUsuario') }}" class="btn-volver">
-            ⬅️ Volver al Menú Principal
+            <i class="bi bi-arrow-left-circle"></i>
+             Volver al Menú Principal
         </a>
     </div>
 </div>
