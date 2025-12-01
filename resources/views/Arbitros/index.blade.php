@@ -8,16 +8,30 @@
 <nav class="navbar">
     <div class="navbar-left">
         <a href="{{ route('welcome') }}" class="logo">
-            <img src="{{ url('img/logoSinFondo.png') }}" alt="MGR PLAY">
+            <img src="{{ url('img/logoSinFondo.png') }}" alt="MGR PLAY" style="height: 50px; margin-right: 30px;">
             ⚖️ ÁRBITROS
         </a>
     </div>
-    <a href="{{ route('welcome') }}" class="btn btn-admin">Volver al menú</a>
+    <a href="{{ route('welcome') }}" class="btn-volver">
+        <i class="fas fa-arrow-left me-2"></i>Volver al menú
+    </a>
 </nav>
 @endsection
 
 @section('content')
 <style>
+    /* ==== ANIMACIONES ==== */
+    @keyframes fadeInUp {
+        from { opacity: 0; transform: translateY(40px); }
+        to { opacity: 1; transform: translateY(0); }
+    }
+
+    @keyframes glowIn {
+        0% { box-shadow: 0 0 0 rgba(255,215,0,0); }
+        100% { box-shadow: 0 0 20px rgba(255,215,0,0.4); }
+    }
+
+    /* ==== NAVBAR ==== */
     .navbar {
         background-color: #1B1F23;
         padding: 0 20px;
@@ -54,184 +68,282 @@
         margin-right: 30px;
     }
 
-    /* Hero Section */
-    .hero-section {
-        background: linear-gradient(135deg, #1B1F23 0%, #2a2e33 100%);
-        padding: 40px 20px;
-        margin-bottom: 40px;
-        border-radius: 15px;
-        text-align: center;
-        box-shadow: 0 8px 16px rgba(0,0,0,0.3);
+    /* ==== CONTENEDOR PRINCIPAL ==== */
+    .arbitros-container {
+        background: linear-gradient(145deg, #1B1F23 0%, #252a2f 100%);
+        border: 2px solid #2a2e33;
+        border-radius: 20px;
+        padding: 40px;
+        max-width: 1400px;
+        margin: 40px auto;
+        color: #fff;
+        opacity: 0;
+        animation: fadeInUp 0.8s ease forwards, glowIn 1.5s ease 0.3s forwards;
     }
 
-    .hero-section h1 {
-        color: #ffffff;
-        font-size: 2.3rem;
+    /* ==== ENCABEZADO ==== */
+    .header-section {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 30px;
+        padding-bottom: 20px;
+        border-bottom: 2px solid #444;
+    }
+
+    .section-title {
+        color: #ffd700;
         font-weight: 700;
-        margin-bottom: 10px;
-        text-shadow: 2px 2px 4px rgba(0,0,0,0.5);
-    }
-
-    .hero-section p {
-        color: #ccc;
-        font-size: 1.1rem;
-    }
-
-    /* Tabla */
-    .table-dark {
-        background-color: #1B1F23 !important;
-        color: #ffffff !important;
-    }
-
-    .table-striped tbody tr:nth-of-type(odd) {
-        background-color: #23282e !important;
-    }
-
-    .table-striped tbody tr:nth-of-type(even) {
-        background-color: #1e2227 !important;
-    }
-
-    .table-striped tbody tr:hover {
-        background-color: #2e353d !important;
-        transition: 0.3s ease;
-    }
-
-    .table th {
-        color: #ffd700 !important;
-        font-weight: 700;
+        font-size: 1.8rem;
+        margin: 0;
         text-transform: uppercase;
-        border-bottom: 2px solid #ffd700 !important;
+        letter-spacing: 2px;
     }
 
-    .table td {
-        color: #000000ff !important;
-        font-weight: 500;
-        border-color: #2f343a !important;
-    }
-
-    /* Botones */
-    .btn-admin {
-        background: linear-gradient(135deg, #ffd700 0%, #ffed4e 100%);
-        color: #1B1F23;
+    /* ==== BOTONES ==== */
+    .btn-crear,
+    .btn-volver,
+    .btn-editar,
+    .btn-eliminar {
         border: none;
-        padding: 10px 25px;
+        padding: 12px 28px;
         border-radius: 25px;
         font-weight: 700;
-        font-size: 0.9rem;
-        transition: all 0.3s ease;
         text-decoration: none;
         display: inline-block;
+        transition: all 0.28s ease;
+        transform-origin: center;
+        cursor: pointer;
+        font-size: 0.95rem;
+    }
+
+    .btn-crear,
+    .btn-volver {
+        background: linear-gradient(135deg, #ffd700 0%, #ffed4e 100%);
+        color: #1B1F23;
         box-shadow: 0 4px 8px rgba(255, 215, 0, 0.3);
     }
 
-    .btn-admin:hover {
+    .btn-crear:hover,
+    .btn-volver:hover {
+        transform: scale(1.06);
         background: linear-gradient(135deg, #ffed4e 0%, #ffd700 100%);
-        transform: scale(1.05);
-        box-shadow: 0 6px 12px rgba(255, 215, 0, 0.5);
-        color: #000;
+        box-shadow: 0 6px 14px rgba(255,215,0,0.55);
+        color: #1B1F23;
     }
 
-    .btn-secondary {
+    .btn-editar {
+        background: linear-gradient(135deg, #ffd700 0%, #ffed4e 100%);
+        color: #1B1F23;
+        box-shadow: 0 4px 8px rgba(255, 215, 0, 0.35);
+        padding: 8px 20px;
+        font-size: 0.85rem;
+    }
+
+    .btn-editar:hover {
+        transform: scale(1.06);
+        background: linear-gradient(135deg, #ffed4e 0%, #ffd700 100%);
+        box-shadow: 0 6px 14px rgba(255,215,0,0.55);
+        color: #1B1F23;
+    }
+
+    .btn-eliminar {
         background: linear-gradient(135deg, #00ff88 0%, #00ccff 100%);
         color: #1B1F23;
-        border: none;
-        padding: 10px 25px;
-        border-radius: 25px;
-        font-weight: 700;
-        transition: all 0.3s ease;
-        text-decoration: none;
-        box-shadow: 0 4px 8px rgba(0,255,136,0.4);
+        box-shadow: 0 4px 8px rgba(0, 229, 204, 0.35);
+        padding: 8px 20px;
+        font-size: 0.85rem;
     }
 
-    .btn-secondary:hover {
-        background: linear-gradient(135deg, #00ccff 0%, #00ff88 100%);
-        transform: scale(1.05);
-        color: #000;
+    .btn-eliminar:hover {
+        transform: scale(1.06);
+        background: linear-gradient(135deg, #00d4ba 0%, #00e5cc 100%);
+        box-shadow: 0 6px 14px rgba(0,229,204,0.55);
+        color: #1B1F23;
     }
 
-    /* Título */
-    .section-title {
-        color: #ffd700;
-        font-size: 1.8rem;
+    /* ==== TABLA ==== */
+    .table-container {
+        background: linear-gradient(145deg, #252a2f 0%, #1B1F23 100%);
+        border: 2px solid #2a2e33;
+        border-radius: 15px;
+        padding: 20px;
+        overflow: hidden;
+    }
+
+    .table-custom {
+        width: 100%;
+        margin: 0;
+        color: #fff;
+        border-collapse: separate;
+        border-spacing: 0;
+    }
+
+    .table-custom thead {
+        background: linear-gradient(135deg, #2a2e33 0%, #1B1F23 100%);
+    }
+
+    .table-custom thead th {
+        color: #ffd700 !important;
         font-weight: 700;
-        margin-bottom: 25px;
-        text-align: center;
         text-transform: uppercase;
-        letter-spacing: 2px;
-        position: relative;
-        padding-bottom: 15px;
+        padding: 18px 15px;
+        border-bottom: 2px solid #ffd700;
+        font-size: 0.95rem;
+        letter-spacing: 1px;
     }
 
-    .section-title::after {
-        content: '';
-        position: absolute;
-        bottom: 0;
-        left: 50%;
-        transform: translateX(-50%);
-        width: 100px;
-        height: 3px;
-        background: linear-gradient(90deg, transparent, #ffd700, transparent);
+    .table-custom tbody tr {
+        background-color: #1e2227;
+        transition: all 0.3s ease;
     }
 
+    .table-custom tbody tr:nth-of-type(even) {
+        background-color: #23282e;
+    }
+
+    .table-custom tbody tr:hover {
+        background-color: #2e353d;
+        transform: scale(1.01);
+        box-shadow: 0 4px 12px rgba(255,215,0,0.15);
+    }
+
+    .table-custom tbody td {
+        padding: 16px 15px;
+        border-bottom: 1px solid #2f343a;
+        color: #fff;
+        font-weight: 500;
+        vertical-align: middle;
+    }
+
+    .table-custom tbody td:first-child {
+        color: #ffd700;
+        font-weight: 700;
+    }
+
+    /* ==== ESTADO VACÍO ==== */
+    .empty-state {
+        text-align: center;
+        padding: 60px 20px;
+        color: #999;
+    }
+
+    .empty-state i {
+        font-size: 4rem;
+        color: #444;
+        margin-bottom: 20px;
+    }
+
+    .empty-state h3 {
+        color: #ccc;
+        margin-bottom: 10px;
+    }
+
+    .empty-state p {
+        color: #888;
+    }
+
+    /* ==== ACCIONES ==== */
+    .action-buttons {
+        display: flex;
+        gap: 8px;
+        justify-content: center;
+        align-items: center;
+    }
+
+    /* ==== RESPONSIVE ==== */
+    @media (max-width: 768px) {
+        .arbitros-container {
+            padding: 20px;
+            margin: 20px 12px;
+        }
+
+        .header-section {
+            flex-direction: column;
+            gap: 15px;
+            text-align: center;
+        }
+
+        .section-title {
+            font-size: 1.4rem;
+        }
+
+        .table-container {
+            overflow-x: auto;
+        }
+
+        .table-custom {
+            min-width: 600px;
+        }
+
+        .action-buttons {
+            flex-direction: column;
+            width: 100%;
+        }
+
+        .btn-editar,
+        .btn-eliminar {
+            width: 100%;
+        }
+    }
 </style>
 
-<div class="container mt-4">
-    <!-- Hero -->
-    <div class="hero-section">
-        <h1>⚖️ Gestión de Árbitros</h1>
-        <p>Administra los árbitros registrados en MGR PLAY</p>
-    </div>
-
+<div class="arbitros-container">
     <!-- Encabezado -->
-    <div class="d-flex justify-content-between align-items-center mb-4">
-        <h2 class="section-title">⚖️ Árbitros Registrados</h2>
-        <a href="{{ route('Arbitros.create') }}" class="btn-admin">➕ Crear Árbitro</a>
+    <div class="header-section">
+        <h2 class="section-title">
+            <i class="fas fa-list-ul me-2"></i>Árbitros Registrados
+        </h2>
+        <a href="{{ route('Arbitros.create') }}" class="btn-crear">
+            <i class="fas fa-plus-circle me-2"></i>Crear Árbitro
+        </a>
     </div>
 
-    <!-- 📋 Tabla Árbitros -->
-    <div class="row justify-content-center">
-        <div class="col-md-10">
-            <table class="table table-striped table-bordered text-center align-middle shadow-lg rounded-4 overflow-hidden">
-                <thead class="table-dark">
+    <!-- Tabla -->
+    <div class="table-container">
+        @if($arbitros->count() > 0)
+            <table class="table-custom">
+                <thead>
                     <tr>
-                        <th>ID</th>
-                        <th>Nombre</th>
-                        <th>Apellido</th>
-                        <th>Acciones</th>
+                        <th style="width: 10%;">ID</th>
+                        <th style="width: 30%;">Nombre</th>
+                        <th style="width: 30%;">Apellido</th>
+                        <th style="width: 30%;">Acciones</th>
                     </tr>
                 </thead>
                 <tbody>
-                    @forelse($arbitros as $arbitro)
+                    @foreach($arbitros as $arbitro)
                         <tr>
-                            <td><b>{{ $arbitro->id }}</b></td>
+                            <td><strong>{{ $arbitro->id }}</strong></td>
                             <td>{{ $arbitro->nombre }}</td>
                             <td>{{ $arbitro->apellido }}</td>
                             <td>
-                                <a href="{{ route('Arbitros.edit', $arbitro->id) }}" class="btn-admin btn-sm rounded-pill px-3">✏️ Editar</a>
+                                <div class="action-buttons">
+                                    <a href="{{ route('Arbitros.edit', $arbitro->id) }}" class="btn-editar">
+                                        <i class="fas fa-edit me-1"></i>Editar
+                                    </a>
 
-                                <form action="{{ route('Arbitros.destroy', $arbitro->id) }}" 
-                                    method="POST" 
-                                    class="delete-arbitro-form d-inline">
-                                    @csrf
-                                    <button type="button" class="btn-secondary btn-sm rounded-pill px-3 delete-arbitro-btn">
-                                        🗑️ Eliminar
-                                    </button>
-                                </form>
+                                    <form action="{{ route('Arbitros.destroy', $arbitro->id) }}" 
+                                          method="POST" 
+                                          class="delete-arbitro-form d-inline">
+                                        @csrf
+                                        <button type="button" class="btn-eliminar delete-arbitro-btn">
+                                            <i class="fas fa-trash-alt me-1"></i>Eliminar
+                                        </button>
+                                    </form>
+                                </div>
                             </td>
                         </tr>
-                    @empty
-                        <tr>
-                            <td colspan="4" class="text-center text-muted">⚠️ No hay árbitros registrados</td>
-                        </tr>
-                    @endforelse
+                    @endforeach
                 </tbody>
             </table>
-        </div>
-    </div>
-
-    <!-- Volver -->
-    <div class="text-center mt-5">
-        <a href="{{ route('welcome') }}" class="btn-admin">Volver al menú</a>
+        @else
+            <div class="empty-state">
+                <i class="fas fa-user-slash"></i>
+                <h3>No hay árbitros registrados</h3>
+                <p>Comienza creando tu primer árbitro</p>
+            </div>
+        @endif
     </div>
 </div>
 
@@ -243,7 +355,10 @@
             title: '¡Éxito!',
             text: "{{ session('success') }}",
             confirmButtonText: 'Aceptar',
-            timer: 3000
+            confirmButtonColor: '#ffd700',
+            timer: 3000,
+            background: '#1B1F23',
+            color: '#fff'
         });
     });
 </script>
@@ -257,17 +372,19 @@
             title: '¡Error!',
             text: "{{ session('error') }}",
             confirmButtonText: 'Aceptar',
-            timer: 4000
+            confirmButtonColor: '#ff6b6b',
+            timer: 4000,
+            background: '#1B1F23',
+            color: '#fff'
         });
     });
 </script>
 @endif
-<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 <script>
 document.querySelectorAll('.delete-arbitro-btn').forEach(button => {
     button.addEventListener('click', function () {
-
         let form = this.closest('.delete-arbitro-form');
 
         Swal.fire({
@@ -276,15 +393,16 @@ document.querySelectorAll('.delete-arbitro-btn').forEach(button => {
             icon: 'warning',
             showCancelButton: true,
             confirmButtonColor: '#22C55E',
-            cancelButtonColor: '#d33',
+            cancelButtonColor: '#ff6b6b',
             confirmButtonText: 'Sí, eliminar',
-            cancelButtonText: 'Cancelar'
+            cancelButtonText: 'Cancelar',
+            background: '#1B1F23',
+            color: '#fff'
         }).then((result) => {
             if (result.isConfirmed) {
                 form.submit();
             }
         });
-
     });
 });
 </script>

@@ -8,247 +8,468 @@ Jugadores | MGR PLAY
 <nav class="navbar">
     <div class="navbar-left">
         <a href="{{ route('welcome') }}" class="logo">
-            <img src="{{ url('img/logoSinFondo.png') }}" alt="MGR PLAY">
+            <img src="{{ url('img/logoSinFondo.png') }}" alt="MGR PLAY" style="height: 50px; margin-right: 30px;">
             🎽 JUGADORES
         </a>
     </div>
-    <a href="{{ route('welcome') }}" class="btn btn-admin">Volver al menú</a>
+    <a href="{{ route('welcome') }}" class="btn-volver">
+        <i class="fas fa-arrow-left me-2"></i>Volver al menú
+    </a>
 </nav>
 @endsection
 
 @section('content')
 <style>
-/* === NAVBAR === */
-.navbar {
-    background-color: #1B1F23;
-    padding: 0 20px;
-    height: 65px;
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    box-shadow: 0 4px 8px rgba(0,0,0,0.3);
-}
-.logo {
-    display: flex;
-    align-items: center;
-    font-weight: 700;
-    font-size: 18px;
-    color: #fff;
-    text-decoration: none;
-    transition: all 0.3s ease;
-}
-.logo img {
-    height: 50px;
-    margin-right: 15px;
-    transition: transform 0.3s ease;
-}
-.logo:hover img {
-    transform: rotate(-5deg) scale(1.05);
-}
+    /* ==== ANIMACIONES ==== */
+    @keyframes fadeInUp {
+        from { opacity: 0; transform: translateY(40px); }
+        to { opacity: 1; transform: translateY(0); }
+    }
 
-/* === HERO SECTION === */
-.hero-section {
-    background: linear-gradient(135deg, #1B1F23, #2c3036);
-    padding: 50px 20px;
-    text-align: center;
-    border-radius: 20px;
-    box-shadow: 0 6px 12px rgba(0,0,0,0.4);
-    margin-bottom: 40px;
-    transition: all 0.3s ease;
-}
-.hero-section:hover {
-    transform: translateY(-3px);
-    box-shadow: 0 10px 20px rgba(255, 215, 0, 0.15);
-}
-.hero-section h1 {
-    color: #ffd700;
-    font-size: 2.4rem;
-    font-weight: 700;
-    margin-bottom: 10px;
-    text-shadow: 0 2px 5px rgba(0,0,0,0.6);
-}
-.hero-section p {
-    color: #ccc;
-    font-size: 1.1rem;
-}
+    @keyframes glowIn {
+        0% { box-shadow: 0 0 0 rgba(255,215,0,0); }
+        100% { box-shadow: 0 0 20px rgba(255,215,0,0.4); }
+    }
 
-/* === BOTONES === */
-.btn-admin {
-    background: linear-gradient(135deg, #ffd700, #ffed4e);
-    color: #1B1F23;
-    border: none;
-    padding: 10px 25px;
-    border-radius: 30px;
-    font-weight: 700;
-    font-size: 0.95rem;
-    transition: all 0.3s ease;
-    text-decoration: none;
-    box-shadow: 0 4px 10px rgba(255, 215, 0, 0.3);
-}
-.btn-admin:hover {
-    transform: scale(1.07);
-    background: linear-gradient(135deg, #fff57a, #ffd700);
-    box-shadow: 0 6px 15px rgba(255, 215, 0, 0.5);
-}
-.btn-admin:active {
-    transform: scale(0.97);
-}
+    @keyframes slideInRight {
+        from { opacity: 0; transform: translateX(30px); }
+        to { opacity: 1; transform: translateX(0); }
+    }
 
-/* === FILTROS === */
-.filter-card {
-    background: linear-gradient(145deg, #1B1F23, #252a2f);
-    border: 1px solid #2a2e33;
-    border-radius: 20px;
-    padding: 25px;
-    margin-bottom: 30px;
-    box-shadow: 0 6px 12px rgba(0,0,0,0.3);
-    transition: all 0.3s ease;
-}
-.filter-card:hover {
-    transform: translateY(-3px);
-    box-shadow: 0 8px 16px rgba(255, 215, 0, 0.2);
-}
-.filter-card label {
-    color: #ffd700;
-    font-weight: 600;
-}
-.form-select,
-.form-control {
-    background-color: #2a2e33;
-    color: #fff;
-    border-radius: 20px;
-    border: 1px solid #444;
-}
-.input-group-text {
-    background-color: #ffd700;
-    color: #1B1F23;
-    font-weight: bold;
-    border: none;
-}
+    /* ==== NAVBAR ==== */
+    .navbar {
+        background-color: #1B1F23;
+        padding: 0 20px;
+        height: 60px;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        box-shadow: 0 4px 8px rgba(0,0,0,0.3);
+    }
 
-/* === TABLA === */
-.table {
-    background-color: #1B1F23;
-    color: white;
-    border-radius: 15px;
-    overflow: hidden;
-}
-.table th {
-    background-color: #252a2f;
-    color: #ffd700;
-    text-transform: uppercase;
-    font-weight: 700;
-    border-bottom: 2px solid #444;
-}
-.table td {
-    vertical-align: middle;
-    border-color: #2f343a;
-}
-.table-hover tbody tr:hover {
-    background-color: rgba(255, 215, 0, 0.05);
-    transition: background 0.3s ease;
-}
-.badge.bg-success {
-    background-color: #00ff88 !important;
-    color: #1B1F23;
-    font-weight: 600;
-}
-.badge.bg-danger {
-    background-color: #ff5555 !important;
-    color: white;
-    font-weight: 600;
-}
+    .navbar-left {
+        display: flex;
+        align-items: center;
+        gap: 40px;
+    }
 
-/* === BOTONES DE ACCIÓN === */
-.btn-success, .btn-warning {
-    border-radius: 25px;
-    font-weight: 600;
-    transition: all 0.3s ease;
-    box-shadow: 0 3px 8px rgba(0,0,0,0.2);
-}
-.btn-success {
-    background: linear-gradient(135deg, #00ff88, #00ccff);
-    color: #1B1F23;
-    border: none;
-}
-.btn-success:hover {
-    transform: scale(1.08);
-    box-shadow: 0 6px 14px rgba(0, 255, 180, 0.4);
-}
-.btn-warning {
-    background: linear-gradient(135deg, #ff8a00, #ffcd00);
-    color: #1B1F23;
-    border: none;
-}
-.btn-warning:hover {
-    transform: scale(1.08);
-    box-shadow: 0 6px 14px rgba(255, 200, 0, 0.4);
-}
+    .logo {
+        display: flex;
+        align-items: center;
+        color: white;
+        font-size: 18px;
+        font-weight: bold;
+        text-decoration: none;
+        transition: transform 0.3s ease;
+    }
 
-/* === PAGINACIÓN === */
-.pagination .page-link {
-    background-color: #2a2e33;
-    border: none;
-    color: #ffd700;
-    border-radius: 50px;
-}
-.pagination .page-item.active .page-link {
-    background-color: #ffd700;
-    color: #1B1F23;
-}
+    .logo:hover {
+        transform: scale(1.05);
+        color: white;
+    }
 
-/* === TÍTULOS === */
-.section-title {
-    color: #ffd700;
-    font-size: 1.8rem;
-    font-weight: 700;
-    margin-bottom: 25px;
-    text-align: center;
-    text-transform: uppercase;
-    letter-spacing: 2px;
-    position: relative;
-    padding-bottom: 15px;
-}
-.section-title::after {
-    content: '';
-    position: absolute;
-    bottom: 0;
-    left: 50%;
-    transform: translateX(-50%);
-    width: 120px;
-    height: 3px;
-    background: linear-gradient(90deg, transparent, #ffd700, transparent);
-}
+    .logo img {
+        height: 50px;
+        margin-right: 30px;
+    }
+
+    /* ==== CONTENEDOR PRINCIPAL ==== */
+    .jugadores-container {
+        background: linear-gradient(145deg, #1B1F23 0%, #252a2f 100%);
+        border: 2px solid #2a2e33;
+        border-radius: 20px;
+        padding: 40px;
+        max-width: 1600px;
+        margin: 40px auto;
+        color: #fff;
+        opacity: 0;
+        animation: fadeInUp 0.8s ease forwards, glowIn 1.5s ease 0.3s forwards;
+    }
+
+    /* ==== ENCABEZADO ==== */
+    .header-section {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 30px;
+        padding-bottom: 20px;
+        border-bottom: 2px solid #444;
+    }
+
+    .section-title {
+        color: #ffd700;
+        font-weight: 700;
+        font-size: 1.8rem;
+        margin: 0;
+        text-transform: uppercase;
+        letter-spacing: 2px;
+    }
+
+    /* ==== BOTONES ==== */
+    .btn-crear,
+    .btn-volver,
+    .btn-editar,
+    .btn-eliminar,
+    .btn-buscar,
+    .btn-limpiar {
+        border: none;
+        padding: 12px 28px;
+        border-radius: 25px;
+        font-weight: 700;
+        text-decoration: none;
+        display: inline-block;
+        transition: all 0.28s ease;
+        transform-origin: center;
+        cursor: pointer;
+        font-size: 0.95rem;
+    }
+
+    .btn-crear,
+    .btn-volver,
+    .btn-buscar {
+        background: linear-gradient(135deg, #ffd700 0%, #ffed4e 100%);
+        color: #1B1F23;
+        box-shadow: 0 4px 8px rgba(255, 215, 0, 0.3);
+    }
+
+    .btn-crear:hover,
+    .btn-volver:hover,
+    .btn-buscar:hover {
+        transform: scale(1.06);
+        background: linear-gradient(135deg, #ffed4e 0%, #ffd700 100%);
+        box-shadow: 0 6px 14px rgba(255,215,0,0.55);
+        color: #1B1F23;
+    }
+
+    .btn-limpiar {
+        background: linear-gradient(135deg, #2a2e33 0%, #1B1F23 100%);
+        color: #ffd700;
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+        border: 2px solid #444;
+    }
+
+    .btn-limpiar:hover {
+        transform: scale(1.06);
+        background: linear-gradient(135deg, #1B1F23 0%, #2a2e33 100%);
+        box-shadow: 0 6px 14px rgba(255,215,0,0.35);
+        color: #ffd700;
+        border-color: #ffd700;
+    }
+
+    .btn-editar {
+        background: linear-gradient(135deg, #ffd700 0%, #ffed4e 100%);
+        color: #1B1F23;
+        box-shadow: 0 4px 8px rgba(255, 215, 0, 0.35);
+        padding: 8px 20px;
+        font-size: 0.85rem;
+    }
+
+    .btn-editar:hover {
+        transform: scale(1.06);
+        background: linear-gradient(135deg, #ffed4e 0%, #ffd700 100%);
+        box-shadow: 0 6px 14px rgba(255,215,0,0.55);
+        color: #1B1F23;
+    }
+
+    .btn-eliminar {
+        background: linear-gradient(135deg, #00ff88 0%, #00ccff 100%);
+        color: #1B1F23;
+        box-shadow: 0 4px 8px rgba(0, 229, 204, 0.35);
+        padding: 8px 20px;
+        font-size: 0.85rem;
+    }
+
+    .btn-eliminar:hover {
+        transform: scale(1.06);
+        background: linear-gradient(135deg, #00d4ba 0%, #00e5cc 100%);
+        box-shadow: 0 6px 14px rgba(0,229,204,0.55);
+        color: #1B1F23;
+    }
+
+    /* ==== FILTROS ==== */
+    .filter-container {
+        background: linear-gradient(145deg, #252a2f 0%, #1B1F23 100%);
+        border: 2px solid #2a2e33;
+        border-radius: 15px;
+        padding: 30px;
+        margin-bottom: 30px;
+        animation: slideInRight 0.6s ease forwards;
+    }
+
+    .filter-title {
+        color: #ffd700;
+        font-size: 1.2rem;
+        font-weight: 700;
+        margin-bottom: 20px;
+        text-transform: uppercase;
+        letter-spacing: 1px;
+        display: flex;
+        align-items: center;
+        gap: 10px;
+    }
+
+    .form-label {
+        color: #ffd700;
+        font-weight: 600;
+        font-size: 0.9rem;
+        margin-bottom: 8px;
+        display: block;
+    }
+
+    .form-control,
+    .form-select {
+        background-color: #1e2227;
+        border: 2px solid #2a2e33;
+        border-radius: 12px;
+        color: #fff;
+        padding: 12px 16px;
+        font-size: 0.95rem;
+        transition: all 0.3s ease;
+    }
+
+    .form-control:focus,
+    .form-select:focus {
+        background-color: #23282e;
+        border-color: #ffd700;
+        box-shadow: 0 0 0 0.2rem rgba(255, 215, 0, 0.15);
+        color: #fff;
+    }
+
+    .form-control::placeholder {
+        color: #888;
+    }
+
+    .input-group-text {
+        background: linear-gradient(135deg, #ffd700 0%, #ffed4e 100%);
+        color: #1B1F23;
+        border: none;
+        font-weight: 700;
+        border-radius: 12px 0 0 12px;
+    }
+
+    .input-group .form-control {
+        border-radius: 0 12px 12px 0;
+    }
+
+    /* ==== TABLA ==== */
+    .table-container {
+        background: linear-gradient(145deg, #252a2f 0%, #1B1F23 100%);
+        border: 2px solid #2a2e33;
+        border-radius: 15px;
+        padding: 20px;
+        overflow: hidden;
+    }
+
+    .table-custom {
+        width: 100%;
+        margin: 0;
+        color: #fff;
+        border-collapse: separate;
+        border-spacing: 0;
+    }
+
+    .table-custom thead {
+        background: linear-gradient(135deg, #2a2e33 0%, #1B1F23 100%);
+    }
+
+    .table-custom thead th {
+        color: #ffd700 !important;
+        font-weight: 700;
+        text-transform: uppercase;
+        padding: 18px 15px;
+        border-bottom: 2px solid #ffd700;
+        font-size: 0.85rem;
+        letter-spacing: 1px;
+        text-align: center;
+    }
+
+    .table-custom tbody tr {
+        background-color: #1e2227;
+        transition: all 0.3s ease;
+    }
+
+    .table-custom tbody tr:nth-of-type(even) {
+        background-color: #23282e;
+    }
+
+    .table-custom tbody tr:hover {
+        background-color: #2e353d;
+        transform: scale(1.005);
+        box-shadow: 0 4px 12px rgba(255,215,0,0.15);
+    }
+
+    .table-custom tbody td {
+        padding: 16px 15px;
+        border-bottom: 1px solid #2f343a;
+        color: #fff;
+        font-weight: 500;
+        vertical-align: middle;
+        text-align: center;
+    }
+
+    .table-custom tbody td:first-child {
+        color: #ffd700;
+        font-weight: 700;
+        font-size: 1.1rem;
+    }
+
+    /* ==== BADGES ==== */
+    .badge-estado {
+        padding: 6px 14px;
+        border-radius: 20px;
+        font-weight: 700;
+        font-size: 0.8rem;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+    }
+
+    .badge-activo {
+        background: linear-gradient(135deg, #00ff88 0%, #00e5cc 100%);
+        color: #1B1F23;
+        box-shadow: 0 2px 6px rgba(0, 255, 136, 0.3);
+    }
+
+    .badge-inactivo {
+        background: linear-gradient(135deg, #ff5555 0%, #ff8888 100%);
+        color: #fff;
+        box-shadow: 0 2px 6px rgba(255, 85, 85, 0.3);
+    }
+
+    /* ==== ESTADO VACÍO ==== */
+    .empty-state {
+        text-align: center;
+        padding: 60px 20px;
+        color: #999;
+    }
+
+    .empty-state i {
+        font-size: 4rem;
+        color: #444;
+        margin-bottom: 20px;
+    }
+
+    .empty-state h3 {
+        color: #ccc;
+        margin-bottom: 10px;
+        font-size: 1.5rem;
+    }
+
+    .empty-state p {
+        color: #888;
+        font-size: 1rem;
+    }
+
+    /* ==== ACCIONES ==== */
+    .action-buttons {
+        display: flex;
+        gap: 8px;
+        justify-content: center;
+        align-items: center;
+        flex-wrap: wrap;
+    }
+
+    /* ==== PAGINACIÓN ==== */
+    .pagination-container {
+        display: flex;
+        justify-content: center;
+        margin-top: 30px;
+        padding-top: 20px;
+        border-top: 1px solid #2a2e33;
+    }
+
+    /* ==== RESPONSIVE ==== */
+    @media (max-width: 1200px) {
+        .table-custom thead th,
+        .table-custom tbody td {
+            font-size: 0.8rem;
+            padding: 12px 10px;
+        }
+    }
+
+    @media (max-width: 768px) {
+        .jugadores-container {
+            padding: 20px;
+            margin: 20px 12px;
+        }
+
+        .header-section {
+            flex-direction: column;
+            gap: 15px;
+            text-align: center;
+        }
+
+        .section-title {
+            font-size: 1.4rem;
+        }
+
+        .filter-container {
+            padding: 20px;
+        }
+
+        .table-container {
+            overflow-x: auto;
+        }
+
+        .table-custom {
+            min-width: 900px;
+        }
+
+        .action-buttons {
+            flex-direction: column;
+            width: 100%;
+        }
+
+        .btn-editar,
+        .btn-eliminar {
+            width: 100%;
+        }
+
+        .filter-title {
+            font-size: 1rem;
+        }
+    }
 </style>
 
-<div class="container mt-4">
-    <div class="hero-section">
-        <h1>🎽 Gestión de Jugadores</h1>
-        <p>Administra los jugadores registrados y su información</p>
+<div class="jugadores-container">
+    <!-- Encabezado -->
+    <div class="header-section">
+        <h2 class="section-title">
+            <i class="fas fa-users me-2"></i>Jugadores Registrados
+        </h2>
+        <a href="{{ route('jugadores.create') }}" class="btn-crear">
+            <i class="fas fa-plus-circle me-2"></i>Crear Jugador
+        </a>
     </div>
 
-    <h2 class="section-title">📋 Listado de Jugadores</h2>
-
-    <div class="d-flex justify-content-between align-items-center mb-4">
-        <a href="{{ route('jugadores.create') }}" class="btn btn-admin">➕ Crear Jugador</a>
-    </div>
-
-    <!-- 🔍 Barra de filtros -->
-    <div class="filter-card">
-        <form method="GET" action="{{ route('jugadores.index') }}" class="row g-3 align-items-end">
-            <div class="col-md-4">
-                <label>Nombre</label>
+    <!-- Filtros -->
+    <div class="filter-container">
+        <div class="filter-title">
+            <i class="fas fa-filter"></i>
+            Filtros de Búsqueda
+        </div>
+        <form method="GET" action="{{ route('jugadores.index') }}" class="row g-3">
+            <div class="col-md-3">
+                <label class="form-label">
+                    <i class="fas fa-search me-1"></i>Nombre
+                </label>
                 <div class="input-group">
-                    <span class="input-group-text">🔍</span>
-                    <input type="text" name="search" class="form-control" placeholder="Escribe el nombre del jugador..."
-                        value="{{ request('search') }}">
+                    <span class="input-group-text">
+                        <i class="fas fa-user"></i>
+                    </span>
+                    <input type="text" 
+                           name="search" 
+                           class="form-control" 
+                           placeholder="Buscar por nombre..."
+                           value="{{ request('search') }}">
                 </div>
             </div>
 
-            <div class="col-md-4">
-                <label>Posición</label>
+            <div class="col-md-3">
+                <label class="form-label">
+                    <i class="fas fa-map-marker-alt me-1"></i>Posición
+                </label>
                 <select name="posicion" class="form-select">
-                    <option value="">-- Todas --</option>
+                    <option value="">-- Todas las posiciones --</option>
                     @foreach($posiciones as $posicion)
                         <option value="{{ $posicion }}" {{ request('posicion') == $posicion ? 'selected' : '' }}>
                             {{ ucfirst($posicion) }}
@@ -257,10 +478,12 @@ Jugadores | MGR PLAY
                 </select>
             </div>
 
-            <div class="col-md-4">
-                <label>Equipo</label>
+            <div class="col-md-3">
+                <label class="form-label">
+                    <i class="fas fa-shield-alt me-1"></i>Equipo
+                </label>
                 <select name="idEquipo" class="form-select">
-                    <option value="">-- Todos --</option>
+                    <option value="">-- Todos los equipos --</option>
                     @foreach($equipos as $equipo)
                         <option value="{{ $equipo->id }}" {{ request('idEquipo') == $equipo->id ? 'selected' : '' }}>
                             {{ $equipo->nombre }}
@@ -270,9 +493,11 @@ Jugadores | MGR PLAY
             </div>
 
             <div class="col-md-3">
-                <label>Municipio del equipo</label>
+                <label class="form-label">
+                    <i class="fas fa-city me-1"></i>Municipio
+                </label>
                 <select name="idMunicipio" class="form-select">
-                    <option value="">-- Todos --</option>
+                    <option value="">-- Todos los municipios --</option>
                     @foreach($municipios as $municipio)
                         <option value="{{ $municipio->id }}" {{ request('idMunicipio') == $municipio->id ? 'selected' : '' }}>
                             {{ $municipio->nombre }}
@@ -281,102 +506,83 @@ Jugadores | MGR PLAY
                 </select>
             </div>
 
-
-            <div class="col-md-2 d-flex gap-2 mt-3">
-                <button type="submit" class="btn btn-admin w-100">Buscar</button>
-                <a href="{{ route('jugadores.index') }}" class="btn btn-outline-light w-100 rounded-pill">Limpiar</a>
+            <div class="col-12 d-flex gap-3 justify-content-end">
+                <button type="submit" class="btn-buscar">
+                    <i class="fas fa-search me-2"></i>Buscar
+                </button>
+                <a href="{{ route('jugadores.index') }}" class="btn-limpiar">
+                    <i class="fas fa-eraser me-2"></i>Limpiar Filtros
+                </a>
             </div>
         </form>
     </div>
 
-    <!-- 📋 Tabla -->
-    <div class="table-responsive">
-        <table class="table table-hover table-bordered text-center align-middle">
-            <thead>
-                <tr>
-                    <th>#</th>
-                    <th>Nombre</th>
-                    <th>Posición</th>
-                    <th>Fecha Nacimiento</th>
-                    <th>Altura (m)</th>
-                    <th>Peso (kg)</th>
-                    <th>Estado</th>
-                    <th>Equipo</th>
-                    <th>Acciones</th>
-                </tr>
-            </thead>
-            <tbody>
-                @forelse($jugadores as $jugador)
+    <!-- Tabla -->
+    <div class="table-container">
+        @if($jugadores->count() > 0)
+            <table class="table-custom">
+                <thead>
                     <tr>
-                        <td>{{ $jugador->id }}</td>
-                        <td>{{ $jugador->nombreCompleto() }}</td>
-                        <td>{{ $jugador->posicion }}</td>
-                        <td>{{ \Carbon\Carbon::parse($jugador->fechaNacimiento)->format('d/m/Y') }}</td>
-                        <td>{{ number_format($jugador->altura, 2) }}</td>
-                        <td>{{ number_format($jugador->peso, 2) }}</td>
-                        <td>
-                            <span class="badge {{ $jugador->estado == 'activo' ? 'bg-success' : 'bg-danger' }}">
-                                {{ ucfirst($jugador->estado) }}
-                            </span>
-                        </td>
-                        <td>{{ $jugador->equipos->nombre ?? 'Sin asignar' }}</td>
-                        <td>
-                            <a href="{{ route('jugadores.edit', $jugador->id) }}"
-                                class="btn btn-success btn-sm rounded-pill px-3">✏️ Editar</a>
-
-                            <form action="{{ route('jugadores.destroy', $jugador->id) }}" 
-                                method="POST" 
-                                class="delete-jugador-form d-inline">
-                                @csrf
-                                <button type="button" class="btn btn-warning btn-sm rounded-pill px-3 delete-jugador-btn">
-                                    🗑️ Eliminar
-                                </button>
-                            </form>
-                        </td>
+                        <th style="width: 5%;">ID</th>
+                        <th style="width: 18%;">Nombre Completo</th>
+                        <th style="width: 10%;">Posición</th>
+                        <th style="width: 12%;">F. Nacimiento</th>
+                        <th style="width: 8%;">Altura</th>
+                        <th style="width: 8%;">Peso</th>
+                        <th style="width: 10%;">Estado</th>
+                        <th style="width: 14%;">Equipo</th>
+                        <th style="width: 15%;">Acciones</th>
                     </tr>
-                @empty
-                    <tr>
-                        <td colspan="10" class="text-white-50">⚠️ No hay jugadores registrados.</td>
-                    </tr>
-                @endforelse
-            </tbody>
-        </table>
+                </thead>
+                <tbody>
+                    @foreach($jugadores as $jugador)
+                        <tr>
+                            <td><strong>{{ $jugador->id }}</strong></td>
+                            <td>{{ $jugador->nombreCompleto() }}</td>
+                            <td>{{ ucfirst($jugador->posicion) }}</td>
+                            <td>{{ \Carbon\Carbon::parse($jugador->fechaNacimiento)->format('d/m/Y') }}</td>
+                            <td>{{ number_format($jugador->altura, 2) }} m</td>
+                            <td>{{ number_format($jugador->peso, 2) }} kg</td>
+                            <td>
+                                <span class="badge-estado {{ $jugador->estado == 'activo' ? 'badge-activo' : 'badge-inactivo' }}">
+                                    {{ ucfirst($jugador->estado) }}
+                                </span>
+                            </td>
+                            <td>{{ $jugador->equipos->nombre ?? 'Sin asignar' }}</td>
+                            <td>
+                                <div class="action-buttons">
+                                    <a href="{{ route('jugadores.edit', $jugador->id) }}" class="btn-editar">
+                                        <i class="fas fa-edit me-1"></i>Editar
+                                    </a>
 
-        <div class="d-flex justify-content-center mt-3">
-            {{ $jugadores->links() }}
-        </div>
-    </div>
+                                    <form action="{{ route('jugadores.destroy', $jugador->id) }}" 
+                                          method="POST" 
+                                          class="delete-jugador-form d-inline">
+                                        @csrf
+                                        <button type="button" class="btn-eliminar delete-jugador-btn">
+                                            <i class="fas fa-trash-alt me-1"></i>Eliminar
+                                        </button>
+                                    </form>
+                                </div>
+                            </td>
+                        </tr>
+                    @endforeach
+                </tbody>
+            </table>
 
-    <div class="text-center mt-4">
-        <a href="{{ route('welcome') }}" class="btn btn-admin">Volver al menú</a>
+            <div class="pagination-container">
+                {{ $jugadores->links() }}
+            </div>
+        @else
+            <div class="empty-state">
+                <i class="fas fa-user-slash"></i>
+                <h3>No hay jugadores registrados</h3>
+                <p>Comienza creando tu primer jugador o ajusta los filtros de búsqueda</p>
+            </div>
+        @endif
     </div>
 </div>
-<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 
-<script>
-document.querySelectorAll('.delete-jugador-btn').forEach(button => {
-    button.addEventListener('click', function () {
-
-        let form = this.closest('.delete-jugador-form');
-
-        Swal.fire({
-            title: '¿Eliminar jugador?',
-            text: "Esta acción no se puede deshacer.",
-            icon: 'warning',
-            showCancelButton: true,
-            confirmButtonColor: '#22C55E',
-            cancelButtonColor: '#d33',
-            confirmButtonText: 'Sí, eliminar',
-            cancelButtonText: 'Cancelar'
-        }).then((result) => {
-            if (result.isConfirmed) {
-                form.submit();
-            }
-        });
-
-    });
-});
-</script>
 @if(session('success'))
 <script>
     document.addEventListener('DOMContentLoaded', function() {
@@ -385,10 +591,56 @@ document.querySelectorAll('.delete-jugador-btn').forEach(button => {
             title: '¡Éxito!',
             text: "{{ session('success') }}",
             confirmButtonText: 'Aceptar',
-            timer: 3000
+            confirmButtonColor: '#ffd700',
+            timer: 3000,
+            background: '#1B1F23',
+            color: '#fff'
         });
     });
 </script>
 @endif
+
+@if(session('error'))
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        Swal.fire({
+            icon: 'error',
+            title: '¡Error!',
+            text: "{{ session('error') }}",
+            confirmButtonText: 'Aceptar',
+            confirmButtonColor: '#ff6b6b',
+            timer: 4000,
+            background: '#1B1F23',
+            color: '#fff'
+        });
+    });
+</script>
+@endif
+
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+<script>
+document.querySelectorAll('.delete-jugador-btn').forEach(button => {
+    button.addEventListener('click', function () {
+        let form = this.closest('.delete-jugador-form');
+
+        Swal.fire({
+            title: '¿Eliminar jugador?',
+            text: "Esta acción no se puede deshacer.",
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonColor: '#22C55E',
+            cancelButtonColor: '#ff6b6b',
+            confirmButtonText: 'Sí, eliminar',
+            cancelButtonText: 'Cancelar',
+            background: '#1B1F23',
+            color: '#fff'
+        }).then((result) => {
+            if (result.isConfirmed) {
+                form.submit();
+            }
+        });
+    });
+});
+</script>
 
 @endsection
