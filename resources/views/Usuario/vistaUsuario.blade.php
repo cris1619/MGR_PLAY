@@ -482,7 +482,7 @@
                                             <div class="collapse mt-2" id="canchas{{ $municipio->id }}">
                                                 <ul class="list-unstyled ps-3">
                                                     @forelse ($municipio->canchas as $cancha)
-                                                    <li><a href="{{ url('/cancha/' . $cancha->id) }}">{{ $cancha->nombre }}</a></li>
+                                                    <li><a href="#">{{ $cancha->nombre }}</a></li>
                                                     @empty
                                                     <li><em>No hay canchas por ahora.</em></li>
                                                     @endforelse
@@ -497,7 +497,7 @@
                                             <div class="collapse mt-2" id="equipos{{ $municipio->id }}">
                                                 <ul class="list-unstyled ps-3">
                                                     @forelse ($municipio->equipos as $equipo)
-                                                    <li><a href="{{ url('/equipo/' . $equipo->id) }}">{{ $equipo->nombre }}</a></li>
+                                                    <li><a href="#">{{ $equipo->nombre }}</a></li>
                                                     @empty
                                                     <li><em>No hay equipos por ahora.</em></li>
                                                     @endforelse
@@ -512,7 +512,7 @@
                                             <div class="collapse mt-2" id="torneos{{ $municipio->id }}">
                                                 <ul class="list-unstyled ps-3">
                                                     @forelse ($municipio->torneos as $torneo)
-                                                    <li><a href="{{ url('/torneo/' . $torneo->id) }}">{{ $torneo->nombre }}</a></li>
+                                                    <li><a href="#">{{ $torneo->nombre }}</a></li>
                                                     @empty
                                                     <li><em>No hay torneos por ahora.</em></li>
                                                     @endforelse

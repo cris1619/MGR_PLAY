@@ -18,6 +18,29 @@
 
 @section('content')
 <style>
+     /* Hero Section */
+    .hero-section {
+        background: linear-gradient(135deg, #1B1F23 0%, #2a2e33 100%);
+        padding: 40px 20px;
+        margin-bottom: 40px;
+        border-radius: 15px;
+        text-align: center;
+        box-shadow: 0 8px 16px rgba(0,0,0,0.3);
+    }
+
+    .hero-section h1 {
+        color: #ccc;
+        font-size: 2.3rem;
+        font-weight: 700;
+        margin-bottom: 10px;
+        text-shadow: 2px 2px 4px rgba(0,0,0,0.5);
+    }
+
+    .hero-section p {
+        color: #ccc;
+        font-size: 1.1rem;
+    }
+
     /* ==== ANIMACIONES ==== */
     @keyframes fadeInUp {
         from { opacity: 0; transform: translateY(40px); }
@@ -429,6 +452,11 @@
         }
     }
 </style>
+
+<div class="hero-section">
+        <h1>Gestión de Torneos</h1>
+        <p>Administra los torneos registrados en MGR PLAY</p>
+    </div>
 
 <div class="torneos-container">
     <!-- Encabezado -->

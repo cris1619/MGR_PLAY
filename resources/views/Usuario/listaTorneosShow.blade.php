@@ -284,6 +284,36 @@ body {
     color: #fff;
 }
 
+/* === INFO ADICIONAL === */
+.partido-info {
+    padding-top: 15px;
+    border-top: 1px solid rgba(255, 255, 255, 0.1);
+    display: flex;
+    justify-content: center;
+    gap: 15px;
+}
+
+.btn-ver-detalles {
+    background:#00cc6a;
+    color: white;
+    padding: 10px 25px;
+    border-radius: 25px;
+    font-weight: 700;
+    font-size: 0.9rem;
+    text-decoration: none;
+    transition: all 0.3s ease;
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    box-shadow: 0 4px 15px rgba(99, 254, 79, 0.3);
+}
+
+.btn-ver-detalles:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 20px rgba(79, 254, 123, 0.5);
+    color: white;
+}
+
 /* === SECCIÓN PARTIDOS === */
 .partidos-section {
     margin-top: 50px;
@@ -686,6 +716,14 @@ body {
                                 </div>
 
                                 <div class="partido-info">
+                                        <a href="{{ route('partidos.show', $partido->id) }}" class="btn-ver-detalles">
+                                            <i class="bi bi-eye"></i>
+                                            
+                                            Ver Detalles
+                                        </a>
+                                    </div>
+
+                                <div class="partido-info">
                                     @if($partido->municipio)
                                         <div class="info-item">
                                             <span class="info-icon">📍</span>
@@ -699,6 +737,8 @@ body {
                                             <span>{{ $partido->fase }}</span>
                                         </div>
                                     @endif
+
+                                    
                                 </div>
                             </div>
                         </div>

@@ -89,6 +89,30 @@
         animation: fadeInUp 0.8s ease forwards, glowIn 1.5s ease 0.3s forwards;
     }
 
+     /* Hero Section */
+    .hero-section {
+        background: linear-gradient(135deg, #1B1F23 0%, #2a2e33 100%);
+        padding: 40px 20px;
+        margin-bottom: 40px;
+        border-radius: 15px;
+        text-align: center;
+        box-shadow: 0 8px 16px rgba(0,0,0,0.3);
+    }
+
+    .hero-section h1 {
+        color: #ccc;
+        font-size: 2.3rem;
+        font-weight: 700;
+        margin-bottom: 10px;
+        text-shadow: 2px 2px 4px rgba(0,0,0,0.5);
+    }
+
+    .hero-section p {
+        color: #ccc;
+        font-size: 1.1rem;
+    }
+
+
     /* ==== ENCABEZADO ==== */
     .header-section {
         display: flex;
@@ -476,6 +500,7 @@
             min-width: 900px;
         }
 
+
         .action-buttons {
             flex-direction: column;
             width: 100%;
@@ -491,6 +516,11 @@
         }
     }
 </style>
+
+<div class="hero-section">
+        <h1>Gestión de Equipos</h1>
+        <p>Administra los equipos registrados en MGR PLAY</p>
+    </div>
 
 <div class="equipos-container">
     <!-- Encabezado -->

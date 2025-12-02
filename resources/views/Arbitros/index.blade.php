@@ -68,6 +68,30 @@
         margin-right: 30px;
     }
 
+     /* Hero Section */
+    .hero-section {
+        background: linear-gradient(135deg, #1B1F23 0%, #2a2e33 100%);
+        padding: 40px 20px;
+        margin-bottom: 40px;
+        border-radius: 15px;
+        text-align: center;
+        box-shadow: 0 8px 16px rgba(0,0,0,0.3);
+    }
+
+    .hero-section h1 {
+        color: #ccc;
+        font-size: 2.3rem;
+        font-weight: 700;
+        margin-bottom: 10px;
+        text-shadow: 2px 2px 4px rgba(0,0,0,0.5);
+    }
+
+    .hero-section p {
+        color: #ccc;
+        font-size: 1.1rem;
+    }
+
+
     /* ==== CONTENEDOR PRINCIPAL ==== */
     .arbitros-container {
         background: linear-gradient(145deg, #1B1F23 0%, #252a2f 100%);
@@ -287,6 +311,11 @@
         }
     }
 </style>
+
+<div class="hero-section">
+        <h1>Gestión de Arbitros</h1>
+        <p>Administra los arbitros registrados en MGR PLAY</p>
+    </div>
 
 <div class="arbitros-container">
     <!-- Encabezado -->
