@@ -1,160 +1,242 @@
 @extends('layouts.app')
 
-@section('title')
-Editar Torneo | MGR PLAY
-@endsection
-
-@section('titleContent')
-<nav class="navbar">
-    <div class="navbar-left">
-        <a href="{{ route('welcome') }}" class="logo">
-            <img src="{{ url('img/logoSinFondo.png') }}" alt="MGR PLAY" style="height: 50px; margin-right: 30px;">
-            🏆 EDITAR TORNEO
-        </a>
-    </div>
-    <a href="{{ route('torneos.index') }}" class="btn btn-secondary">Volver a torneos</a>
-</nav>
-@endsection
+@section('title', 'Editar Torneo | MGR PLAY')
 
 @section('content')
-<style>
-    .navbar {
-        background-color: #1B1F23;
-        padding: 0 20px;
-        height: 60px;
-        display: flex;
-        align-items: center;
-        justify-content: space-between;
-        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-    }
+<div class="container my-5">
 
-    .form-card {
-        background-color: #1B1F23;
-        border-radius: 15px;
-        padding: 25px 30px;
-        margin-bottom: 25px;
-        color: white;
-    }
+    {{-- ENCABEZADO --}}
+    <div class="text-center mb-4">
+        <h2 class="fw-bold text-white">
+            <i class="fas fa-edit text-success"></i> Editar Torneo
+        </h2>
+        <p class="text-light opacity-75">Modifica la información del torneo según corresponda</p>
+    </div>
 
-    .form-select,
-    .form-control {
-        border-radius: 15px;
-        font-size: 14px;
-    }
-</style>
+    {{-- CARD PRINCIPAL --}}
+    <div class="card border-0 shadow-lg rounded-4 bg-dark text-light animate__animated animate__fadeInUp">
+        <div class="card-body p-4">
 
-<div class="container mt-5">
-    <div class="form-card shadow-sm">
-        <h3 class="mb-4">✏️ Editar torneo</h3>
+            <form action="{{ route('torneos.update', $torneos->id) }}" method="POST">
+                @csrf
+               
 
-        <form method="POST" action="{{ route('torneos.update', $torneos->id) }}" enctype="multipart/form-data">
-            @csrf
-
-            <div class="row g-3">
-                <!-- Nombre -->
-                <div class="col-md-6">
-                    <label class="form-label">Nombre</label>
-                    <input type="text" name="nombre" class="form-control" value="{{ $torneos->nombre }}" required>
+                {{-- Nombre --}}
+                <div class="mb-3">
+                    <label class="form-label fw-semibold text-warning">🏆 Nombre del Torneo</label>
+                    <input type="text" name="nombre" class="form-control bg-dark text-light border-secondary rounded-3"
+                           value="{{ old('nombre', $torneos->nombre) }}" required>
                 </div>
 
-                <!-- Municipio -->
-                <div class="col-md-6">
-                    <label class="form-label">Municipio</label>
-                    <select name="idMunicipio" class="form-select" required>
-                        <option value="">-- Selecciona un municipio --</option>
-                        @foreach($municipios as $municipio)
-                        <option value="{{ $municipio->id }}" {{ $torneos->idMunicipio == $municipio->id ? 'selected' : '' }}>
-                            {{ $municipio->nombre }}
-                        </option>
+                {{-- Municipio --}}
+                <div class="mb-3">
+                    <label class="form-label fw-semibold text-warning">🌍 Municipio</label>
+                    <select name="idMunicipio" class="form-select bg-dark text-light border-secondary rounded-3">
+                        <option value="">Seleccione un municipio</option>
+                        @foreach ($municipios as $mun)
+                            <option value="{{ $mun->id }}" {{ old('idMunicipio', $torneos->idMunicipio) == $mun->id ? 'selected' : '' }}>
+                                {{ $mun->nombre }}
+                            </option>
                         @endforeach
                     </select>
                 </div>
 
-                <!-- Descripción -->
-                <div class="col-md-12">
-                    <label class="form-label">Descripción</label>
-                    <textarea name="descripcion" class="form-control" rows="3" required>{{ $torneos->descripcion }}</textarea>
+                {{-- Descripción --}}
+                <div class="mb-3">
+                    <label class="form-label fw-semibold text-warning">📝 Descripción</label>
+                    <textarea name="descripcion" rows="3"
+                              class="form-control bg-dark text-light border-secondary rounded-3">{{ old('descripcion', $torneos->descripcion) }}</textarea>
                 </div>
 
-                <!-- Logo -->
-                <div class="col-md-6">
-                    <label class="form-label">Logo</label>
-                    <input type="file" name="logo" class="form-control" accept="image/*">
-                    @if($torneos->logo)
-                        <div class="mt-2">
-                            <img src="{{ asset('storage/' . $torneos->logo) }}" alt="Logo torneo" height="80">
+                {{-- Premio --}}
+                <div class="mb-3">
+                    <label class="form-label fw-semibold text-warning">💰 Premio</label>
+                    <input type="text" name="premio" class="form-control bg-dark text-light border-secondary rounded-3"
+                           value="{{ old('premio', $torneos->premio) }}">
+                </div>
+
+                {{-- Estado --}}
+                <div class="mb-3">
+                    <label class="form-label fw-semibold text-warning">📊 Estado del Torneo</label>
+                    <select name="estado" class="form-select bg-dark text-light border-secondary rounded-3" required>
+                        <option value="Pendiente" {{ old('estado', $torneos->estado) == 'Pendiente' ? 'selected' : '' }}>Pendiente</option>
+                        <option value="En curso" {{ old('estado', $torneos->estado) == 'En curso' ? 'selected' : '' }}>En curso</option>
+                        <option value="Finalizado" {{ old('estado', $torneos->estado) == 'Finalizado' ? 'selected' : '' }}>Finalizado</option>
+                    </select>
+                </div>
+
+                {{-- Tipo --}}
+                <div class="mb-3">
+                    <label class="form-label fw-semibold text-warning">⚙️ Tipo de Torneo</label>
+                    <select name="tipo" id="tipo_torneo" class="form-select bg-dark text-light border-secondary rounded-3" required>
+                        <option value="">Seleccione una opción</option>
+                        <option value="Grupos" {{ old('tipo', $torneos->tipo) == 'Grupos' ? 'selected' : '' }}>Fase de Grupos</option>
+                        <option value="Eliminacion" {{ old('tipo', $torneos->tipo) == 'Eliminacion' ? 'selected' : '' }}>Eliminación Directa</option>
+                        <option value="Liguilla" {{ old('tipo', $torneos->tipo) == 'Liguilla' ? 'selected' : '' }}>Liguilla (Todos contra todos)</option>
+                    </select>
+                </div>
+
+                {{-- Fechas --}}
+                <div class="row">
+                    <div class="col-md-6 mb-3">
+                        <label class="form-label fw-semibold text-warning">📅 Fecha de Inicio</label>
+                        <input type="date" name="fecha_inicio" class="form-control bg-dark text-light border-secondary rounded-3"
+                               value="{{ old('fecha_inicio', $torneos->fecha_inicio) }}">
+                    </div>
+                    <div class="col-md-6 mb-3">
+                        <label class="form-label fw-semibold text-warning">📅 Fecha de Fin</label>
+                        <input type="date" name="fecha_fin" class="form-control bg-dark text-light border-secondary rounded-3"
+                               value="{{ old('fecha_fin', $torneos->fecha_fin) }}">
+                    </div>
+                </div>
+
+                {{-- Equipos --}}
+                <div class="mb-3">
+                    <label class="form-label fw-semibold text-warning">👥 Equipos Participantes</label>
+                    <select name="equipos[]" class="selectpicker w-100" data-style="btn-dark" multiple data-live-search="true" required>
+                        @foreach ($equipos as $eq)
+                            <option value="{{ $eq->id }}" {{ $torneos->equipos->contains($eq->id) ? 'selected' : '' }}>
+                                {{ $eq->nombre }}
+                            </option>
+                        @endforeach
+                    </select>
+                    <small class="text-secondary">Seleccione los equipos participantes</small>
+                </div>
+
+                {{-- Número de equipos --}}
+                <div class="mb-3">
+                    <label class="form-label fw-semibold text-warning">🔢 Número de Equipos</label>
+                    <input type="number" name="num_equipos" id="num_equipos_form"
+                           class="form-control bg-dark text-light border-secondary rounded-3"
+                           value="{{ $torneos->num_equipos }}" readonly>
+                </div>
+
+                {{-- Configuración de grupos --}}
+                <div id="config_grupos" class="mt-4 bg-black bg-opacity-25 p-3 rounded-4 border border-success d-none">
+                    <h5 class="text-success"><i class="fas fa-layer-group"></i> Configuración de Grupos</h5>
+                    <div class="row mt-2">
+                        <div class="col-md-4 mb-3">
+                            <label class="form-label">Número de Grupos</label>
+                            <input type="number" min="1" name="cantidad_grupos" id="num_grupos"
+                                   class="form-control bg-dark text-light border-secondary rounded-3"
+                                   value="{{ $torneos->cantidad_grupos }}">
                         </div>
-                    @endif
+                        <div class="col-md-4 mb-3">
+                            <label class="form-label">Equipos por Grupo</label>
+                            <input type="number" id="equipos_por_grupo" name="equipos_por_grupo"
+                                   class="form-control bg-dark text-light border-secondary rounded-3"
+                                   readonly value="{{ $torneos->equipos_por_grupo }}">
+                        </div>
+                        <div class="col-md-4 mb-3">
+                            <label class="form-label">Clasifican por Grupo</label>
+                            <input type="number" min="1" name="clasificados_por_grupo" id="clasifican_por_grupo"
+                                   class="form-control bg-dark text-light border-secondary rounded-3"
+                                   value="{{ $torneos->clasificados_por_grupo }}">
+                        </div>
+                    </div>
                 </div>
 
-                <!-- Número de equipos -->
-                <div class="col-md-6">
-                    <label class="form-label">Número de equipos</label>
-                    <input type="number" name="numeroEquipos" class="form-control" min="2" value="{{ $torneos->numeroEquipos }}" required>
-                </div>
-
-                <!-- Estado -->
-                <div class="col-md-6">
-                    <label class="form-label">Estado</label>
-                    <select name="estado" class="form-select" required>
-                        <option value="activo" {{ $torneos->estado == 'activo' ? 'selected' : '' }}>Activo</option>
-                        <option value="inactivo" {{ $torneos->estado == 'inactivo' ? 'selected' : '' }}>Inactivo</option>
+                {{-- Liguilla --}}
+                <div id="config_liguilla" class="mt-4 bg-black bg-opacity-25 p-3 rounded-4 border border-warning d-none">
+                    <h5 class="text-warning"><i class="fas fa-sync-alt"></i> Configuración Liguilla</h5>
+                    <label class="form-label">¿Ida y Vuelta?</label>
+                    <select name="partidos_por_enfrentamiento" class="form-select bg-dark text-light border-secondary rounded-3">
+                        <option value="1" {{ $torneos->partidos_por_enfrentamiento == 1 ? 'selected' : '' }}>Solo Ida</option>
+                        <option value="2" {{ $torneos->partidos_por_enfrentamiento == 2 ? 'selected' : '' }}>Ida y Vuelta</option>
                     </select>
                 </div>
 
-                <!-- Tipo de deporte -->
-                <div class="col-md-6">
-                    <label class="form-label">Tipo de deporte</label>
-                    <select name="tipoDeporte" class="form-select" required>
-                        <option value="FUTBOL" {{ $torneos->tipoDeporte == 'FUTBOL' ? 'selected' : '' }}>Fútbol</option>
-                        <option value="FUTBOL-5" {{ $torneos->tipoDeporte == 'FUTBOL-5' ? 'selected' : '' }}>Fútbol 5</option>
-                        <option value="FUTBOL-8" {{ $torneos->tipoDeporte == 'FUTBOL-8' ? 'selected' : '' }}>Fútbol 8</option>
-                        <option value="MICRO-FUTBOL" {{ $torneos->tipoDeporte == 'MICRO-FUTBOL' ? 'selected' : '' }}>Microfútbol</option>
-                        <option value="OTRO" {{ $torneos->tipoDeporte == 'OTRO' ? 'selected' : '' }}>Otro</option>
-                    </select>
+                {{-- Eliminación --}}
+                <div id="config_eliminacion" class="mt-4 bg-black bg-opacity-25 p-3 rounded-4 border border-danger d-none">
+                    <h5 class="text-danger"><i class="fas fa-times-circle"></i> Eliminación Directa</h5>
+                    <p class="text-secondary">Las llaves se generarán automáticamente según el número de equipos.</p>
                 </div>
 
-                <!-- Formato -->
-                <div class="col-md-6">
-                    <label class="form-label">Formato</label>
-                    <select name="formato" class="form-select" required>
-                        <option value="FASE_GRUPOS" {{ $torneos->formato == 'FASE_GRUPOS' ? 'selected' : '' }}>Fase de Grupos</option>
-                        <option value="LIGUILLA" {{ $torneos->formato == 'LIGUILLA' ? 'selected' : '' }}>Liguilla</option>
-                        <option value="ELIMINACION_DIRECTA" {{ $torneos->formato == 'ELIMINACION_DIRECTA' ? 'selected' : '' }}>Eliminación Directa</option>
-                        <option value="MIXTO" {{ $torneos->formato == 'MIXTO' ? 'selected' : '' }}>Mixto</option>
-                    </select>
+                {{-- Botones --}}
+                <div class="mt-5 d-flex flex-column flex-md-row gap-3">
+                    <button class="btn btn-actualizar flex-fill">
+                        <i class="fas fa-check me-2"></i> Actualizar Torneo
+                    </button>
+
+                    <a href="{{ route('torneos.index') }}" class="btn btn-volver flex-fill">
+                        <i class="fas fa-arrow-left me-2"></i> Volver
+                    </a>
                 </div>
 
-                <!-- Fechas -->
-                <div class="col-md-6">
-                    <label class="form-label">Fecha de inicio</label>
-                    <input type="date" name="fechaInicio" class="form-control" value="{{ $torneos->fechaInicio }}" required>
-                </div>
-
-                <div class="col-md-6">
-                    <label class="form-label">Fecha de fin</label>
-                    <input type="date" name="fechaFin" class="form-control" value="{{ $torneos->fechaFin }}" required>
-                </div>
-
-                <!-- Reglas -->
-                <div class="col-md-12">
-                    <label class="form-label">Reglas del torneo</label>
-                    <textarea name="reglas" class="form-control" rows="3" >{{ $torneos->reglas }}</textarea>
-                </div>
-
-                <!-- Premio -->
-                <div class="col-md-6">
-                    <label class="form-label">Premio</label>
-                    <input type="number" name="premio" step="0.01" class="form-control" value="{{ $torneos->premio }}">
-                </div>
-            </div>
-
-            <!-- Botones -->
-            <div class="mt-4 d-flex justify-content-end gap-2">
-                <button type="submit" class="btn btn-success">Actualizar</button>
-                <a href="{{ route('torneos.index') }}" class="btn btn-warning">Volver</a>
-            </div>
-        </form>
+            </form>
+            
+        </div>
     </div>
 </div>
+@endsection
+
+@section('scripts')
+<script>
+$(document).ready(function() {
+    $('.selectpicker').selectpicker();
+    $('#tipo_torneo').on('change', mostrarConfig);
+    actualizarGrupos();
+    $('select[name="equipos[]"]').on('changed.bs.select', actualizarGrupos);
+    $('#num_grupos').on('keyup change', actualizarGrupos);
+});
+
+function mostrarConfig() {
+    let tipo = $('#tipo_torneo').val();
+    $('#config_grupos, #config_liguilla, #config_eliminacion').addClass('d-none');
+    if (tipo === 'Grupos') $('#config_grupos').removeClass('d-none');
+    else if (tipo === 'Liguilla') $('#config_liguilla').removeClass('d-none');
+    else if (tipo === 'Eliminacion') $('#config_eliminacion').removeClass('d-none');
+    actualizarGrupos();
+}
+
+function actualizarGrupos() {
+    let selectedEquipos = $('select[name="equipos[]"]').val() || [];
+    let numEquipos = selectedEquipos.length;
+    $('#num_equipos_form').val(numEquipos);
+    let numGrupos = parseInt($('#num_grupos').val()) || 0;
+    if (numGrupos > 0 && numEquipos > 0) {
+        let porGrupo = Math.floor(numEquipos / numGrupos);
+        $('#equipos_por_grupo').val(porGrupo);
+    } else {
+        $('#equipos_por_grupo').val('');
+    }
+}
+</script>
+
+<style>
+/* --- BOTÓN ACTUALIZAR --- */
+.btn-actualizar {
+    background: linear-gradient(135deg, #16A34A, #22C55E);
+    color: #fff;
+    font-weight: 600;
+    border: none;
+    border-radius: 12px;
+    padding: 12px 20px;
+    transition: all 0.35s ease;
+    box-shadow: 0 4px 12px rgba(22, 163, 74, 0.3);
+}
+.btn-actualizar:hover {
+    background: linear-gradient(135deg, #22C55E, #16A34A);
+    transform: translateY(-3px) scale(1.03);
+    box-shadow: 0 8px 22px rgba(22, 163, 74, 0.6);
+}
+
+/* --- BOTÓN VOLVER --- */
+.btn-volver {
+    background: linear-gradient(135deg, #1E293B, #334155);
+    color: #fff;
+    font-weight: 600;
+    border: 2px solid #22C55E;
+    border-radius: 12px;
+    padding: 12px 20px;
+    transition: all 0.35s ease;
+    box-shadow: 0 4px 12px rgba(34, 197, 94, 0.25);
+}
+.btn-volver:hover {
+    background: linear-gradient(135deg, #22C55E, #16A34A);
+    color: #fff;
+    transform: translateY(-3px) scale(1.03);
+    box-shadow: 0 8px 22px rgba(22, 163, 74, 0.6);
+}
+</style>
 @endsection

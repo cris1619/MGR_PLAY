@@ -12,15 +12,19 @@ return new class extends Migration
     public function up(): void
     {
         Schema::create('partido_equipos', function (Blueprint $table) {
-            $table->id();
-            $table->unsignedBigInteger('id_partido');
-            $table->unsignedBigInteger('id_equipo');
-            $table->enum('rol', ['Local','Visitante']);
-            $table->integer('goles')->default(0);
-            $table->foreign('id_partido')->references('id')->on('partido');
-            $table->foreign('id_equipo')->references('id')->on('equipos');
-            $table->timestamps();
-        });
+        $table->id();
+        $table->unsignedBigInteger('id_partido');
+        $table->unsignedBigInteger('id_equipo')->nullable(); // ✅ ahora permite NULL
+        $table->enum('rol', ['Local','Visitante','Ganador Ronda Anterior'])->nullable();
+        $table->integer('goles')->default(0);
+
+        $table->foreign('id_partido')->references('id')->on('partidos');
+        $table->foreign('id_equipo')
+            ->references('id')->on('equipos')
+            ->nullOnDelete(); // ✅ soporte para null
+
+        $table->timestamps();
+    });
     }
 
     /**

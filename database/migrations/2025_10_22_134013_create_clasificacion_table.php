@@ -25,7 +25,6 @@ return new class extends Migration
             $table->integer('perdidos')->default(0);
             $table->integer('goles_favor')->default(0);
             $table->integer('goles_contra')->default(0);
-            $table->integer('diferencia_goles')->default(0);
             $table->timestamps();
         });
     }

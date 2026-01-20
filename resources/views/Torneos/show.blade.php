@@ -1,0 +1,752 @@
+@extends('layouts.app')
+
+@section('title')
+{{ $torneo->nombre }} | MGR PLAY
+@endsection
+
+@section('titleContent')
+<nav class="navbar">
+    <div class="navbar-left">
+        <a href="{{ route('welcome') }}" class="logo">
+            <img src="{{ url('img/logoSinFondo.png') }}" alt="MGR PLAY" style="height: 50px; margin-right: 30px;">
+            🏆 TORNEO
+        </a>
+    </div>
+    <div class="d-flex gap-2">
+        <a href="{{ route('torneos.index') }}" class="btn btn-outline-light">← Volver</a>
+        <a href="{{ route('usuario.vistaUsuario') }}" class="btn btn-secondary">🏠 Inicio</a>
+    </div>
+</nav>
+@endsection
+
+@section('content')
+<style>
+    .navbar {
+        background-color: #1B1F23;
+        padding: 0 20px;
+        height: 60px;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        box-shadow: 0 2px 8px rgba(0,0,0,0.3);
+    }
+
+    .navbar-left {
+        display: flex;
+        align-items: center;
+        gap: 40px;
+    }
+
+    .hero-section {
+        background: linear-gradient(135deg, rgba(26, 31, 36, 0.98) 0%, rgba(42, 46, 51, 0.98) 100%);
+        border-radius: 25px;
+        padding: 50px;
+        margin-bottom: 30px;
+        position: relative;
+        overflow: hidden;
+        border: 2px solid #ffd700;
+    }
+
+    .trophy-icon {
+        font-size: 5rem;
+        text-align: center;
+        margin-bottom: 20px;
+        filter: drop-shadow(0 5px 20px rgba(255, 215, 0, 0.5));
+        animation: float 3s ease-in-out infinite;
+    }
+
+    @keyframes float {
+        0%, 100% { transform: translateY(0px); }
+        50% { transform: translateY(-15px); }
+    }
+
+    .torneo-nombre {
+        background: linear-gradient(135deg, #ffd700 0%, #00ff88 50%, #00ccff 100%);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        background-clip: text;
+        font-weight: 800;
+        font-size: 3rem;
+        text-align: center;
+        margin-bottom: 20px;
+        text-transform: uppercase;
+        letter-spacing: 2px;
+    }
+
+    .info-card {
+        background: linear-gradient(145deg, #1a1f24 0%, #252a30 50%, #1a1f24 100%);
+        border: 2px solid #2a2e33;
+        border-radius: 20px;
+        padding: 30px;
+        margin-bottom: 25px;
+        position: relative;
+        overflow: hidden;
+        transition: all 0.4s ease;
+    }
+
+    .info-card::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        height: 4px;
+        background: linear-gradient(90deg, #ffd700, #00ff88, #00ccff, #ffd700);
+        background-size: 200% 100%;
+        animation: shimmer 3s linear infinite;
+    }
+
+    @keyframes shimmer {
+        0% { background-position: 200% 0; }
+        100% { background-position: -200% 0; }
+    }
+
+    .info-card:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 10px 30px rgba(0, 255, 136, 0.2);
+        border-color: #00ff88;
+    }
+
+    .card-title {
+        color: #ffd700;
+        font-weight: 700;
+        font-size: 1.5rem;
+        margin-bottom: 25px;
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        text-transform: uppercase;
+        letter-spacing: 1px;
+    }
+
+    .info-item {
+        display: flex;
+        padding: 15px;
+        margin-bottom: 15px;
+        background: rgba(42, 46, 51, 0.5);
+        border-radius: 12px;
+        border-left: 4px solid #00ccff;
+        transition: all 0.3s ease;
+    }
+
+    .info-item:hover {
+        background: rgba(42, 46, 51, 0.8);
+        border-left-color: #00ff88;
+        transform: translateX(5px);
+    }
+
+    .info-label {
+        color: #00ccff;
+        font-weight: 600;
+        font-size: 1.1rem;
+        min-width: 200px;
+    }
+
+    .info-value {
+        color: #fff;
+        font-size: 1.1rem;
+        font-weight: 500;
+    }
+
+    .estado-badge {
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        padding: 10px 25px;
+        border-radius: 25px;
+        font-weight: 700;
+        text-transform: uppercase;
+        letter-spacing: 1px;
+        font-size: 1rem;
+    }
+
+    .estado-activo {
+        background: linear-gradient(135deg, #00ff88 0%, #00ccff 100%);
+        color: #1a1f24;
+        box-shadow: 0 5px 20px rgba(0, 255, 136, 0.4);
+    }
+
+    .estado-finalizado {
+        background: linear-gradient(135deg, #ffd700 0%, #ffaa00 100%);
+        color: #1a1f24;
+        box-shadow: 0 5px 20px rgba(255, 215, 0, 0.4);
+    }
+
+    .estado-inactivo {
+        background: linear-gradient(135deg, #666 0%, #444 100%);
+        color: #fff;
+    }
+
+    .tipo-badge {
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        padding: 8px 20px;
+        border-radius: 20px;
+        background: rgba(0, 204, 255, 0.2);
+        border: 2px solid #00ccff;
+        color: #00ccff;
+        font-weight: 700;
+        text-transform: uppercase;
+    }
+
+    .equipos-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+        gap: 15px;
+        margin-top: 20px;
+    }
+
+    .equipo-card {
+        background: rgba(42, 46, 51, 0.6);
+        border: 2px solid #3a3e43;
+        border-radius: 12px;
+        padding: 15px;
+        display: flex;
+        align-items: center;
+        gap: 15px;
+        transition: all 0.3s ease;
+    }
+
+    .equipo-card:hover {
+        background: rgba(42, 46, 51, 0.9);
+        border-color: #00ff88;
+        transform: translateX(5px);
+    }
+
+    .equipo-escudo {
+        width: 60px;
+        height: 60px;
+        border-radius: 50%;
+        object-fit: cover;
+        border: 3px solid #ffd700;
+        box-shadow: 0 3px 10px rgba(0, 0, 0, 0.3);
+        flex-shrink: 0;
+    }
+
+    .equipo-nombre {
+        color: #fff;
+        font-weight: 600;
+        font-size: 1rem;
+    }
+
+    .grupo-container {
+        background: rgba(26, 31, 36, 0.6);
+        border: 2px solid #2a2e33;
+        border-radius: 15px;
+        padding: 25px;
+        margin-bottom: 25px;
+    }
+
+    .grupo-title {
+        color: #ffd700;
+        font-weight: 700;
+        font-size: 1.3rem;
+        margin-bottom: 20px;
+    }
+
+    .partido-card {
+        background: rgba(42, 46, 51, 0.6);
+        border: 2px solid #3a3e43;
+        border-radius: 15px;
+        padding: 30px;
+        margin-bottom: 25px;
+        transition: all 0.3s ease;
+    }
+
+    .partido-card:hover {
+        border-color: #00ccff;
+        transform: translateY(-3px);
+        box-shadow: 0 8px 25px rgba(0, 204, 255, 0.2);
+    }
+
+    .partido-fase {
+        color: #ffd700;
+        font-weight: 700;
+        font-size: 1.2rem;
+        margin-bottom: 20px;
+        padding: 10px 20px;
+        background: rgba(255, 215, 0, 0.1);
+        border-left: 4px solid #ffd700;
+        border-radius: 8px;
+    }
+
+    .partido-equipos {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        margin-bottom: 25px;
+        gap: 20px;
+    }
+
+    .partido-equipo {
+        display: flex;
+        align-items: center;
+        gap: 15px;
+        flex: 1;
+        min-width: 0;
+    }
+
+    .partido-equipo .info-value {
+        font-size: 1.4rem;
+        font-weight: 600;
+        flex: 1;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+    }
+
+    .partido-equipo .badge {
+        font-size: 2rem;
+        padding: 12px 24px;
+        background: linear-gradient(135deg, #ffd700 0%, #00ff88 100%) !important;
+        color: #1a1f24;
+        font-weight: 800;
+        border-radius: 12px;
+        min-width: 70px;
+        text-align: center;
+        box-shadow: 0 4px 12px rgba(255, 215, 0, 0.3);
+    }
+
+    .vs-separator {
+        color: #ffd700;
+        font-weight: 800;
+        font-size: 2rem;
+        padding: 0 20px;
+        flex-shrink: 0;
+        text-shadow: 0 0 15px rgba(255, 215, 0, 0.5);
+    }
+
+    .partido-info {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        flex-wrap: wrap;
+        gap: 15px;
+        padding-top: 20px;
+        border-top: 2px solid #3a3e43;
+    }
+
+    .partido-fecha {
+        color: #00ccff;
+        font-size: 1.2rem;
+        font-weight: 600;
+        display: flex;
+        align-items: center;
+        gap: 8px;
+    }
+
+    .partido-actions {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        flex-wrap: wrap;
+    }
+
+    .partido-jugado {
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        padding: 10px 20px;
+        border-radius: 20px;
+        font-size: 1rem;
+        font-weight: 700;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+    }
+
+    .jugado-si {
+        background: linear-gradient(135deg, rgba(0, 255, 136, 0.2) 0%, rgba(0, 204, 255, 0.2) 100%);
+        border: 2px solid #00ff88;
+        color: #00ff88;
+    }
+
+    .jugado-no {
+        background: linear-gradient(135deg, rgba(255, 215, 0, 0.2) 0%, rgba(255, 170, 0, 0.2) 100%);
+        border: 2px solid #ffd700;
+        color: #ffd700;
+    }
+
+    .btn-editar-partido {
+        background: linear-gradient(135deg, #00ccff 0%, #0088ff 100%);
+        border: none;
+        color: #fff;
+        padding: 10px 20px;
+        border-radius: 20px;
+        font-weight: 700;
+        font-size: 0.95rem;
+        text-decoration: none;
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        transition: all 0.3s ease;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+    }
+
+    .btn-editar-partido:hover {
+        background: linear-gradient(135deg, #0088ff 0%, #00ccff 100%);
+        transform: translateY(-2px);
+        box-shadow: 0 5px 15px rgba(0, 204, 255, 0.4);
+        color: #fff;
+    }
+
+    .btn-clasificacion {
+        background: linear-gradient(135deg, #ffd700 0%, #ffed4e 100%);
+        border: none;
+        color: #1a1f24;
+        padding: 15px 35px;
+        border-radius: 25px;
+        font-weight: 800;
+        font-size: 1.1rem;
+        text-decoration: none;
+        display: inline-flex;
+        align-items: center;
+        gap: 10px;
+        transition: all 0.3s ease;
+        text-transform: uppercase;
+        letter-spacing: 1px;
+        box-shadow: 0 5px 20px rgba(255, 215, 0, 0.3);
+        margin-bottom: 30px;
+    }
+
+    .btn-clasificacion:hover {
+        background: linear-gradient(135deg, #ffed4e 0%, #ffd700 100%);
+        transform: translateY(-3px);
+        box-shadow: 0 8px 25px rgba(255, 215, 0, 0.5);
+        color: #1a1f24;
+    }
+
+    .avance-info {
+        margin-top: 15px;
+        padding: 12px 20px;
+        background: rgba(0, 204, 255, 0.1);
+        border-left: 4px solid #00ccff;
+        border-radius: 8px;
+        color: #00ccff;
+        font-weight: 600;
+    }
+
+    .avance-info strong {
+        color: #00ff88;
+    }
+
+    .section-title-partidos {
+        color: #ffd700;
+        font-weight: 700;
+        font-size: 1.8rem;
+        margin-top: 40px;
+        margin-bottom: 25px;
+        text-transform: uppercase;
+        letter-spacing: 1px;
+        display: flex;
+        align-items: center;
+        gap: 15px;
+    }
+
+    .section-title-partidos::after {
+        content: '';
+        flex: 1;
+        height: 3px;
+        background: linear-gradient(90deg, #ffd700 0%, transparent 100%);
+    }
+
+    .stats-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+        gap: 20px;
+        margin-top: 20px;
+    }
+
+    .stat-card {
+        background: rgba(42, 46, 51, 0.8);
+        border: 2px solid #3a3e43;
+        border-radius: 15px;
+        padding: 25px;
+        text-align: center;
+        transition: all 0.3s ease;
+    }
+
+    .stat-card:hover {
+        transform: translateY(-5px);
+        border-color: #ffd700;
+    }
+
+    .stat-icon {
+        font-size: 2.5rem;
+        margin-bottom: 10px;
+    }
+
+    .stat-label {
+        color: #00ccff;
+        font-weight: 600;
+        font-size: 0.95rem;
+        margin-bottom: 8px;
+    }
+
+    .stat-value {
+        color: #fff;
+        font-size: 2rem;
+        font-weight: 800;
+    }
+</style>
+
+<div class="container mt-5 mb-5">
+    <div class="hero-section">
+        <div class="trophy-icon">🏆</div>
+        <h1 class="torneo-nombre">{{ $torneo->nombre }}</h1>
+        <div class="text-center mb-3">
+            <span class="tipo-badge">{{ $torneo->tipo }}</span>
+        </div>
+        <div class="text-center">
+            <span class="estado-badge estado-{{ $torneo->estado }}">
+                {{ ucfirst($torneo->estado) }}
+            </span>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-lg-6 mb-4">
+            <div class="info-card">
+                <h3 class="card-title">📋 Información General</h3>
+                
+                <div class="info-item">
+                    <div class="info-label">🆔 ID:</div>
+                    <div class="info-value">{{ $torneo->id }}</div>
+                </div>
+
+                <div class="info-item">
+                    <div class="info-label">📍 Municipio:</div>
+                    <div class="info-value">{{ $torneo->municipio->nombre ?? '-' }}</div>
+                </div>
+
+                <div class="info-item">
+                    <div class="info-label">📅 Inicio:</div>
+                    <div class="info-value">{{ $torneo->fecha_inicio ?? '-' }}</div>
+                </div>
+
+                <div class="info-item">
+                    <div class="info-label">🏁 Fin:</div>
+                    <div class="info-value">{{ $torneo->fecha_fin ?? '-' }}</div>
+                </div>
+
+                @if($torneo->premio)
+                <div class="info-item">
+                    <div class="info-label">💰 Premio:</div>
+                    <div class="info-value">{{ $torneo->premio }}</div>
+                </div>
+                @endif
+            </div>
+        </div>
+
+        <div class="col-lg-6 mb-4">
+            <div class="info-card">
+                <h3 class="card-title">⚙️ Configuración</h3>
+
+                <div class="stats-grid">
+                    <div class="stat-card">
+                        <div class="stat-icon">👥</div>
+                        <div class="stat-label">Equipos</div>
+                        <div class="stat-value">{{ $torneo->num_equipos ?? 0 }}</div>
+                    </div>
+
+                    @if($torneo->tipo == 'Grupos')
+                        <div class="stat-card">
+                            <div class="stat-icon">🔢</div>
+                            <div class="stat-label">Grupos</div>
+                            <div class="stat-value">{{ $torneo->cantidad_grupos }}</div>
+                        </div>
+                    @endif
+                </div>
+            </div>
+        </div>
+    </div>
+
+    @if($torneo->equipos && $torneo->equipos->count() > 0)
+    <div class="info-card">
+        <h3 class="card-title">👥 Equipos Participantes</h3>
+        <div class="equipos-grid">
+            @foreach($torneo->equipos as $equipo)
+            <div class="equipo-card">
+                <img src="{{ asset('storage/public/escudos/' . $equipo->escudo) }}" alt="{{ $equipo->nombre }}" class="equipo-escudo">
+                <div class="equipo-nombre">{{ $equipo->nombre }}</div>
+            </div>
+            @endforeach
+        </div>
+    </div>
+    @endif
+
+    @if($torneo->tipo == 'Grupos' && isset($torneo->grupos))
+        @foreach($torneo->grupos as $grupo)
+        <div class="grupo-container">
+            <h4 class="grupo-title">🔷 {{ $grupo->nombre }}</h4>
+
+            <div class="equipos-grid mb-4">
+                @foreach($grupo->equipos as $equipo)
+                <div class="equipo-card">
+                    <img src="{{ asset('storage/public/escudos/' . $equipo->escudo) }}" alt="{{ $equipo->nombre }}" class="equipo-escudo">
+                    <div class="equipo-nombre">{{ $equipo->nombre }}</div>
+                </div>
+                @endforeach
+            </div>
+
+            @php
+                $partidosGrupo = $torneo->partidos->where('id_grupo', $grupo->id);
+            @endphp
+
+            @if($partidosGrupo->count() > 0)
+            <h5 style="color: #00ccff; margin-bottom: 15px;">⚽ Partidos</h5>
+            @foreach($partidosGrupo as $partido)
+                @php
+                    $equiposPartido = $partido->partido_equipos;
+                @endphp
+
+                @if($equiposPartido && $equiposPartido->count() == 2)
+                <div class="partido-card">
+                    <div class="partido-equipos">
+                        <div class="partido-equipo">
+                            <img src="{{ asset('img/' . $equiposPartido[0]->equipo->escudo) }}" alt="" class="equipo-escudo">
+                            <span class="info-value">{{ $equiposPartido[0]->equipo->nombre }}</span>
+                        </div>
+                        <div class="vs-separator">VS</div>
+                        <div class="partido-equipo">
+                            <img src="{{ asset('img/' . $equiposPartido[1]->equipo->escudo) }}" alt="" class="equipo-escudo">
+                            <span class="info-value">{{ $equiposPartido[1]->equipo->nombre }}</span>
+                        </div>
+                    </div>
+                    
+                    <div class="partido-info">
+                        @if($partido->fecha)
+                        <div class="partido-fecha">
+                            📅 {{ $partido->fecha }} @if($partido->hora)⏰ {{ $partido->hora }}@endif
+                        </div>
+                        @endif
+                        <div class="partido-actions">
+                            <span class="partido-jugado {{ $partido->jugado ? 'jugado-si' : 'jugado-no' }}">
+                                {{ $partido->jugado ? '✓ Jugado' : '⏳ Pendiente' }}
+                            </span>
+                            @if(!$partido->jugado)
+                                <a href="{{ route('partidos.edit', $partido->id) }}" class="btn-editar-partido">
+                                    <i class="fas fa-edit"></i> Editar
+                                </a>
+                            @endif
+                        </div>
+                    </div>
+                </div>
+                @endif
+            @endforeach
+            @endif
+        </div>
+        @endforeach
+    @endif
+
+    <h3 class="section-title-partidos">⚽ Partidos del Torneo</h3>
+
+    @if ($torneo->tipo === 'Liguilla')
+    <div class="text-center mb-4">
+        <a href="{{ route('torneo.clasificacion.liguilla', $torneo->id) }}" class="btn-clasificacion">
+            <i class="fas fa-trophy"></i> Ver Clasificación
+        </a>
+    </div>
+    @endif
+
+    @foreach($torneo->partidos->sortBy('id') as $partido)
+        @php
+            $equipos = $partido->partido_equipos;
+            $local = $equipos->where('rol', 'Local')->first();
+            $visitante = $equipos->where('rol', 'Visitante')->first();
+            $ganador1 = $equipos->where('rol', 'Ganador Ronda Anterior')->first();
+            $ganador2 = $equipos->where('rol', 'Ganador Ronda Anterior')->skip(1)->first();
+        @endphp
+
+        <div class="partido-card">
+            @if($partido->fase)
+            <div class="partido-fase">
+                🏆 {{ $partido->fase }}
+            </div>
+            @endif
+
+            <div class="partido-equipos">
+                <div class="partido-equipo">
+                    @if($local && $local->equipo)
+                    <img src="{{ asset('storage/public/escudos/' . $local->equipo->escudo) }}" alt="" class="equipo-escudo">
+                    <span class="info-value">{{ $local->equipo->nombre }}</span>
+                    <span class="badge">{{ $local->goles }}</span>
+                    @elseif($ganador1 && $ganador1->equipo)
+                    <img src="{{ asset('storage/public/escudos/' . $ganador1->equipo->escudo) }}" alt="" class="equipo-escudo">
+                    <span class="info-value">{{ $ganador1->equipo->nombre }}</span>
+                    <span class="badge">{{ $ganador1->goles }}</span>
+                    @else
+                    <span class="info-value" style="color: #999;">Por definir</span>
+                    @endif
+                </div>
+                
+                <div class="vs-separator">VS</div>
+                
+                <div class="partido-equipo">
+                    @if($visitante && $visitante->equipo)
+                    <img src="{{ asset('storage/public/escudos/' . $visitante->equipo->escudo) }}" alt="" class="equipo-escudo">
+                    <span class="info-value">{{ $visitante->equipo->nombre }}</span>
+                    <span class="badge">{{ $visitante->goles }}</span>
+                    @elseif($ganador2 && $ganador2->equipo)
+                    <img src="{{ asset('storage/public/escudos/' . $ganador2->equipo->escudo) }}" alt="" class="equipo-escudo">
+                    <span class="info-value">{{ $ganador2->equipo->nombre }}</span>
+                    <span class="badge">{{ $ganador2->goles }}</span>
+                    @else
+                    <span class="info-value" style="color: #999;">Por definir</span>
+                    @endif
+                </div>
+            </div>
+            
+            <div class="partido-info">
+                @if($partido->fecha)
+                <div class="partido-fecha">
+                    📅 {{ $partido->fecha }} @if($partido->hora)⏰ {{ $partido->hora }}@endif
+                </div>
+                @endif
+                <div class="partido-actions">
+                    <span class="partido-jugado {{ $partido->jugado ? 'jugado-si' : 'jugado-no' }}">
+                        {{ $partido->jugado ? '✓ Jugado' : '⏳ Pendiente' }}
+                    </span>
+                    @if(!$partido->jugado)
+                        <a href="{{ route('partidos.edit', $partido->id) }}" class="btn-editar-partido">
+                            <i class="fas fa-edit"></i> Editar
+                        </a>
+                    @endif
+                </div>
+            </div>
+            
+            @php
+                $avanza = null;
+                $avanzaDesde = null;
+                foreach($equipos->where('rol', 'Ganador Ronda Anterior') as $pe) {
+                    if($pe->equipo) {
+                        $avanza = $pe->equipo;
+                        $prevPartido = $torneo->partidos->where('jugado', true)->filter(function($p) use ($pe) {
+                            $eqs = $p->partido_equipos;
+                            $local = $eqs->where('rol', 'Local')->first();
+                            $visitante = $eqs->where('rol', 'Visitante')->first();
+                            if($local && $visitante) {
+                                if($local->goles > $visitante->goles && $local->equipo_id == $pe->equipo_id) return true;
+                                if($visitante->goles > $local->goles && $visitante->equipo_id == $pe->equipo_id) return true;
+                            }
+                            return false;
+                        })->first();
+                        if($prevPartido) $avanzaDesde = $prevPartido->fase;
+                    }
+                }
+            @endphp
+
+            @if($avanza && $avanzaDesde)
+                <div class="avance-info">
+                    <strong>{{ $avanza->nombre }}</strong> avanzó desde {{ $avanzaDesde }}
+                </div>
+            @endif
+        </div>
+    @endforeach
+
+    <div class="text-center mt-4">
+        <a href="{{ route('torneos.index') }}" class="btn btn-outline-light btn-lg">← Volver a Torneos</a>
+    </div>
+</div>
+@endsection

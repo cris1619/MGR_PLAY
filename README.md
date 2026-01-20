@@ -1,61 +1,132 @@
-<p align="center"><a href="https://laravel.com" target="_blank"><img src="https://raw.githubusercontent.com/laravel/art/master/logo-lockup/5%20SVG/2%20CMYK/1%20Full%20Color/laravel-logolockup-cmyk-red.svg" width="400" alt="Laravel Logo"></a></p>
+# MGR PLAY
 
-<p align="center">
-<a href="https://github.com/laravel/framework/actions"><img src="https://github.com/laravel/framework/workflows/tests/badge.svg" alt="Build Status"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/dt/laravel/framework" alt="Total Downloads"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/v/laravel/framework" alt="Latest Stable Version"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/l/laravel/framework" alt="License"></a>
-</p>
+Sistema web para la gestión de torneos deportivos de la región Málaga García Rovira. Permite administrar usuarios, equipos, jugadores, canchas, árbitros, partidos y torneos, con autenticación y panel de administración.
 
-## About Laravel
+## Tabla de Contenidos
+- [Descripción General](#descripción-general)
+- [Estructura del Proyecto](#estructura-del-proyecto)
+- [Instalación y Configuración](#instalación-y-configuración)
+- [Uso Básico](#uso-básico)
+- [Modelos y Controladores](#modelos-y-controladores)
+- [Servicios](#servicios)
+- [Rutas Principales](#rutas-principales)
+- [Vistas](#vistas)
+- [Pruebas](#pruebas)
+- [Tecnologías y Dependencias](#tecnologías-y-dependencias)
+- [Licencia](#licencia)
 
-Laravel is a web application framework with expressive, elegant syntax. We believe development must be an enjoyable and creative experience to be truly fulfilling. Laravel takes the pain out of development by easing common tasks used in many web projects, such as:
+---
 
-- [Simple, fast routing engine](https://laravel.com/docs/routing).
-- [Powerful dependency injection container](https://laravel.com/docs/container).
-- Multiple back-ends for [session](https://laravel.com/docs/session) and [cache](https://laravel.com/docs/cache) storage.
-- Expressive, intuitive [database ORM](https://laravel.com/docs/eloquent).
-- Database agnostic [schema migrations](https://laravel.com/docs/migrations).
-- [Robust background job processing](https://laravel.com/docs/queues).
-- [Real-time event broadcasting](https://laravel.com/docs/broadcasting).
+## Descripción General
+MGR PLAY es una aplicación web desarrollada con Laravel y Vite, orientada a la gestión integral de torneos deportivos. Permite el registro y administración de usuarios, equipos, jugadores, canchas, árbitros y partidos, así como la visualización y control de torneos.
 
-Laravel is accessible, powerful, and provides tools required for large, robust applications.
+## Estructura del Proyecto
+```
+├── app/
+│   ├── Http/
+│   │   ├── Controllers/   # Lógica de negocio y endpoints
+│   │   ├── Requests/      # Validaciones de formularios
+│   ├── Models/            # Modelos Eloquent (Admin, Equipos, Jugadores, etc.)
+│   ├── Providers/         # Servicios y providers de Laravel
+│   ├── Services/          # Servicios personalizados
+├── bootstrap/             # Bootstrap de la app
+├── config/                # Configuración de Laravel
+├── database/
+│   ├── migrations/        # Migraciones de base de datos
+│   ├── seeders/           # Datos de ejemplo
+├── public/                # Archivos públicos y assets
+├── resources/
+│   ├── views/             # Vistas Blade (login, welcome, etc.)
+│   ├── css/ js/           # Estilos y scripts
+├── routes/                # Definición de rutas (web.php, console.php)
+├── storage/               # Archivos generados y logs
+├── tests/                 # Pruebas unitarias y funcionales
+├── vendor/                # Dependencias PHP
+├── composer.json          # Dependencias y scripts PHP
+├── package.json           # Dependencias y scripts JS
+├── vite.config.js         # Configuración de Vite
+└── README.md              # Documentación
+```
 
-## Learning Laravel
+## Instalación y Configuración
+1. **Requisitos:** PHP >= 8.2, Composer, Node.js, npm.
+2. Clona el repositorio:
+   ```powershell
+   git clone <url-del-repo>
+   cd MGR_PLAY
+   ```
+3. Instala dependencias:
+   ```powershell
+   composer install
+   npm install
+   ```
+4. Configura el entorno:
+   ```powershell
+   cp .env.example .env
+   php artisan key:generate
+   ```
+5. Ejecuta migraciones y seeders:
+   ```powershell
+   php artisan migrate --seed
+   ```
+6. Activar public para gestionar imagenes:
+   ```
+   php artisan storage:link
+   -Ir archivo .env
+   -FILESYSTEM_DISK=local -> asi esta
+   -FILESYSTEM_DISK=public -> asi debe quedar
+   ```
+7. Inicia el servidor:
+   ```powershell
+   npm run dev
+   php artisan serve
+   ```
 
-Laravel has the most extensive and thorough [documentation](https://laravel.com/docs) and video tutorial library of all modern web application frameworks, making it a breeze to get started with the framework.
+## Uso Básico
+- Accede a la app en `http://localhost:8000`.
+- Inicia sesión como administrador para acceder al panel.
+- Navega por los módulos: usuarios, equipos, jugadores, canchas, árbitros, torneos y partidos.
 
-You may also try the [Laravel Bootcamp](https://bootcamp.laravel.com), where you will be guided through building a modern Laravel application from scratch.
+## Modelos y Controladores
+- **Modelos:** Representan entidades como `Admin`, `Equipos`, `Jugadores`, `Canchas`, etc. Usan Eloquent ORM para interactuar con la base de datos.
+- **Controladores:** Gestionan la lógica de negocio y las peticiones HTTP. Ejemplo: `AdminController` maneja login, registro y logout.
 
-If you don't feel like reading, [Laracasts](https://laracasts.com) can help. Laracasts contains thousands of video tutorials on a range of topics including Laravel, modern PHP, unit testing, and JavaScript. Boost your skills by digging into our comprehensive video library.
+## Servicios
+- Los servicios como `userService` proveen métodos para obtener estadísticas (total de jugadores, equipos, canchas, etc.) y lógica reutilizable.
 
-## Laravel Sponsors
+## Rutas Principales
+- Definidas en `routes/web.php`:
+  - `/login`, `/logout`, `/registro`: Autenticación y registro.
+  - `/usuario/index`, `/usuario/listaEquipos`, `/usuario/listaJugadores`: Panel de usuario.
+  - `/Municipios/*`, `/Canchas/*`, `/Equipos/*`: CRUD de entidades.
+  - `/welcome`: Página principal tras login.
 
-We would like to extend our thanks to the following sponsors for funding Laravel development. If you are interested in becoming a sponsor, please visit the [Laravel Partners program](https://partners.laravel.com).
+## Vistas
+- **Blade Templates:**
+  - `login.blade.php`: Formulario de acceso.
+  - `welcome.blade.php`: Panel principal tras autenticación.
+  - `layouts/app.blade.php`: Layout base con estilos y navegación.
+- **Estilos:** Integración con Bootstrap y Tailwind para diseño moderno y responsivo.
 
-### Premium Partners
+## Pruebas
+- Pruebas unitarias y funcionales en `tests/Unit` y `tests/Feature`.
+- Ejecuta las pruebas con:
+  ```powershell
+  php artisan test
+  ```
 
-- **[Vehikl](https://vehikl.com)**
-- **[Tighten Co.](https://tighten.co)**
-- **[Kirschbaum Development Group](https://kirschbaumdevelopment.com)**
-- **[64 Robots](https://64robots.com)**
-- **[Curotec](https://www.curotec.com/services/technologies/laravel)**
-- **[DevSquad](https://devsquad.com/hire-laravel-developers)**
-- **[Redberry](https://redberry.international/laravel-development)**
-- **[Active Logic](https://activelogic.com)**
+## Tecnologías y Dependencias
+- **Backend:** Laravel 12, PHP 8.2
+- **Frontend:** Vite, TailwindCSS, Bootstrap
+- **Autenticación:** Laravel Auth
+- **ORM:** Eloquent
+- **Testing:** PHPUnit, Pest
+- **Otros:** Axios, FontAwesome
 
-## Contributing
+## Licencia
+Este proyecto está bajo la licencia MIT.
 
-Thank you for considering contributing to the Laravel framework! The contribution guide can be found in the [Laravel documentation](https://laravel.com/docs/contributions).
+---
 
-## Code of Conduct
-
-In order to ensure that the Laravel community is welcoming to all, please review and abide by the [Code of Conduct](https://laravel.com/docs/contributions#code-of-conduct).
-
-## Security Vulnerabilities
-
-If you discover a security vulnerability within Laravel, please send an e-mail to Taylor Otwell via [taylor@laravel.com](mailto:taylor@laravel.com). All security vulnerabilities will be promptly addressed.
-
-## License
-
-The Laravel framework is open-sourced software licensed under the [MIT license](https://opensource.org/licenses/MIT).
+### Créditos
+Desarrollado por cris1619 y colaboradores.
