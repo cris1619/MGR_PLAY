@@ -7,7 +7,7 @@
 @section('titleContent')
 <nav class="navbar">
     <div class="navbar-left">
-        <a href="{{ route('municipios.index') }}" class="logo">
+        <a href="{{ route('Municipios.index') }}" class="logo">
             <img src="{{ url('img/logoSinFondo.png') }}" alt="MGR PLAY" style="height: 50px; margin-right: 30px;">
             🌍 CREAR MUNICIPIO
         </a>
