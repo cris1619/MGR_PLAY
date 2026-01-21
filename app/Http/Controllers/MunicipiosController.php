@@ -46,7 +46,7 @@ class MunicipiosController extends Controller
     {        
         $municipio = Municipios::findOrFail($id);
         $municipio->update($request->all());
-        return redirect()->route('Municipios.index')
+        return redirect()->route('municipios.index')
                          ->with('success', 'Municipio actualizado correctamente');
     }
 
