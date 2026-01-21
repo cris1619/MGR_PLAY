@@ -17,14 +17,14 @@ class MunicipiosController extends Controller
     // GET: formulario para crear
     public function create()
     {
-        return view('municipios.create');
+        return view('Municipios.create');
     }
 
     // POST: guardar nuevo municipio
     public function store(Request $request)
     {
         Municipios::create($request->all());
-        return redirect()->route('municipios.index')
+        return redirect()->route('Municipios.index')
                          ->with('success', 'Municipio creado correctamente');
     }
 
@@ -38,7 +38,7 @@ class MunicipiosController extends Controller
     public function edit($id)
     {
         $municipio = Municipios::findOrFail($id);
-        return view('municipios.edit', compact('municipio'));
+        return view('Municipios.edit', compact('municipio'));
     }
 
     // POST: actualizar municipio (sin PUT)
@@ -46,7 +46,7 @@ class MunicipiosController extends Controller
     {        
         $municipio = Municipios::findOrFail($id);
         $municipio->update($request->all());
-        return redirect()->route('municipios.index')
+        return redirect()->route('Municipios.index')
                          ->with('success', 'Municipio actualizado correctamente');
     }
 
@@ -57,13 +57,13 @@ class MunicipiosController extends Controller
 
         // Validar si el municipio tiene canchas asociadas
         if ($municipio->canchas()->count() > 0) {
-            return redirect()->route('municipios.index')
+            return redirect()->route('Municipios.index')
                 ->with('error', 'No puedes eliminar este municipio porque tiene canchas asociadas.');
         }
 
         $municipio->delete();
 
-        return redirect()->route('municipios.index')
+        return redirect()->route('Municipios.index')
             ->with('success', 'Municipio eliminado correctamente.');
     }
 }
