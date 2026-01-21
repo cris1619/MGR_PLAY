@@ -11,7 +11,7 @@ class MunicipiosController extends Controller
     public function index()
     {
         $municipios = Municipios::all();
-        return view('municipios.index', compact('municipios'));
+        return view('municipios.index', compact('Municipios'));
     }
 
     // GET: formulario para crear
