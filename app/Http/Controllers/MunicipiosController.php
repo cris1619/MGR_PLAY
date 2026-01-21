@@ -63,7 +63,7 @@ class MunicipiosController extends Controller
 
         $municipio->delete();
 
-        return redirect()->route('Municipios.index')
+        return redirect()->route('municipios.index')
             ->with('success', 'Municipio eliminado correctamente.');
     }
 }
