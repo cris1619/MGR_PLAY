@@ -46,7 +46,7 @@ Route::get('/usuario/listaTorneosShow/{id}', [UserController::class, 'listaTorne
 
 //RUTAS MUNICIPIOS
 Route::get('/Municipios/index', [MunicipiosController::class, 'index'])->name('municipios.index');
-Route::get('/Municipios/create', [MunicipiosController::class, 'create'])->name('municipios.create');
+Route::get('/Municipios/create', [MunicipiosController::class, 'create'])->name('Municipios.create');
 Route::post('/Municipios/store', [MunicipiosController::class, 'store'])->name('municipios.store');
 Route::get('/Municipios/edit/{id}', [MunicipiosController::class, 'edit'])->name('municipios.edit');
 Route::post('/Municipios/update/{id}', [MunicipiosController::class, 'update'])->name('municipios.update');
