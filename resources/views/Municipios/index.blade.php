@@ -201,7 +201,7 @@
     <!-- Título + Botón -->
     <div class="d-flex justify-content-between align-items-center mb-4">
         <h2 class="section-title">🏘️ Municipios Registrados</h2>
-        <a href="{{ route('municipios.create') }}" class="btn-admin">
+        <a href="{{ route('Municipios.create') }}" class="btn-admin">
             ➕ Crear Municipio
         </a>
     </div>
