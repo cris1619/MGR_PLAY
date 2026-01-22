@@ -130,7 +130,7 @@ class JugadoresController extends Controller
     {
         $jugadores = Jugadores::findorFail($id);
         $jugadores->delete();
-        return redirect()->route('Jugadores.index')
+        return redirect()->route('jugadores.index')
             ->with('success', 'Jugador eliminado correctamente');
     }
 }
