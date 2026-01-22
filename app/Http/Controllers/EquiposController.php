@@ -38,7 +38,7 @@ class EquiposController extends Controller
 
         $municipios = Municipios::all();
 
-        return view('equipos.index', compact('equipos', 'municipios', 'perPage'));
+        return view('Equipos.index', compact('equipos', 'municipios', 'perPage'));
     }
 
     /**
@@ -48,7 +48,7 @@ class EquiposController extends Controller
     {
         $equipos = Equipos::all();
         $municipios = municipios::all();
-        return view('equipos.create', compact('equipos', 'municipios'));
+        return view('Equipos.create', compact('equipos', 'municipios'));
     }
 
     /**
@@ -93,7 +93,7 @@ public function show($id)
         ->withCount(['partidos', 'jugadores'])
         ->findOrFail($id);
     
-    return view('equipos.show', compact('equipo','admin'));
+    return view('Equipos.show', compact('equipo','admin'));
 }
 
 
@@ -104,7 +104,7 @@ public function show($id)
     {
         $equipos = Equipos::find($id);
         $municipios = municipios::all();
-        return view('equipos.edit', compact('equipos', 'municipios'));
+        return view('Equipos.edit', compact('equipos', 'municipios'));
     }
 
     /**
@@ -153,7 +153,7 @@ public function show($id)
 
         // Validar si el equipo tiene jugadores asociados
         if ($equipos->jugadores()->count() > 0) {
-            return redirect()->route('equipos.index')
+            return redirect()->route('Equipos.index')
                 ->with('error', 'No puedes eliminar este equipo porque tiene jugadores asociados.');
         }
 
