@@ -91,7 +91,7 @@ class CanchasController extends Controller
     {
         $canchas = Canchas::findorFail($id);
         $canchas->delete();
-        return redirect()->route('Canchas.index')
+        return redirect()->route('canchas.index')
             ->with('success', 'Cancha eliminada correctamente');
     }
 }
