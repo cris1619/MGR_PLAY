@@ -4,7 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Equipos;
 use App\Models\Jugadores;
-use App\Models\municipios;
+use App\Models\Municipios;
 use Illuminate\Http\Request;
 
 class JugadoresController extends Controller
@@ -52,7 +52,7 @@ class JugadoresController extends Controller
     // Paginación
     $jugadores = $query->paginate(10)->appends($request->all());
 
-    return view('jugadores.index', compact('equipos', 'municipios', 'jugadores', 'posiciones'));
+    return view('Jugadores.index', compact('equipos', 'municipios', 'jugadores', 'posiciones'));
 }
 
 
@@ -72,7 +72,7 @@ class JugadoresController extends Controller
             'extremo derecho',
             'delantero centro'
         ];
-        return view('jugadores.create', compact('equipos', 'posiciones'));
+        return view('Jugadores.create', compact('equipos', 'posiciones'));
     }
 
     /**
@@ -110,7 +110,7 @@ class JugadoresController extends Controller
             'extremo derecho',
             'delantero centro'
         ];
-        return view('jugadores.edit', compact('equipos', 'jugadores', 'posiciones'));
+        return view('Jugadores.edit', compact('equipos', 'jugadores', 'posiciones'));
     }
 
     /**
@@ -130,7 +130,7 @@ class JugadoresController extends Controller
     {
         $jugadores = Jugadores::findorFail($id);
         $jugadores->delete();
-        return redirect()->route('jugadores.index')
+        return redirect()->route('Jugadores.index')
             ->with('success', 'Jugador eliminado correctamente');
     }
 }
