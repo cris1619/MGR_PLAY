@@ -3,7 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Equipos;
-use App\Models\municipios;
+use App\Models\Municipios;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Storage;
