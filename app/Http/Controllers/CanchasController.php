@@ -28,7 +28,7 @@ class CanchasController extends Controller
             $canchas = $query->get();
 
             // Retornar la vista con los datos
-            return view('canchas.index', compact('canchas', 'municipios'));
+            return view('Canchas.index', compact('canchas', 'municipios'));
         }
 
     /**
@@ -38,7 +38,7 @@ class CanchasController extends Controller
     {
         $municipios = Municipios::all();
         $canchas = Canchas::all();
-        return view('canchas.create', compact('municipios', 'canchas'));
+        return view('Canchas.create', compact('municipios', 'canchas'));
     }
 
     /**
@@ -70,7 +70,7 @@ class CanchasController extends Controller
     {
         $canchas = Canchas::find($id);
         $municipios = Municipios::all();
-        return view('canchas.edit', compact('canchas', 'municipios'));
+        return view('Canchas.edit', compact('canchas', 'municipios'));
     }
 
     /**
@@ -91,7 +91,7 @@ class CanchasController extends Controller
     {
         $canchas = Canchas::findorFail($id);
         $canchas->delete();
-        return redirect()->route('canchas.index')
+        return redirect()->route('Canchas.index')
             ->with('success', 'Cancha eliminada correctamente');
     }
 }
