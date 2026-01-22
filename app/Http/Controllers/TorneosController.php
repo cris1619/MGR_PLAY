@@ -6,7 +6,7 @@ use App\Models\Clasificacion;
 use App\Models\Equipos;
 use App\Models\Grupo;
 use App\Models\Grupo_Equipo;
-use App\Models\municipios;
+use App\Models\Municipios;
 use App\Models\Partido;
 use App\Models\Partido_Equipo;
 use App\Models\Torneo_Equipo;
@@ -20,15 +20,15 @@ class TorneosController extends Controller
     public function index()
     {
         $torneos = Torneos::all();
-        return view('torneos.index', compact('torneos'));
+        return view('Torneos.index', compact('torneos'));
     }
 
     public function create()
     {
         $equipos = Equipos::where('estado', 'activo')->get();
-        $municipios = municipios::all();
+        $municipios = Municipios::all();
         
-        return view('torneos.create', compact('equipos', 'municipios'));
+        return view('Torneos.create', compact('equipos', 'municipios'));
     }
 
     public function store(Request $request)
@@ -121,9 +121,9 @@ class TorneosController extends Controller
     {
         $torneos = Torneos::with('equipos')->findOrFail($id);
         $equipos = Equipos::where('estado', 'activo')->get();
-        $municipios = municipios::all();
+        $municipios = Municipios::all();
 
-        return view('torneos.edit', compact('torneos', 'equipos', 'municipios'));
+        return view('Torneos.edit', compact('torneos', 'equipos', 'municipios'));
     }
 
     public function update(Request $request, $id)
@@ -183,7 +183,7 @@ public function destroy($id)
 
         $torneo->delete();
 
-        return redirect()->route('torneos.index')->with('success', 'Torneo eliminado correctamente');
+        return redirect()->route('Torneos.index')->with('success', 'Torneo eliminado correctamente');
 
     } catch (QueryException $e) {
         // Detectar error de integridad (foreign key)
