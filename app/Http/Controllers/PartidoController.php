@@ -53,9 +53,9 @@ class PartidoController extends Controller
     public function edit($id)
     {
         $partido = Partido::with('equipos')->findOrFail($id);
-        $municipios = \App\Models\municipios::all();
+        $municipios = \App\Models\Municipios::all();
         $canchas = \App\Models\Canchas::all();
-        $arbitros = \App\Models\arbitros::all();
+        $arbitros = \App\Models\Arbitros::all();
         return view('Partidos.edit', compact('partido', 'municipios', 'canchas', 'arbitros'));
     }
 
