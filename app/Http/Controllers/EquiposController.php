@@ -47,7 +47,7 @@ class EquiposController extends Controller
     public function create()
     {
         $equipos = Equipos::all();
-        $municipios = municipios::all();
+        $municipios = Municipios::all();
         return view('Equipos.create', compact('equipos', 'municipios'));
     }
 
@@ -103,7 +103,7 @@ public function show($id)
     public function edit($id)
     {
         $equipos = Equipos::find($id);
-        $municipios = municipios::all();
+        $municipios = Municipios::all();
         return view('Equipos.edit', compact('equipos', 'municipios'));
     }
 
