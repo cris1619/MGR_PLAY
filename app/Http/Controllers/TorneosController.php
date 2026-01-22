@@ -114,7 +114,7 @@ class TorneosController extends Controller
     public function show($id)
     {
         $torneo = Torneos::with(['municipio', 'equipos'])->findOrFail($id);
-        return view('torneos.show', compact('torneo'));
+        return view('Torneos.show', compact('torneo'));
     }
 
     public function edit($id)
