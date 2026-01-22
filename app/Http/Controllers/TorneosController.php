@@ -415,7 +415,7 @@ public function clasificacionLiguilla($idTorneo)
         ->orderBy('goles_favor', 'desc')
         ->get();
 
-    return view('torneos.clasificacion_liguilla', compact('torneo', 'clasificacion'));
+    return view('Torneos.clasificacion_liguilla', compact('torneo', 'clasificacion'));
 }
 
 public function clasificacion($id)
