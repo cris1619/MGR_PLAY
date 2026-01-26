@@ -7,7 +7,7 @@ use App\Models\Canchas;
 use App\Models\Clasificacion;
 use App\Models\Equipos;
 use App\Models\Jugadores;
-use App\Models\municipios;
+use App\Models\Municipios;
 use App\Models\Partido;
 use App\Models\Torneos;
 use App\Services\userService;
@@ -25,7 +25,7 @@ class UserController extends Controller
     }
     public function index()
     {
-        $municipios = municipios::all();
+        $municipios = Municipios::all();
         $canchas = Canchas::all();
         $admin = Auth::user();
         $accesosRapidos = [
@@ -59,13 +59,13 @@ class UserController extends Controller
 
 
     // Otras colecciones que usas en la vista
-    $municipios = municipios::all();
+    $municipios = Municipios::all();
     $canchas = Canchas::all();
     $torneos = Torneos::all();
     $equipos = Equipos::all();
 
 
-    return view('usuario.vistaUsuario', compact(
+    return view('Usuario.vistaUsuario', compact(
         'municipios',
         'canchas',
         'accesosRapidos',
@@ -154,7 +154,7 @@ public function listaPartidos(Request $request)
 {
     $admin = Auth::user();
     // 1. Cargar las variables necesarias para los filtros (Selects)
-    $municipios = municipios::orderBy('nombre')->get();
+    $municipios = Municipios::orderBy('nombre')->get();
     $torneos = Torneos::orderBy('nombre')->get(); 
     
     // 2. Iniciar la consulta de Partidos con las relaciones necesarias
