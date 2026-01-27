@@ -93,29 +93,43 @@ public function edit()
     return view('admin.edit', compact('admin'));
 }
 
+
 public function update(Request $request)
 {
     $admin = Auth::guard('admin')->user();
 
-    // Validar
     $request->validate([
         'nombre' => 'required|string|max:100',
         'apellido' => 'required|string|max:100',
         'email' => 'required|email|unique:admin,email,' . $admin->id,
-        'password' => 'nullable|min:6'
+        'password' => 'nullable|min:6',
+        'current_password' => 'required_with:password',
     ]);
 
-    // Actualizar datos
-    $admin->nombre = $request->nombre;
-    $admin->apellido = $request->apellido;
-    $admin->email = $request->email;
-
+    // 🔒 BLOQUEO TOTAL
     if ($request->filled('password')) {
+        if (!Hash::check($request->current_password, $admin->password)) {
+            return back()
+                ->withErrors([
+                    'current_password' => 'La contraseña actual no es correcta.',
+                ])
+                ->withInput();
+        }
+
         $admin->password = Hash::make($request->password);
     }
 
+    // 👉 SOLO ASIGNAR (NO update)
+    $admin->nombre   = $request->nombre;
+    $admin->apellido = $request->apellido;
+    $admin->email    = $request->email;
+
+    // 👉 UN SOLO GUARDADO
     $admin->save();
 
-    return redirect()->route('admin.show')->with('success', 'Perfil actualizado correctamente.');
+    return redirect()
+        ->route('admin.show')
+        ->with('success', 'Perfil actualizado correctamente.');
 }
+
 }
