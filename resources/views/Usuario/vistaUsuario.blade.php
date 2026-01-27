@@ -446,7 +446,7 @@
         </div>
 
         <div class="navbar-right">
-            <a href="" class="icon-btn admin-btn" title="Usuario">
+            <a href="{{ route('admin.show', $admin->id) }}" class="icon-btn admin-btn" title="Usuario">
                 <svg viewBox="0 0 24 24" fill="currentColor">
                     <path d="M12 12c2.67 0 8 1.34 8 4v3H4v-3c0-2.66 5.33-4 8-4zm0-2c-1.1 0-2-.9-2-2s.9-2 2-2 
                     2 .9 2 2-.9 2-2 2z"/>

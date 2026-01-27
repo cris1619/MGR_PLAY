@@ -34,6 +34,11 @@ Route::get('/logout', function () {
 Route::get('/registro', [AdminController::class, 'verRegistro'])->name('registro');
 Route::post('/registro-submit', [AdminController::class, 'registro'])->name('registro.submit');
 
+//RUTAS ADMIN
+Route::get('/admin/show', [AdminController::class, 'show'])->name('admin.show');
+Route::get('/admin/edit', [AdminController::class, 'edit'])->name('admin.edit');
+Route::post('/admin/update', [AdminController::class, 'update'])->name('admin.update');
+
 //RUTA USUARIO
 Route::get('/usuario/index', [UserController::class, 'index'])->name('usuario.vistaUsuario');
 Route::get('/usuario/listaEquipos', [UserController::class, 'listaEquipos'])->name('usuario.listaEquipos');

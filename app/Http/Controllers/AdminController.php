@@ -79,4 +79,43 @@ class AdminController extends Controller
     // Redirigir al login con mensaje
     return redirect()->route('login')->with('success','Registro exitoso, ahora puedes iniciar sesión.');
 }
+
+public function show()
+{
+    $admin = Auth::guard('admin')->user();
+    return view('admin.show', compact('admin'));
+}
+
+
+public function edit()
+{
+    $admin = Auth::guard('admin')->user();
+    return view('admin.edit', compact('admin'));
+}
+
+public function update(Request $request)
+{
+    $admin = Auth::guard('admin')->user();
+
+    // Validar
+    $request->validate([
+        'nombre' => 'required|string|max:100',
+        'apellido' => 'required|string|max:100',
+        'email' => 'required|email|unique:admin,email,' . $admin->id,
+        'password' => 'nullable|min:6'
+    ]);
+
+    // Actualizar datos
+    $admin->nombre = $request->nombre;
+    $admin->apellido = $request->apellido;
+    $admin->email = $request->email;
+
+    if ($request->filled('password')) {
+        $admin->password = Hash::make($request->password);
+    }
+
+    $admin->save();
+
+    return redirect()->route('admin.show')->with('success', 'Perfil actualizado correctamente.');
+}
 }
