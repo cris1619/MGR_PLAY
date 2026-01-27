@@ -83,14 +83,14 @@ class AdminController extends Controller
 public function show()
 {
     $admin = Auth::guard('admin')->user();
-    return view('admin.show', compact('admin'));
+    return view('Admin.show', compact('admin'));
 }
 
 
 public function edit()
 {
     $admin = Auth::guard('admin')->user();
-    return view('admin.edit', compact('admin'));
+    return view('Admin.edit', compact('admin'));
 }
 
 
