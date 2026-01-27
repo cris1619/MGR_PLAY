@@ -9,7 +9,6 @@
     <link href="https://fonts.googleapis.com/css2?family=Play:wght@400;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css">
 
-
     <style>
         :root {
             --verde-neon: #00ff88;
@@ -43,13 +42,15 @@
         .navbar {
             background: linear-gradient(90deg, #0f0f0f, #1a1f24);
             box-shadow: 0 2px 10px rgba(0, 0, 0, 0.6);
-            padding: 10px 30px;
+            padding: 10px 20px;
+            position: relative;
         }
 
         .navbar-left {
             display: flex;
             align-items: center;
             gap: 25px;
+            flex-wrap: wrap;
         }
 
         .logo {
@@ -60,6 +61,7 @@
             font-weight: bold;
             letter-spacing: 1px;
             transition: all 0.3s ease;
+            font-size: 1rem;
         }
 
         .logo img {
@@ -76,6 +78,7 @@
             display: flex;
             list-style: none;
             gap: 20px;
+            flex-wrap: wrap;
         }
 
         .nav-menu li a {
@@ -84,6 +87,7 @@
             padding: 8px 14px;
             border-radius: 6px;
             transition: all 0.3s ease;
+            font-size: 0.95rem;
         }
 
         .nav-menu li a:hover {
@@ -95,6 +99,7 @@
             display: flex;
             align-items: center;
             gap: 15px;
+            flex-wrap: wrap;
         }
 
         .navbar-right a {
@@ -102,6 +107,7 @@
             text-decoration: none;
             font-weight: bold;
             transition: color 0.3s ease;
+            font-size: 0.9rem;
         }
 
         .navbar-right a:hover {
@@ -117,15 +123,16 @@
             transition: transform 0.3s ease, color 0.3s ease;
             display: flex;
             align-items: center;
-            gap: 10px;
-            padding: 8px 15px;
+            gap: 8px;
+            padding: 8px 12px;
             border-radius: 8px;
             background-color: rgba(255, 255, 255, 0.05);
+            font-size: 0.9rem;
         }
 
         .icon-btn svg {
-            width: 24px;
-            height: 24px;
+            width: 20px;
+            height: 20px;
             flex-shrink: 0;
         }
 
@@ -163,13 +170,14 @@
             text-align: center;
             color: var(--verde-neon);
             font-weight: bold;
-            font-size: 1.2rem;
+            font-size: 1.1rem;
             padding: 15px;
         }
 
         .accordion-button {
             background-color: var(--gris-medio);
             color: var(--blanco);
+            font-size: 0.95rem;
         }
 
         .accordion-button:not(.collapsed) {
@@ -186,6 +194,7 @@
             border: none;
             color: var(--blanco);
             transition: all 0.3s ease;
+            font-size: 0.85rem;
         }
 
         .btn-secondary:hover {
@@ -197,6 +206,7 @@
             color: #00ccff;
             text-decoration: none;
             transition: color 0.3s ease, padding-left 0.3s ease;
+            font-size: 0.9rem;
         }
 
         .list-unstyled a:hover {
@@ -210,7 +220,7 @@
             border: 2px solid rgba(0, 255, 136, 0.3);
             border-radius: 15px;
             transition: all 0.4s ease;
-            padding: 25px;
+            padding: 25px 15px;
             position: relative;
             overflow: hidden;
         }
@@ -240,7 +250,7 @@
         .quick-card h5 {
             color: #e5e5e5;
             font-weight: 600;
-            font-size: 1rem;
+            font-size: 0.95rem;
             margin-bottom: 10px;
         }
 
@@ -310,12 +320,12 @@
         }
 
         .admin-card .card-body {
-            padding: 25px;
+            padding: 20px;
         }
 
         .admin-card .card-title {
             color: #faf8f5;
-            font-size: 1.3rem;
+            font-size: 1.2rem;
             font-weight: 700;
             margin-bottom: 15px;
             letter-spacing: 0.5px;
@@ -323,7 +333,7 @@
 
         .admin-card .card-text {
             color: #e5e5e5;
-            font-size: 0.95rem;
+            font-size: 0.9rem;
             line-height: 1.8;
             margin-bottom: 20px;
         }
@@ -349,7 +359,7 @@
             padding: 12px 30px;
             border-radius: 25px;
             font-weight: 700;
-            font-size: 0.95rem;
+            font-size: 0.9rem;
             transition: all 0.3s ease;
             text-decoration: none;
             display: inline-block;
@@ -389,17 +399,82 @@
 
         footer div {
             color: #ccc;
-            font-size: 0.9rem;
+            font-size: 0.85rem;
+        }
+
+        /* MOBILE MENU TOGGLE */
+        .mobile-menu-toggle {
+            display: none;
+            background: none;
+            border: 2px solid var(--verde-neon);
+            color: var(--verde-neon);
+            padding: 8px 12px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 1.2rem;
+            transition: all 0.3s ease;
+        }
+
+        .mobile-menu-toggle:hover {
+            background-color: rgba(0, 255, 136, 0.1);
         }
 
         /* RESPONSIVE */
-        @media (max-width: 768px) {
+        @media (max-width: 992px) {
+            .navbar {
+                flex-wrap: wrap;
+                padding: 10px 15px;
+            }
+
+            .navbar-left {
+                width: 100%;
+                justify-content: space-between;
+                margin-bottom: 10px;
+            }
+
+            .mobile-menu-toggle {
+                display: block;
+            }
+
             .nav-menu {
                 display: none;
+                width: 100%;
+                flex-direction: column;
+                gap: 5px;
+                padding: 10px 0;
+                background: rgba(26, 31, 36, 0.95);
+                border-radius: 8px;
+                margin-top: 10px;
+            }
+
+            .nav-menu.active {
+                display: flex;
+            }
+
+            .nav-menu li {
+                width: 100%;
+            }
+
+            .nav-menu li a {
+                display: block;
+                width: 100%;
+                padding: 12px 20px;
+            }
+
+            .navbar-right {
+                width: 100%;
+                justify-content: space-between;
+                padding-top: 10px;
+                border-top: 1px solid rgba(255, 255, 255, 0.1);
+            }
+
+            .logo {
+                font-size: 0.85rem;
             }
 
             .logo img {
                 height: 40px;
+                margin-right: 10px;
             }
 
             .main-content {
@@ -408,16 +483,83 @@
 
             .section-title {
                 font-size: 1.4rem;
+                letter-spacing: 1px;
             }
 
             .quick-card h3 {
                 font-size: 2rem;
             }
+
+            .quick-card h5 {
+                font-size: 0.85rem;
+            }
+
+            .admin-card .card-body {
+                padding: 15px;
+            }
+
+            .admin-card .card-title {
+                font-size: 1.1rem;
+            }
+
+            .admin-card .card-text {
+                font-size: 0.85rem;
+            }
+
+            .btn-admin {
+                padding: 10px 25px;
+                font-size: 0.85rem;
+            }
+
+            .card-icon {
+                font-size: 2.5rem;
+            }
+        }
+
+        @media (max-width: 576px) {
+            .logo span {
+                display: none;
+            }
+
+            .icon-btn span {
+                display: none;
+            }
+
+            .icon-btn svg {
+                width: 24px;
+                height: 24px;
+            }
+
+            .section-title {
+                font-size: 1.2rem;
+            }
+
+            .quick-card {
+                padding: 20px 10px;
+            }
+
+            .quick-card h3 {
+                font-size: 1.8rem;
+            }
+
+            .admin-card .card-title {
+                font-size: 1rem;
+            }
+
+            .btn-admin {
+                width: 100%;
+                text-align: center;
+            }
+
+            footer div {
+                font-size: 0.75rem;
+                padding: 0 10px;
+            }
         }
 
         /* Scrollbar */
         ::-webkit-scrollbar {
-            width: 10px;
+            width: 8px;
         }
 
         ::-webkit-scrollbar-thumb {
@@ -435,9 +577,12 @@
         <div class="navbar-left">
             <a href="{{ route('welcome') }}" class="logo">
                 <img src="{{ url('img/logoSinFondo.png') }}" alt="MGR PLAY">
-                MALAGA GARCÍA ROVIRA PLAY
+                <span>MALAGA GARCÍA ROVIRA PLAY</span>
             </a>
-            <ul class="nav-menu">
+            <button class="mobile-menu-toggle" onclick="toggleMobileMenu()">
+                <i class="bi bi-list"></i>
+            </button>
+            <ul class="nav-menu" id="mobileMenu">
                 <li><a href="{{ route('usuario.listaTorneos') }}">Torneos</a></li>
                 <li><a href="{{ route('usuario.listaEquipos') }}">Equipos</a></li>
                 <li><a href="{{ route('usuario.listaJugadores') }}">Jugadores</a></li>
@@ -458,10 +603,10 @@
         </div>
     </nav>
 
-    <div class="container main-content">
+    <div class="container-fluid main-content">
         <div class="row">
             <!-- Lado izquierdo -->
-            <div class="col-lg-3 col-md-4 mb-4">
+            <div class="col-lg-3 col-md-12 mb-4">
                 <div class="card">
                     <div class="card-header"><i class="bi bi-geo"></i> Ubicaciones</div>
                     <div class="card-body">
@@ -529,24 +674,24 @@
             </div>
 
             <!-- Accesos Rápidos -->
-            <div class="col-lg-9 col-md-8 mb-4">
+            <div class="col-lg-9 col-md-12 mb-4">
                 <div class="card">
                     <div class="card-header"><i class="bi bi-graph-up"></i> Estadísticas Generales</div>
                     <div class="card-body">
-                        <div class="row g-4 mb-4">
-                            <div class="col-md-4">
+                        <div class="row g-3 mb-4">
+                            <div class="col-md-4 col-sm-6">
                                 <div class="quick-card text-center fade-in-up">
                                     <h5>Jugadores Totales</h5>
                                     <h3>{{ $accesosRapidos['totalJugadores'] }}</h3>
                                 </div>
                             </div>
-                            <div class="col-md-4">
+                            <div class="col-md-4 col-sm-6">
                                 <div class="quick-card text-center fade-in-up">
                                     <h5>Equipos Totales</h5>
                                     <h3>{{ $accesosRapidos['totalEquipos'] }}</h3>
                                 </div>
                             </div>
-                            <div class="col-md-4">
+                            <div class="col-md-4 col-sm-12">
                                 <div class="quick-card text-center fade-in-up">
                                     <h5>Canchas Totales</h5>
                                     <h3>{{ $accesosRapidos['totalCanchas'] }}</h3>
@@ -555,16 +700,16 @@
                         </div>
 
                         <h2 class="section-title"><i class="bi bi-calendar"></i> Próximos Partidos</h2>
-                        <div class="row justify-content-center g-4 mb-4">
+                        <div class="row justify-content-center g-3 mb-4">
                             @forelse( $partidosProximos ?? [] as $partido )
-                                <div class="col-lg-4 col-md-6">
+                                <div class="col-lg-4 col-md-6 col-sm-12">
                                     <div class="card admin-card shadow-lg fade-in-up">
                                         <div class="card-body">
                                             <h5 class="card-title">
-    {{ $partido->equipoLocal->nombre ?? 'Equipo Local' }}
-    vs
-    {{ $partido->equipoVisitante->nombre ?? 'Equipo Visitante' }}
-</h5>
+                                                {{ $partido->equipoLocal->nombre ?? 'Equipo Local' }}
+                                                vs
+                                                {{ $partido->equipoVisitante->nombre ?? 'Equipo Visitante' }}
+                                            </h5>
                                             <p class="card-text">
                                                 <strong>Fecha:</strong> {{ \Carbon\Carbon::parse($partido->fecha)->format('d M Y') ?? 'Desconocida' }}<br>
                                                 <strong>Hora:</strong> {{ \Carbon\Carbon::parse($partido->hora)->format('h:i A') ?? 'Desconocida' }}<br>
@@ -592,9 +737,9 @@
                         </div>
 
                         <h2 class="section-title"><i class="bi bi-trophy"></i> Torneos Disponibles</h2>
-                        <div class="row justify-content-center g-4">
+                        <div class="row justify-content-center g-3">
                             @forelse( $torneos ?? [] as $torneo )
-                                <div class="col-lg-4 col-md-6">
+                                <div class="col-lg-4 col-md-6 col-sm-12">
                                     <div class="card admin-card shadow-lg fade-in-up">
                                         <div class="card-body">
                                             <h5 class="card-title">{{ $torneo->nombre }}</h5>
@@ -613,7 +758,7 @@
                                 <div class="col-12">
                                     <div class="card admin-card shadow-lg fade-in-up">
                                         <div class="card-body text-center">
-                                            <div class="card-icon"><i class="bi bi-exclamation-triangle"></div>
+                                            <div class="card-icon"><i class="bi bi-exclamation-triangle"></i></div>
                                             <h5 class="card-title">No hay torneos disponibles</h5>
                                             <p class="card-text">
                                                 Por ahora no hay torneos programados. Revisa más tarde o crea uno desde el panel de administración.
@@ -629,13 +774,27 @@
         </div>
     </div>
 
+    <footer>
+        <div class="p-4 text-center text-white">
+            Realizado por - @Cristian Fernando Solano Villamizar - <br>
+            @Juan David Carrillo Mojica <br>
+            2025
+        </div>
+    </footer>
+
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        function toggleMobileMenu() {
+            const menu = document.getElementById('mobileMenu');
+            menu.classList.toggle('active');
+        }
+
+        // Cerrar menú al hacer clic en un enlace
+        document.querySelectorAll('.nav-menu a').forEach(link => {
+            link.addEventListener('click', () => {
+                document.getElementById('mobileMenu').classList.remove('active');
+            });
+        });
+    </script>
 </body>
-<footer>
-    <div class="p-4 text-center text-white">
-        Realizado por - @Cristian Fernando Solano Villamizar - <br>
-        @Juan David Carrillo Mojica <br>
-        2025
-    </div>
-</footer>
 </html>

@@ -132,4 +132,9 @@ public function update(Request $request)
         ->with('success', 'Perfil actualizado correctamente.');
 }
 
+public function welcome()
+{
+    return view('welcome');
+}
+
 }
